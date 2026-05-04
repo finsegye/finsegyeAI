@@ -76,6 +76,22 @@ function goStore() {
         location.href = webLink;
     }
 }
+
+// 🔥 ⭐ 여기만 추가 (자동 실행)
+window.addEventListener("load", function() {
+
+    // 아이폰은 자동 이동 ❌ (홈화면 안내 보여줘야 함)
+    if (isIOS()) return;
+
+    // 안드로이드만 자동 이동
+    if (/Android/i.test(navigator.userAgent)) {
+        setTimeout(function() {
+            goStore();
+        }, 500); // 0.5초 후 실행 (안정성)
+    }
+
+});
+    
 </script>
 
 </head>
