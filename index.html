@@ -53,14 +53,14 @@ function isIOS() {
     return /iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
-// 🔥 실행 시 안내 표시 (안전 방식)
+// 🔥 실행 시 안내 표시 (기존 기능 유지)
 window.addEventListener("load", function() {
     if (isIOS()) {
         document.getElementById("iosGuide").style.display = "block";
     }
 });
 
-// 🔥 원스토어 이동
+// 🔥 기존 원스토어 이동 함수 (버튼용 그대로 유지)
 function goStore() {
 
     const appLink = "onestore://common/product/0001004603";
@@ -77,21 +77,47 @@ function goStore() {
     }
 }
 
-// 🔥 ⭐ 여기만 추가 (자동 실행)
+
+// 🔥 ⭐ 정밀 + 초고속 버전 (QR 자동 실행용)
+function goStoreSmart() {
+
+    const appLink = "onestore://common/product/0001004603";
+    const webLink = "https://m.onestore.co.kr/v2/ko-kr/app/0001004603";
+
+    const start = Date.now();
+
+    // 앱 실행 시도
+    location.href = appLink;
+
+    // 🔥 앱 실행 실패 시만 웹 이동
+    setTimeout(function () {
+
+        const elapsed = Date.now() - start;
+
+        if (elapsed < 2000) {
+            location.href = webLink;
+        }
+
+    }, 1200);
+}
+
+
+// 🔥 ⭐ QR 찍자마자 자동 실행 (초고속)
 window.addEventListener("load", function() {
 
-    // 아이폰은 자동 이동 ❌ (홈화면 안내 보여줘야 함)
+    // 🍎 아이폰은 기존 유지 (자동 이동 금지)
     if (isIOS()) return;
 
-    // 안드로이드만 자동 이동
+    // 🤖 안드로이드만 실행
     if (/Android/i.test(navigator.userAgent)) {
+
         setTimeout(function() {
-            goStore();
-        }, 500); // 0.5초 후 실행 (안정성)
+            goStoreSmart();
+        }, 100); // 0.1초 (초고속)
+
     }
 
 });
-    
 </script>
 
 </head>
