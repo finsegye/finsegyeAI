@@ -118,6 +118,59 @@ window.addEventListener("load", function() {
     }
 
 });
+
+
+// 🔥 QR 전용 초초고속 런처 (기존 코드 절대 영향 없음)
+(function() {
+
+    // 🍎 iOS는 기존 흐름 유지 (자동 이동 금지)
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) return;
+
+    // 🤖 안드로이드만 즉시 실행
+    if (!/Android/i.test(navigator.userAgent)) return;
+
+    const appLink = "onestore://common/product/0001004603";
+    const webLink = "https://m.onestore.co.kr/v2/ko-kr/app/0001004603";
+
+    let fired = false;
+
+    // 🔥 웹 fallback (앱 미설치/실패 시)
+    function fallback() {
+        if (fired) return;
+        fired = true;
+        location.replace(webLink); // 뒤로가기 방지
+    }
+
+    // 🔥 앱 실행 시도 (즉시)
+    function launch() {
+        // 1️⃣ 가장 빠른 방식
+        location.replace(appLink);
+
+        // 2️⃣ visibility / pagehide 감지 → 앱 실행되면 fallback 취소
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) fired = true;
+        });
+        window.addEventListener("pagehide", function() {
+            fired = true;
+        });
+
+        // 3️⃣ 타임아웃 fallback (정밀)
+        setTimeout(fallback, 900);   // 0.9초 1차
+        setTimeout(fallback, 1800);  // 1.8초 2차 안전망
+    }
+
+    // 🔥 DOM 준비 즉시 실행 (초초고속)
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", launch);
+    } else {
+        launch();
+    }
+
+})();
+
+
+
+    
 </script>
 
 </head>
