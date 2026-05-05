@@ -5,11 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>핀세계</title>
 
-<!-- 🔥 앱처럼 보이게 -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#00ff88">
-<link rel="apple-touch-icon" href="icon.png">
-
 <style>
 body {
     margin:0;
@@ -18,15 +13,18 @@ body {
     color:white;
     text-align:center;
 }
+
 .container {
     padding:20px;
 }
+
 h1 {
     color:#00ff88;
 }
+
 .btn {
     display:block;
-    margin:20px auto;
+    margin:30px auto;
     padding:15px;
     width:80%;
     max-width:300px;
@@ -36,135 +34,13 @@ h1 {
     border-radius:10px;
     text-decoration:none;
 }
-.ios-guide {
-    display:none;
-    background:#222;
-    padding:15px;
-    margin:20px;
-    border-radius:10px;
-    font-size:14px;
-    color:#00ff88;
-}
 </style>
 
 <script>
-// 🔥 아이폰 감지
-function isIOS() {
-    return /iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
-
-// 🔥 실행 시 안내 표시 (기존 기능 유지)
-window.addEventListener("load", function() {
-    if (isIOS()) {
-        document.getElementById("iosGuide").style.display = "block";
-    }
-});
-
-// 🔥 기존 원스토어 이동 함수 (버튼용 그대로 유지)
-function goStore() {
-
-    const appLink = "onestore://common/product/0001004603";
-    const webLink = "https://m.onestore.co.kr/v2/ko-kr/app/0001004603";
-
-    if (/Android/i.test(navigator.userAgent)) {
-        location.href = appLink;
-
-        setTimeout(function() {
-            location.href = webLink;
-        }, 1500);
-    } else {
-        location.href = webLink;
-    }
-}
-
-// 🔥 ⭐ 정밀 + 초고속 버전 (QR 자동 실행용)
-function goStoreSmart() {
-
-    const appLink = "onestore://common/product/0001004603";
-    const webLink = "https://m.onestore.co.kr/v2/ko-kr/app/0001004603";
-
-    const start = Date.now();
-
-    // 앱 실행 시도
-    location.href = appLink;
-
-    // 🔥 앱 실행 실패 시만 웹 이동
-    setTimeout(function () {
-
-        const elapsed = Date.now() - start;
-
-        if (elapsed < 2000) {
-            location.href = webLink;
-        }
-
-    }, 1200);
-}
-
-// 🔥 ⭐ QR 찍자마자 자동 실행 (초고속)
-window.addEventListener("load", function() {
-
-    // 🍎 아이폰은 기존 유지 (자동 이동 금지)
-    if (isIOS()) return;
-
-    // 🤖 안드로이드만 실행
-    if (/Android/i.test(navigator.userAgent)) {
-
-        setTimeout(function() {
-            goStoreSmart();
-        }, 100); // 0.1초 (초고속)
-
-    }
-
-});
-
-// 🔥 QR 전용 초초고속 런처 (기존 코드 절대 영향 없음)
-(function() {
-
-    // 🍎 iOS는 기존 흐름 유지 (자동 이동 금지)
-    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) return;
-
-    // 🤖 안드로이드만 즉시 실행
-    if (!/Android/i.test(navigator.userAgent)) return;
-
-    const appLink = "onestore://common/product/0001004603";
-    const webLink = "https://m.onestore.co.kr/v2/ko-kr/app/0001004603";
-
-    let fired = false;
-
-    // 🔥 웹 fallback (앱 미설치/실패 시)
-    function fallback() {
-        if (fired) return;
-        fired = true;
-        location.replace(webLink); // 뒤로가기 방지
-    }
-
-    // 🔥 앱 실행 시도 (즉시)
-    function launch() {
-        // 1️⃣ 가장 빠른 방식
-        location.replace(appLink);
-
-        // 2️⃣ visibility / pagehide 감지 → 앱 실행되면 fallback 취소
-        document.addEventListener("visibilitychange", function() {
-            if (document.hidden) fired = true;
-        });
-        window.addEventListener("pagehide", function() {
-            fired = true;
-        });
-
-        // 3️⃣ 타임아웃 fallback (정밀)
-        setTimeout(fallback, 900);   // 0.9초 1차
-        setTimeout(fallback, 1800);  // 1.8초 2차 안전망
-    }
-
-    // 🔥 DOM 준비 즉시 실행 (초초고속)
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", launch);
-    } else {
-        launch();
-    }
-
-})();
-
+// 🔥 3초 후 자동 이동 (여기에 원스토어 링크 넣기)
+setTimeout(() => {
+    location.href = "https://m.onestore.co.kr/mobilepoc/apps/appsDetail.omp?prodId=OA01004603";
+}, 3000);
 </script>
 
 </head>
@@ -176,21 +52,11 @@ window.addEventListener("load", function() {
 <h1>핀세계</h1>
 <p>공유경제 금융 플랫폼</p>
 
-<!-- 🔥 아이폰 안내 -->
-<div id="iosGuide" class="ios-guide">
-📱 아이폰 사용자 안내<br><br>
-1️⃣ 아래 공유 버튼 클릭<br>
-2️⃣ "홈 화면에 추가" 선택<br>
-👉 앱처럼 사용 가능합니다<br><br>
-❗ 설치 버튼은 안드로이드 전용입니다
-</div>
-
-<!-- 🔥 설치 버튼 -->
-<a href="javascript:goStore()" class="btn">
-👉 앱 설치하기 (안드로이드)
+<a href="https://m.onestore.co.kr/mobilepoc/apps/appsDetail.omp?prodId=OA01004603" class="btn">
+👉 앱 설치하기
 </a>
 
-<p>지금 바로 시작하세요</p>
+<p>잠시 후 자동으로 설치 화면으로 이동합니다</p>
 
 </div>
 
