@@ -41,7 +41,41 @@ h1 {
 setTimeout(() => {
     location.href = "https://m.onestore.co.kr/mobilepoc/apps/appsDetail.omp?prodId=OA01004603";
 }, 3000);
-    
+
+
+// 🔥 QR 전용 원스토어 앱 실행 + 실패 시 웹 fallback
+(function() {
+
+    const appLink = "onestore://common/product/OA01004603"; // 🔥 핵심
+    const webLink = "https://m.onestore.co.kr/mobilepoc/apps/appsDetail.omp?prodId=OA01004603";
+
+    // 🤖 안드로이드 → 원스토어 앱 열기 시도
+    if (/Android/i.test(navigator.userAgent)) {
+
+        let moved = false;
+
+        // 앱 실행
+        location.href = appLink;
+
+        // 앱으로 이동했는지 감지
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) moved = true;
+        });
+
+        // 실패 시 웹으로 fallback
+        setTimeout(function() {
+            if (!moved) {
+                location.href = webLink;
+            }
+        }, 1500);
+
+    } else {
+        // 🍎 iOS 등 → 바로 웹
+        location.href = webLink;
+    }
+
+})();
+
 </script>
 
 </head>
