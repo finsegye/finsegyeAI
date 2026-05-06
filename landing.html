@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>핀세계</title>
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#00ff88">
+
+<!-- iPhone PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="핀세계">
+
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<style>
+
+body{
+    margin:0;
+    background:#0d0d0d;
+    color:white;
+    font-family:Arial,sans-serif;
+    text-align:center;
+}
+
+.container{
+    padding:30px;
+}
+
+.logo{
+    font-size:34px;
+    color:#00ff88;
+    font-weight:bold;
+    margin-top:40px;
+}
+
+.sub{
+    margin-top:10px;
+    color:#ccc;
+}
+
+.btn{
+    display:block;
+    width:85%;
+    max-width:320px;
+    margin:25px auto;
+    padding:18px;
+    border-radius:14px;
+    background:#00ff88;
+    color:black;
+    text-decoration:none;
+    font-weight:bold;
+    font-size:18px;
+}
+
+.small{
+    margin-top:25px;
+    color:#888;
+    font-size:14px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">핀세계</div>
+
+<div class="sub">
+공유경제 금융 플랫폼
+</div>
+
+<a class="btn"
+href="https://m.onestore.co.kr/mobilepoc/apps/appsDetail.omp?prodId=OA01004603">
+👉 앱 설치 / 실행
+</a>
+
+<div class="small">
+잠시 후 자동 연결됩니다
+</div>
+
+</div>
+
+<script>
+
+// ======================================================
+// 🔥 서비스워커 등록
+// ======================================================
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+}
+
+// ======================================================
+// 🔥 단일 웹 서버 기반 자동 연결
+// ======================================================
+
+setTimeout(() => {
+
+    // ==========================================
+    // 🔥 앱 딥링크 시도
+    // ==========================================
+
+    location.href =
+    "onestore://common/product/0001004603";
+
+    // ==========================================
+    // 🔥 실패 시 웹앱 실행
+    // ==========================================
+
+    setTimeout(() => {
+
+        location.href = "index.html";
+
+    }, 1800);
+
+}, 1000);
+
+</script>
+
+</body>
+</html>
