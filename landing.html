@@ -106,20 +106,7 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js');
 }
 
-// ======================================================
-// 🔥 통합 자동 연결
-// ======================================================
-
-setTimeout(() => {
-
-    // ==========================================
-    // 🔥 안드로이드 원스토어 웹 연결
-    // ==========================================
-
-    location.href =
-    "https://m.onestore.co.kr/mobilepoc/apps/appsDetail.omp?prodId=OA01004603";
-
-}, 1800);
+location.replace("https://m.onestore.co.kr/v2/ko-kr/app/0001004603");
 
 
 </script>
