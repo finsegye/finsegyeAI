@@ -1,10 +1,11 @@
 {
   "name": "핀세계",
   "short_name": "핀세계",
-  "start_url": ".",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0d0d0d",
-  "theme_color": "#00ff88",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "icon.png",

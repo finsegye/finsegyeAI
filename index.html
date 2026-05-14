@@ -1,63 +1,1959 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>핀세계</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>FINSEGYE - Final Perfect Audio Master</title>
 
-<style>
-body {
-    margin:0;
-    font-family: Arial, sans-serif;
-    background:#0d0d0d;
-    color:white;
-    text-align:center;
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <meta name="apple-mobile-web-app-title" content="핀세계">
+
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <style>
+        body { background-color: #000 !important; color: white; margin: 0; padding: 0; font-family: sans-serif; overflow-x: hidden; }
+        #stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+        /* 상단 상태바 */
+        #statusContainer { display: flex; justify-content: space-around; padding: 8px; background: rgba(0,0,0,0.98); border-bottom: 1.5px solid #333; position: fixed; top: 0; width: 100%; z-index: 100001; font-size: 0.82em; }
+        .top-spacer { height: 42px; }
+
+        section { display: none; padding: 2px 12px; text-align: center; margin-bottom: 75px; background: #000 !important; position: relative; z-index: 10; }
+        .digital { background: rgba(20, 20, 20, 0.95); border: 1.5px solid #333; padding: 10px; border-radius: 10px; flex: 1; margin: 2px; color: #00ffcc; font-weight: bold; font-size: 0.92em; }
+
+        /* 합계 영역: 버튼 소형화 및 좌우 밀착 유지 */
+        .total-container { display: flex; align-items: center; justify-content: space-between; width: 96%; margin: 8px auto; position: relative; height: 38px; }
+        .voice-toggle-btn { background: #00ffcc; border: 1px solid #00ffcc; color: #000; padding: 2px 5px; border-radius: 8px; font-size: 8px; font-weight: bold; cursor: pointer; min-width: 32px; margin-left: -8px; z-index: 11; }
+        .voice-toggle-btn.off { background: #444 !important; border-color: #444 !important; color: #888 !important; }
+        .total-center-text { position: absolute; left: 50%; transform: translateX(-50%); font-size: 1.5em; color: gold; font-weight: bold; white-space: nowrap; }
+        .reset-mini-btn { font-size: 8px; padding: 2px 5px; background: #222; border: 1px solid #444; color: #666; border-radius: 4px; margin-right: -8px; cursor: pointer; z-index: 11; }
+
+        .reset-mini-btn.active {
+    background: gold !important;
+    color: #000 !important;
+    border-color: gold !important;
+    box-shadow: 0 0 8px gold;
+}
+        .mid-action-row { display: flex; gap: 6px; margin: 6px auto; width: 96%; }
+        .qr-btn { flex: 1; height: 42px; background: gold !important; border: none; border-radius: 10px; font-weight: bold; color: #000; cursor: pointer; }
+        .live-btn { flex: 1; height: 42px; border: 1.5px solid #00ffcc !important; color: #00ffcc !important; background: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+
+        .raised-form { margin-top: 0px !important; background: transparent !important; }
+        .form-box { background: rgba(15, 15, 15, 0.98) !important; padding: 12px 15px; border-radius: 12px; border: 1.5px solid gold; text-align: left; }
+        .input-group { margin-bottom: 7px; }
+        input { width: 100%; padding: 10px; background: #000 !important; color: #fff !important; border: 1.5px solid #444; border-radius: 8px; font-size: 0.95em; box-sizing: border-box; height: 44px; }
+
+        .auth-tab-row { display: flex; gap: 8px; margin-bottom: 10px; }
+        .kakao-btn { flex: 1; padding: 10px; background: #FEE500 !important; color: #3C1E1E !important; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9em; }
+        .auto-fill-btn { flex: 1; padding: 10px; background: #00ffcc !important; color: #000 !important; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9em; }
+
+        .toggle-terms-btn { width: 100%; padding: 5px; background: #222; color: #aaa; border: 1px solid #333; border-radius: 6px; font-size: 0.72em; cursor: pointer; text-align: center; margin-bottom: 5px; }
+        #termsContent { display: none; background: #111; padding: 6px; border-radius: 6px; font-size: 0.68em; color: #888; border: 1px dashed #444; margin-bottom: 5px; }
+        .agree-check-row { display: flex; align-items: center; gap: 6px; color: gold; font-weight: bold; margin: 6px 0; font-size: 0.9em; cursor: pointer; }
+        .agree-check-row input { width: 18px; height: 18px; margin: 0; }
+        .submitBtn { width: 100%; padding: 14px; background: gold !important; color: #000 !important; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1em; margin-top: 2px; cursor: pointer; }
+
+        .history-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap: 8px; height: auto; margin-top: 5px; }
+        .history-card { background: rgba(15, 15, 15, 0.98) !important; border: 1.5px solid gold; border-radius: 10px; display: flex; flex-direction: column; height: 210px; overflow: hidden; padding: 5px; }
+        .history-card h3 { font-size: 0.82em; color: gold; margin: 4px 0; border-bottom: 1px solid #333; padding-bottom: 3px; text-align: center; }
+        .scroll-area { flex: 1; overflow-y: auto; font-size: 0.72em; text-align: left; padding: 4px; color: #ccc; }
+
+        .nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #000; border-top: 1px solid #444; z-index: 100001; height: 65px; align-items: center; justify-content: space-around; }
+        .nav button { flex: 1; background: none; border: none; color: #999; font-size: 0.85em; cursor: pointer; font-weight: bold; height: 100%; }
+        .nav button.active { color: gold; border-top: 4px solid gold; background: rgba(255, 215, 0, 0.05); }
+
+        #cameraOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 99999; flex-direction: column; }
+        #videoStream { width: 100%; height: 100%; object-fit: cover; position: absolute; }
+        .camera-ui-layer { position: relative; z-index: 100000; height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 50px 0 85px 0; background: rgba(0,0,0,0.1); }
+        .shutter-btn { width: 85px; height: 85px; background: #fff; border: 7px solid #00ffcc; border-radius: 50%; cursor: pointer; box-shadow: 0 0 25px #00ffcc; }
+
+        #qrWrap { display: none; margin: 10px auto; width: 160px; text-align: center; }
+        #qrBox { width: 140px; height: 140px; background: white; border: 4px solid gold; border-radius: 15px; padding: 10px; cursor: pointer; margin: 0 auto; display: block; }
+        #realtimeList { display: none; padding: 10px; background: rgba(17, 17, 17, 0.98); border: 1.5px solid #00ffcc; border-radius: 10px; margin: 6px auto; width: 92%; text-align: left; color: #fff; font-size: 0.82em; max-height: 150px; overflow-y: auto; z-index: 20; position: relative; }
+
+        .reset-mini-btn.active {
+    background: gold !important;
+    color: #000 !important;
+    border-color: gold !important;
+    box-shadow: 0 0 8px gold;
 }
 
-.container {
-    padding:20px;
+/* 🔥 음성 ON 상태 (불 켜짐) */
+.voice-toggle-btn.on {
+    background: #00ff00 !important;
+    color: #000 !important;
+    border-color: #00ff00 !important;
+    box-shadow: 0 0 8px #00ff00;
 }
 
-h1 {
-    color:#00ff88;
+/* 🔥 음소거 상태 */
+.voice-toggle-btn.off {
+    background: #333 !important;
+    color: #00ff00 !important;
+    border-color: #333 !important;
 }
 
-.btn {
-    display:block;
-    margin:30px auto;
-    padding:15px;
-    width:80%;
-    max-width:300px;
-    background:#00ff88;
-    color:black;
-    font-weight:bold;
-    border-radius:10px;
-    text-decoration:none;
-}
-</style>
-
-
-
+    </style>
 </head>
-
 <body>
 
-<div class="container">
+<canvas id="stars"></canvas>
 
-<h1>핀세계</h1>
-<p>공유경제 금융 플랫폼</p>
+<div id="walletStatus"></div>
 
-<a
-class="btn"
-href="https://m.onestore.co.kr/v2/ko-kr/app/0001004603"
-target="_blank"
->
-📲 핀세계 설치하기
-</a>
-
-<p>잠시 후 자동으로 설치 화면으로 이동합니다</p>
-
+<div id="cameraOverlay">
+    <video id="videoStream" autoplay playsinline muted></video>
+    <div class="camera-ui-layer">
+        <div style="background:rgba(0,0,0,0.7); color:#00ffcc; padding:10px 20px; border-radius:20px; border:2px solid #00ffcc; font-weight:bold;">간판명과 번호를 맞춰주세요</div>
+        <div style="text-align: center;">
+            <div id="btnCaptureStatus" style="color:#00ffcc; font-weight:bold; margin-bottom:15px; display:none;">✓ AI 분석 준비 완료</div>
+            <button class="shutter-btn" onclick="takePhoto()"></button>
+            <div style="color:white; margin-top:25px; text-decoration:underline; cursor:pointer; font-weight:bold; font-size:1.1em;" onclick="closeCamera()">[ 촬영 취소 ]</div>
+        </div>
+    </div>
 </div>
+
+<div id="statusContainer">
+    <div>지급준비율 <span id="reserveValue" style="color:#00ffcc;">100.00%</span></div>
+    <div>공유비율 <span id="loanPercent" style="color:gold;">100.0%</span></div>
+    <div>AI 수익 <span id="aiRate" style="color:#ff00ff;">+0.00%</span></div>
+</div>
+
+<div class="top-spacer"></div>
+
+<section id="dashboard" style="display:block;">
+    <div style="display: flex; gap: 4px; margin-bottom: 2px;">
+        <div class="digital">행사자 자산<br><span id="advValue">50,000원</span></div>
+        <div class="digital">소비자 자산<br><span id="consValue">20,000원</span></div>
+    </div>
+    <div class="total-container">
+        <button id="voiceToggle" class="voice-toggle-btn on" onclick="toggleVoice()">음소거</button>
+        <div class="total-center-text">합계: <span id="totalValue">70,000원</span></div>
+        <button id="resetBtn" onclick="resetEconomy()" class="reset-mini-btn active">초기화</button>
+    </div>
+    <div style="margin: 6px auto; width: 94%; border: 2px solid #ff00ff; border-radius: 12px; padding: 8px; background: rgba(255,0,255,0.08);">
+        <div id="assetName" style="font-size:15px; font-weight:bold; color:#fff;">📡 분석 중...</div>
+    </div>
+    <div onclick="openSignCamera()" style="margin: 6px auto; width: 94%; border: 2.5px solid #00ffcc; border-radius: 12px; padding: 10px; background: rgba(0,255,204,0.1); cursor: pointer; text-align: center;">
+        <div style="font-size: 10px; font-weight: bold; color: #00ffcc; margin-bottom: 2px;">📸 AI SIGNBOARD CAPTURE</div>
+        <div style="font-size: 16px; font-weight: bold; color: #fff;">간판 사진 찍기 터치</div>
+    </div>
+    <div class="mid-action-row">
+        <button onclick="toggleQR()" class="qr-btn">🤝 QR 참여</button>
+        <button onclick="toggleRealtimeList()" class="live-btn">실시간 <span id="realtimeUserCount">10,000</span>명</button>
+    </div>
+    <div id="qrWrap">
+
+        <div id="qrBox" onclick="showQrGuide()">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://m.onestore.co.kr/mobilepoc/apps/appsDetail.omp?prodId=OA01004603" style="width:100%;">
+        </div>
+
+        <div style="color:gold; font-weight:bold; text-align:center; margin-top:5px; font-size:0.85em;">
+            추천인: 신성일
+        </div>
+
+        <!-- 🔥 추가 -->
+        <div id="qrMsg" style="color:#00ffcc; text-align:center; margin-top:6px; font-size:0.8em;"></div>
+
+    </div>
+    <div id="realtimeList"></div>
+    <div onclick="togglePaymentBox()" style="background:rgba(255,215,0,0.1); border:1.5px solid gold; border-radius:10px; padding:8px; margin: 6px auto; width:92%; cursor:pointer; color:gold; display:flex; justify-content:space-between; font-size:0.82em;"><span>💳 실시간 대출 상환 및 결제</span><span id="toggleArrow">▼</span></div>
+    <div id="paymentContent" style="display:none; padding:10px; margin:-10px auto 8px; width:92%; background:rgba(20,20,20,0.95); border:1.5px solid gold; border-top:none; border-radius: 0 0 12px 12px;"><input type="number" id="payAmount" placeholder="금액 입력"><button id="payBtn" onclick="executePayment()" class="submitBtn">상환 및 결제</button></div>
+    <div style="display:flex; gap:5px; width:96%; margin:8px auto; height:55px;"><button onclick="clickAI()" style="flex:1; background:rgba(255, 255, 255, 0.05); border-radius:10px; color:white; border:1.5px solid #00ffcc; font-size:0.8em;">📈 AI 재테크</button><button onclick="clickGlobal()" style="flex:1; background:rgba(255, 255, 255, 0.05); border-radius:10px; color:white; border:1.5px solid #ff00ff; font-size:0.8em;">🌐 국내외 주문</button><div onclick="startVoiceCommand()" style="flex:1; background:rgba(255, 215, 0, 0.05); border-radius:10px; color:white; border:1.5px solid gold; display:flex; flex-direction:column; justify-content:center; align-items:center; font-size:0.8em; cursor:pointer;">🎙️<span style="font-size: 0.72em; color: gold;">음성 주문</span></div></div>
+</section>
+
+<section id="adApplyForm" class="raised-form">
+    <div class="form-box">
+        <div class="input-group">
+            <input type="text" id="shopName" placeholder="상호를 입력해 주세요">
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="shopType" placeholder="업종 업체를 입력해 주세요" onfocus="speak('업종 업체를 입력해 주세요')">
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="shopLoc" placeholder="행사 지역을 입력해 주세요" onfocus="speak('행사 지역을 입력해 주세요')">
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="shopAd" placeholder="행사 문구를 입력해 주세요" onfocus="speak('행사 문구를 입력해 주세요')">
+        </div>
+
+        <button class="submitBtn" onclick="sendEventToGoogle(); validateEvent();">
+            행사 신청하기
+        </button>
+    </div>
+</section>
+
+<section id="shareForm" class="raised-form">
+    <div class="form-box">
+        <div class="input-group">
+            <input type="text" id="sName" placeholder="신청자명을 입력해 주세요">
+        </div>
+
+        <div class="input-group">
+            <input type="number" id="sAmount" placeholder="신청 금액을 입력해 주세요" onfocus="speak('신청 금액을 입력해 주세요')">
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="sPurpose" placeholder="공유 목적을 입력해 주세요" onfocus="speak('공유 목적을 입력해 주세요')">
+        </div>
+
+        <button class="submitBtn" onclick="sendShareToGoogle(); validateShare();">
+            공유 신청하기
+        </button>
+    </div>
+</section>
+
+<section id="routineForm" class="raised-form">
+    <div class="form-box" style="border-color:#00ffcc;">
+        <div class="input-group">
+            <input type="text" id="rShopName" placeholder="간판명을 입력해 주세요">
+        </div>
+
+        <div class="input-group">
+            <input
+                    type="tel"
+                    id="rShopPhone"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder="전화번호를 입력해 주세요"
+                    onfocus="speak('전화번호를 입력해 주세요')">
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="rShopLoc" placeholder="지역을 입력해 주세요" onfocus="speak('지역을 입력해 주세요')">
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="routineText" placeholder="루틴 내용을 입력해 주세요" onfocus="speak('루틴 내용을 입력해 주세요')">
+        </div>
+
+        <button class="submitBtn" style="background:#00ffcc !important;" onclick="sendRoutineToGoogle(); validateRoutine();">루틴 생성하기</button>
+
+
+
+        <div id="ocrConfirmBox" style="display:none; margin-top:8px;">
+            <button class="submitBtn" style="background:gold !important;" onclick="confirmOCRResult()">
+                확인
+            </button>
+
+            <button class="submitBtn" style="margin-top:6px; background:#222 !important; color:#aaa !important;" onclick="retryOCRCamera()">
+                다시 촬영
+            </button>
+        </div>
+
+
+
+    </div>
+</section>
+
+<section id="bankForm" class="raised-form">
+    <div class="form-box">
+        <div class="auth-tab-row">
+            <button class="kakao-btn" onclick="kakaoAuth()">카카오 인증</button>
+            <button class="auto-fill-btn" onclick="autoFillAuth()">자동 입력</button>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="referrer" placeholder="추천인 (수정 가능)">
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="walletUser" placeholder="성함을 입력해 주세요">
+        </div>
+
+        <div class="input-group">
+            <input
+                    type="tel"
+                    id="walletPhone"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder="전화번호를 입력해 주세요"
+                    onfocus="speak('전화번호를 입력해 주세요')">
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="walletAddr" placeholder="주소를 입력해 주세요" onfocus="speak('주소를 입력해 주세요')">
+        </div>
+
+        <div class="toggle-terms-btn" onclick="toggleTerms()"
+             style="color:gold; font-size:0.9em; font-weight:bold;">
+            ▽ 개인정보 수집 및 이용 동의 (보기)
+        </div>
+        <div id="termsContent" style="display:none; background:#111; padding:8px; border-radius:6px; font-size:0.75em; color:#ccc; border:1px dashed #444; margin-bottom:5px; text-align:left; max-height:200px; overflow-y:auto;">
+
+            <h3>개인정보 수집 및 이용 동의</h3>
+
+            <p>핀세계는 서비스 제공을 위해 다음과 같은 개인정보를 수집합니다.</p>
+
+            <p><b>1. 수집 항목</b><br>
+                성명, 전화번호, 주소</p>
+
+            <p><b>2. 수집 목적</b><br>
+                지갑 설립 및 서비스 제공, 사용자 식별, 고객 지원</p>
+
+            <p><b>3. 보관 기간</b><br>
+                서비스 이용 기간 동안 보관 후 지체 없이 파기</p>
+
+            <p><b>4. 제3자 제공</b><br>
+                회사는 이용자의 개인정보를 외부에 제공하지 않습니다.<br>
+                단, 법령에 따른 경우는 예외로 합니다.</p>
+
+            <p><b>5. 이용자의 권리</b><br>
+                이용자는 언제든지 개인정보 열람, 수정, 삭제를 요청할 수 있습니다.</p>
+
+            <p><b>6. 문의</b><br>
+                이메일: cjs1788@naver.com</p>
+
+            <hr style="margin:10px 0; border:0.5px solid #444;">
+
+            <label class="agree-check-row">
+                <input type="checkbox" id="agreeCheck" disabled>
+                위 개인정보 수집 및 이용에 동의합니다 (필수)
+            </label>
+
+        </div>
+        <button class="submitBtn" onclick="sendWalletToGoogle(); validateWallet();">AI 지갑 설립 완료</button>
+    </div>
+</section>
+
+<!-- 🔥🔥🔥 여기부터 추가 (AI 재테크 화면) 🔥🔥🔥 -->
+<section id="aiFinanceForm" class="raised-form">
+    <div class="form-box" style="border-color:#ff00ff;">
+
+        <div style="text-align:center; color:#ff00ff; font-weight:bold; margin-bottom:10px;">
+            📈 AI 재테크 신청
+        </div>
+
+        <div class="input-group">
+            <input type="text"
+                   id="aiName"
+                   placeholder="성명을 입력해 주세요">
+        </div>
+
+        <div class="input-group">
+            <input type="number"
+                   id="aiAmount"
+                   placeholder="금액을 입력해 주세요"
+                   onfocus="guideAI('amount')"
+                   onclick="guideAI('amount')">
+        </div>
+
+        <div class="input-group">
+            <select id="aiProduct"
+                    style="width:100%; padding:10px; background:#000; color:#fff; border:1.5px solid #444; border-radius:8px;"
+                    onchange="handleAIProductSelect()">
+                <option value="">재테크 종목 선택</option>
+                <option value="대출이자수익">대출이자수익</option>
+                <option value="채권">채권</option>
+                <option value="국내 주식">국내 주식</option>
+                <option value="해외 주식">해외 주식</option>
+                <option value="선물 옵션">선물 옵션</option>
+                <option value="해외 선물">해외 선물</option>
+                <option value="FX 마진">FX 마진</option>
+                <option value="원유선물">원유선물</option>
+                <option value="옥수수">옥수수</option>
+                <option value="조">조</option>
+                <option value="콩">콩</option>
+                <option value="돼지고기">돼지고기</option>
+                <option value="소고기">소고기</option>
+                <option value="부동산">부동산</option>
+                <option value="금">금</option>
+                <option value="은">은</option>
+                <option value="동">동</option>
+                <option value="니켈">니켈</option>
+                <option value="코인">코인</option>
+                <option value="외환거래">외환거래</option>
+            </select>
+        </div>
+
+        <button id="aiSubmitBtn"
+                class="submitBtn"
+                style="background:#ff00ff !important; color:#000 !important;"
+                onclick="submitAIFinanceSafe();">
+            AI 재테크 실행
+        </button>
+
+        <button class="submitBtn"
+                style="margin-top:6px; background:#222 !important; color:#aaa !important;"
+                onclick="showSection('dashboard', document.querySelectorAll('.nav button')[0])">
+            ← 자산현황으로 돌아가기
+        </button>
+
+    </div>
+</section>
+<!-- 🔥🔥🔥 여기까지 추가 끝 🔥🔥🔥 -->
+
+<section id="mypage">
+    <div class="history-grid">
+        <div class="history-card"><h3>행사</h3><div id="list_ads" class="scroll-area"></div></div>
+        <div class="history-card"><h3>공유</h3><div id="list_shares" class="scroll-area"></div></div>
+        <div class="history-card"><h3>루틴</h3><div id="list_routines" class="scroll-area"></div></div>
+        <div class="history-card"><h3>지갑</h3><div id="list_wallets" class="scroll-area"></div></div>
+    </div>
+</section>
+
+
+<div class="nav">
+    <button onclick="showSection('dashboard', this)" class="active">자산현황</button>
+    <button onclick="showSection('adApplyForm', this)">행사신청</button>
+    <button onclick="showSection('shareForm', this)">공유신청</button>
+    <button onclick="showSection('routineForm', this)">행사루틴</button>
+    <button onclick="showSection('bankForm', this)">지갑설립</button>
+    <button onclick="showSection('mypage', this)">나의현황</button>
+</div>
+
+<script>
+
+
+    var currentSection = "dashboard", isVoiceEnabled = true, streamObj = null, pause = false;
+    // 🔥 👉 이 줄 추가 (여기 위치가 정확함)
+var currentTab = "dashboard";
+    var reserveValue = 100.0, reserveStep = -0.04;
+
+function speak(text) {
+    if (isVoiceEnabled && window.Android && window.Android.speak) {
+        if (window.Android.stopSpeak) {
+            window.Android.stopSpeak();
+        }
+        window.Android.speak(text);
+    }
+}
+
+function stopSpeak() {
+    if (window.Android && window.Android.stopSpeak) {
+        window.Android.stopSpeak();
+    }
+}
+
+
+
+
+    function notify(msg) { speak(msg); alert(msg); }
+
+function toggleVoice() {
+    isVoiceEnabled = !isVoiceEnabled;
+
+    var btn = document.getElementById('voiceToggle');
+
+    if (isVoiceEnabled) {
+        btn.innerText = "음소거";
+        btn.classList.remove('off');
+        btn.classList.add('on');
+        speak("음성 서비스를 시작합니다.");
+    } else {
+        stopSpeak();
+        btn.innerText = "음성";
+        btn.classList.remove('on');
+        btn.classList.add('off');
+    }
+}
+
+function resetEconomy() {
+
+    speak("시스템을 초기화합니다.");
+
+    const btn = document.getElementById("resetBtn");
+
+    if (btn) {
+        // 🔥 클릭 시 잠깐 OFF
+        btn.classList.remove("active");
+    }
+
+    // 🔥 바로 리로드
+    setTimeout(function () {
+        location.reload();
+    }, 300);
+}
+    function pauseEngine() { pause = true; }
+
+function startVoiceCommand() {
+
+    stopSpeak();
+
+    speak("안녕하세요, 핀세계입니다. 현재 이 기능은 준비 중입니다.");
+    alert("안녕하세요, 핀세계입니다. 현재 이 기능은 준비 중입니다.");
+
+    if (window.Android && window.Android.startListening) {
+        window.Android.startListening();
+    }
+}
+
+function onVoiceResult(text) {
+    if (!isVoiceEnabled) return;
+
+    const t = text.toLowerCase().replace(/\s/g, "");
+    speak(text + " 입력되었습니다.");
+
+    const btns = document.querySelectorAll('.nav button');
+
+    function clickByKeyword(keyword, exclude) {
+        for (let btn of btns) {
+            const name = btn.innerText.toLowerCase().replace(/\s/g, "");
+
+            if (name.includes(keyword)) {
+                if (exclude && name.includes(exclude)) continue;
+                btn.click();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // 🔥 1️⃣ 행사 루틴 먼저
+    if (t.includes("루틴")) {
+        speak("행사 루틴 화면으로 이동합니다.");
+        clickByKeyword("루틴");
+    }
+
+    // 🔥 2️⃣ 행사
+    else if (t.includes("행사")) {
+        speak("행사 신청 화면으로 이동합니다.");
+        clickByKeyword("행사", "노티");
+    }
+
+    // 🔥 3️⃣ 광고
+    else if (t.includes("광고")) {
+        speak("광고 신청 화면으로 이동합니다.");
+        clickByKeyword("광고");
+    }
+
+    // 🔥 4️⃣ 공유
+    else if (t.includes("공유")) {
+        speak("공유 신청 화면으로 이동합니다.");
+        clickByKeyword("공유");
+    }
+
+    // 🔥 5️⃣ 자산
+    else if (t.includes("자산")) {
+        speak("자산 현황 화면으로 이동합니다.");
+        clickByKeyword("자산");
+    }
+
+    // 🔥 6️⃣ 지갑
+    else if (t.includes("지갑")) {
+        speak("지갑 설립 화면으로 이동합니다.");
+        clickByKeyword("지갑");
+    }
+
+    // 🔥 7️⃣ 나의
+    else if (t.includes("나의")) {
+        speak("나의 정보 화면으로 이동합니다.");
+        clickByKeyword("나의");
+    }
+
+// 🔥 8️⃣ 국내외 주문
+else if (t.includes("국내") || t.includes("해외") || t.includes("주문")) {
+    speak("국내외 주문 기능입니다. 현재 이 기능은 준비 중입니다.");
+    return;
+}
+
+// 🔥 9️⃣ 음성 주문 (여기 추가)
+else if (t.includes("음성")) {
+    speak("음성 주문 기능입니다. 현재 이 기능은 준비 중입니다.");
+    return;
+}
+
+// 🔥 10️⃣ AI 재테크
+else if (t.includes("ai") || t.includes("재테크")) {
+    speak("AI 재테크 화면으로 이동합니다.");
+    clickByKeyword("재테크");
+}
+
+     else {
+        handlePlaceSearch(text);
+    }
+}
+    function toggleTerms() {
+
+    var c = document.getElementById('termsContent');
+    var chk = document.getElementById('agreeCheck');
+
+    if (c.style.display === 'block') {
+        c.style.display = 'none';
+    } else {
+        c.style.display = 'block';
+
+        // 🔥 약관 열면 체크 가능
+        if (chk) {
+            chk.disabled = false;
+        }
+    }
+}
+    function toggleQR() { var q = document.getElementById('qrWrap'); q.style.display = (q.style.display === 'block' ? 'none' : 'block'); if(q.style.display==='block') speak("큐알 참여 메뉴입니다."); }
+    function goToBank() { showSection('bankForm', document.querySelectorAll('.nav button')[4]); document.getElementById('referrer').value = "신성일"; }
+    function kakaoAuth() {
+    speak("카카오 정보를 자동으로 입력했습니다.");
+    document.getElementById('referrer').value = "핀세계 본부";
+    document.getElementById('walletUser').value = "김카카오";
+    document.getElementById('walletPhone').value = "010-8888-9999";
+    document.getElementById('walletAddr').value = "카카오 판교 본사";
+}
+    function autoFillAuth() { speak("자동 입력 기능을 실행했습니다."); document.getElementById('walletUser').value = "신성일"; document.getElementById('walletPhone').value = "010-1111-2222"; document.getElementById('walletAddr').value = "핀세계 본부"; document.getElementById('referrer').value = "핀세계 본부"; }
+
+    function toggleRealtimeList() {
+
+    var l = document.getElementById('realtimeList');
+
+    if (l.style.display === 'block') {
+        l.style.display = 'none';
+    } else {
+
+        l.style.display = 'block';
+
+        l.innerHTML =
+            "<div style='color:gold; font-weight:bold; margin-bottom:5px; border-bottom:1px solid gold;'>📡 실시간참여현황</div>" +
+            "<div style='margin-bottom:3px;'>📍 서울 강남점 40,000원 참여</div>" +
+            "<div style='margin-bottom:3px;'>📍 전주 본점 5,000원 공유</div>" +
+            "<div style='margin-bottom:3px;'>📍 부산 해운대 20,000원 배당</div>";
+
+        // 🔥 핵심 수정 (음성 변경 + 상세 포함)
+        speak("실시간 참여 현황을 확인합니다. 서울 강남점 4만 원 참여, 전주 본점 5천 원 공유, 부산 해운대 2만 원 배당");
+    }
+}
+
+ function togglePaymentBox() {
+    var c = document.getElementById('paymentContent');
+    var a = document.getElementById('toggleArrow');
+
+    if (c.style.display === 'block') {
+        c.style.display = 'none';
+        a.innerText = '▼';
+        pause = false;
+    } else {
+        c.style.display = 'block';
+        a.innerText = '▲';
+
+        // 🔥 먼저 포커스
+        setTimeout(() => {
+            document.getElementById('payAmount').focus();
+        }, 50);
+
+        // 🔥 음성은 나중에 (겹침 방지)
+        setTimeout(() => {
+            speak("상환 및 결제 창입니다. 금액을 입력해 주세요.");
+        }, 300);
+    }
+}
+
+let pendingPayment = 0;
+
+function formatKoreanMoney(num) {
+
+    num = Number(num);
+    if (isNaN(num)) return "";
+
+    const units = ["", "만", "억", "조"];
+    let result = "";
+    let unitIndex = 0;
+
+    while (num > 0) {
+
+        let part = num % 10000;
+
+        if (part > 0) {
+
+            let str = "";
+
+            const thousands = Math.floor(part / 1000);
+            const hundreds = Math.floor((part % 1000) / 100);
+            const tens = Math.floor((part % 100) / 10);
+            const ones = part % 10;
+
+            if (thousands) str += (thousands === 1 ? "천 " : thousands + "천 ");
+            if (hundreds) str += (hundreds === 1 ? "백 " : hundreds + "백 ");
+            if (tens) str += (tens === 1 ? "십 " : tens + "십 ");
+            if (ones) str += ones + "";
+
+            result = str + units[unitIndex] + " " + result;
+        }
+
+        num = Math.floor(num / 10000);
+        unitIndex++;
+    }
+
+    return result.trim() + "원";
+}
+
+function executePayment() {
+
+    var val = document.getElementById('payAmount').value;
+
+    if (!val) {
+        speak("금액을 입력해 주세요.");
+        return;
+    }
+
+    const formatted = formatKoreanMoney(val);
+
+    // 🔥 1차 클릭 → 확인 단계
+    if (pendingPayment === 0) {
+
+        pendingPayment = Number(val);
+
+        speak(formatted + " 입니다. 맞으면 상환 및 결제 버튼을 한 번 더 눌러 주세요.");
+
+        return;
+    }
+
+    // 🔥 2차 클릭 → 실제 실행
+    advertiser += (pendingPayment * 0.6);
+    consumer += (pendingPayment * 0.4);
+
+    resetAllForms();
+
+    speak("상환 및 결제가 완료되었습니다.");
+    alert("상환 및 결제 완료.");
+
+    pendingPayment = 0;
+
+    togglePaymentBox();
+}
+
+function showSection(id, btn) {
+
+    stopSpeak();
+
+    // 🔥 카메라 안전 종료
+    if (typeof closeCamera === "function") {
+        try { closeCamera(); } catch(e) {}
+    }
+
+    pause = false;
+
+    currentSection = id;
+    currentTab = id;
+
+    // 🔥 전체 숨김
+    document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+    document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+
+    // 🔥 핵심 안정 처리
+    const target = document.getElementById(id);
+
+    if (!target) {
+        console.log("❌ section 없음:", id);
+        return;
+    }
+
+    target.style.display = 'block';
+
+    // 🔥 입력 초기화
+    if (id !== 'dashboard' && id !== 'mypage') {
+        resetSectionFields(id);
+    }
+
+    if (btn) btn.classList.add('active');
+
+    if (id === 'mypage') loadHistory();
+
+    // 🔥 안내 시스템
+    const setupGuide = {
+        'adApplyForm': { msg: "행사 신청 화면입니다. 상호를 입력해 주세요.", focusId: "shopName" },
+        'shareForm': { msg: "공유 신청 화면입니다. 신청자명을 입력해 주세요.", focusId: "sName" },
+        'routineForm': { msg: "행사 루틴 화면입니다. 간판명을 입력해 주세요.", focusId: "rShopName" },
+        'bankForm': { msg: "지갑 설립 화면입니다. 추천인 성함을 입력해 주세요.", focusId: "referrer" },
+        'mypage': { msg: "나의 현황 화면입니다.", focusId: null }
+    };
+
+    const config = setupGuide[id];
+
+    if (config) {
+        speak(config.msg);
+
+        if (config.focusId) {
+            setTimeout(() => {
+                const el = document.getElementById(config.focusId);
+                if (el) {
+                    el.focus();
+                    el.click();
+                }
+            }, 400);
+        }
+    } else if (id === 'dashboard') {
+        speak("자산 현황 화면입니다.");
+    }
+}
+
+// 2. QR 코드를 클릭하고 들어올 때 호출되는 함수 (성함부터 안내)
+function goToBank() {
+    const bankNavBtn = document.querySelectorAll('.nav button')[4];
+
+    // 먼저 지갑설립 섹션을 엽니다.
+    showSection('bankForm', bankNavBtn);
+
+    // 추천인 자동 입력
+    document.getElementById('referrer').value = "신성일";
+
+    // [대표님 정정 요청] QR 전용 안내 멘트 (에이아이 삭제)
+    speak("지갑 설립 화면입니다. 성함을 입력하여 주세요.");
+
+    // 포커스를 추천인이 아닌 '성함'으로 강제 이동
+    setTimeout(() => {
+        const walletUser = document.getElementById('walletUser');
+        if(walletUser) {
+            walletUser.focus();
+            walletUser.click();
+        }
+    }, 450); // speak 안내가 시작된 후 자연스럽게 포커스
+}
+
+// --- [여기까지 교체 완료] ---
+    function handleBackButtonClick() {
+        const camOverlay = document.getElementById('cameraOverlay');
+        if (camOverlay.style.display === 'flex') { closeCamera(); showSection('dashboard', document.querySelectorAll('.nav button')[0]); return; }
+        if (currentSection !== 'dashboard') { showSection('dashboard', document.querySelectorAll('.nav button')[0]); }
+        else { if (window.Android && window.Android.exitApp) { window.Android.exitApp(); } }
+    }
+
+function resetAllForms() {
+
+    // 🔥 input 초기화
+    document.querySelectorAll('input').forEach(i => i.value = "");
+
+    // 🔥 textarea 초기화
+    document.querySelectorAll('textarea').forEach(t => t.value = "");
+
+    // 🔥 select 초기화
+    document.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+
+    // 🔥 체크박스 초기화
+    document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+}
+
+// 🔥🔥🔥 바로 여기 아래 추가 🔥🔥🔥
+function resetSectionFields(sectionId) {
+
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+
+    section.querySelectorAll('input').forEach(i => {
+        if (i.type === "checkbox") {
+            i.checked = false;
+        } else {
+            i.value = "";
+        }
+    });
+
+    section.querySelectorAll('select').forEach(s => {
+        s.selectedIndex = 0;
+    });
+
+    section.querySelectorAll('textarea').forEach(t => {
+        t.value = "";
+    });
+}
+
+
+
+     function saveAndFinish(type, val, msg) {
+        let h = JSON.parse(localStorage.getItem('fin_'+type)) || [];
+        h.unshift({name: val, time: new Date().toLocaleString(), rawTime: new Date().getTime()});
+        localStorage.setItem('fin_'+type, JSON.stringify(h));
+        speak(msg); alert(msg);
+        resetAllForms(); showSection('dashboard', document.querySelectorAll('.nav button')[0]);
+    }
+
+    function hiPassSpeak(msg, fieldId) { speak(msg); if(fieldId) { const t = document.getElementById(fieldId); t.focus(); t.click(); } }
+
+
+
+ function validateEvent() {
+
+    const f = [
+        {id:'shopName', n:'상호'},
+        {id:'shopType', n:'업종'},
+        {id:'shopLoc', n:'지역'},
+        {id:'shopAd', n:'문구'}
+    ];
+
+    for(let x of f) {
+
+        if(!document.getElementById(x.id).value) {
+
+            hiPassSpeak(
+                x.n + " 항목을 입력해 주세요.",
+                x.id
+            );
+
+            return;
+        }
+    }
+
+    // 🔥 통합 저장
+    saveUnifiedData({
+
+        type: "ads",
+
+        user:
+            document.getElementById('shopName').value,
+
+        amount: 0,
+
+        meta: {
+
+            shopType:
+                document.getElementById('shopType').value,
+
+            loc:
+                document.getElementById('shopLoc').value,
+
+            adText:
+                document.getElementById('shopAd').value
+        }
+    });
+
+    // 🔥 기존 베이스캠프 유지
+    saveAndFinish(
+        'ads',
+        document.getElementById('shopName').value,
+        "행사 신청이 완료되었습니다."
+    );
+}
+
+
+
+
+
+
+
+
+
+function validateShare() {
+
+    const f = [
+
+        {id:'sName', n:'신청자명'},
+        {id:'sAmount', n:'금액'},
+        {id:'sPurpose', n:'목적'}
+
+    ];
+
+    for(let x of f) {
+
+        if(!document.getElementById(x.id).value) {
+
+            hiPassSpeak(
+                x.n + " 항목을 입력해 주세요.",
+                x.id
+            );
+
+            return;
+        }
+    }
+
+    // 🔥 통합 저장
+    saveUnifiedData({
+
+        type: "shares",
+
+        user:
+            document.getElementById('sName').value,
+
+        amount:
+            Number(document.getElementById('sAmount').value),
+
+        meta: {
+
+            purpose:
+                document.getElementById('sPurpose').value
+        }
+    });
+
+    // 🔥 기존 베이스캠프 유지
+    saveAndFinish(
+        'shares',
+        document.getElementById('sName').value,
+        "공유 신청이 완료되었습니다."
+    );
+}
+
+
+
+
+
+
+
+
+
+function validateRoutine() {
+
+    const f = [
+
+        {id:'rShopName', n:'간판명'},
+        {id:'rShopPhone', n:'번호'},
+        {id:'rShopLoc', n:'지역'},
+        {id:'routineText', n:'내용'}
+
+    ];
+
+    for(let x of f) {
+
+        if(!document.getElementById(x.id).value) {
+
+            hiPassSpeak(
+                x.n + " 항목을 입력해 주세요.",
+                x.id
+            );
+
+            return;
+        }
+    }
+
+    // 🔥 통합 저장
+    saveUnifiedData({
+
+        type: "routines",
+
+        user:
+            document.getElementById('rShopName').value,
+
+        amount: 0,
+
+        meta: {
+
+phone:
+    "0" + String(document.getElementById("rShopPhone").value).trim().replace(/^0+/, ""),
+            loc:
+                document.getElementById('rShopLoc').value,
+
+            routine:
+                document.getElementById('routineText').value
+        }
+    });
+
+    // 🔥 기존 베이스캠프 유지
+    saveAndFinish(
+        'routines',
+        document.getElementById('rShopName').value,
+        "루틴 생성이 완료되었습니다."
+    );
+}
+
+function validateWallet() {
+
+    const f = [
+
+        {id:'walletUser', n:'성함'},
+        {id:'walletPhone', n:'번호'},
+        {id:'walletAddr', n:'주소'}
+
+    ];
+
+    for(let x of f) {
+
+        if(!document.getElementById(x.id).value) {
+
+            hiPassSpeak(
+                x.n + " 정보를 입력해 주세요.",
+                x.id
+            );
+
+            return;
+        }
+    }
+
+    const chk =
+        document.getElementById('agreeCheck');
+
+    if(!chk || !chk.checked) {
+
+        speak("동의 체크가 필요합니다.");
+
+        return;
+    }
+
+    // 🔥 통합 저장
+    saveUnifiedData({
+
+        type: "wallets",
+
+        user:
+            document.getElementById('walletUser').value,
+
+        amount: 0,
+
+        meta: {
+
+    phone:
+    "0" + String(document.getElementById("walletPhone").value).trim().replace(/^0+/, ""),
+            addr:
+                document.getElementById('walletAddr').value,
+
+            ref:
+                document.getElementById('referrer').value
+        }
+    });
+
+    // 🔥 약관 접기 + 상태 초기화
+    const terms =
+        document.getElementById('termsContent');
+
+    if (terms)
+        terms.style.display = 'none';
+
+    chk.checked = false;
+    chk.disabled = true;
+
+    // 🔥 기존 완료 처리
+    saveAndFinish(
+        'wallets',
+        document.getElementById('walletUser').value,
+        "AI 지갑 설립이 완료가 되었습니다."
+    );
+}
+
+
+
+
+
+
+
+
+
+
+// 🔥 통합 저장 함수 (최종 완성형)
+function saveUnifiedData(data) {
+
+    try {
+
+        // -------------------------
+        // 1️⃣ 전체 저장소
+        // -------------------------
+        let all =
+            JSON.parse(
+                localStorage.getItem("fin_all")
+            ) || [];
+
+        const item = {
+
+            id:
+                Date.now() + "_" +
+                Math.random()
+                    .toString(36)
+                    .substr(2,5),
+
+            type:
+                data.type || "unknown",
+
+            user:
+                data.user || "",
+
+            amount:
+                data.amount || 0,
+
+            meta:
+                data.meta || {},
+
+            time:
+                new Date().toLocaleString(),
+
+            rawTime:
+                Date.now()
+        };
+
+        // 🔥 최신순
+        all.unshift(item);
+
+        // 🔥 최대 10만개 제한
+        if (all.length > 100000) {
+
+            all = all.slice(0, 100000);
+        }
+
+        localStorage.setItem(
+            "fin_all",
+            JSON.stringify(all)
+        );
+
+        // -------------------------
+        // 2️⃣ 타입 인덱스
+        // -------------------------
+        let typeIndex =
+            JSON.parse(
+                localStorage.getItem("fin_index_type")
+            ) || {};
+
+        if (!typeIndex[item.type]) {
+
+            typeIndex[item.type] = [];
+        }
+
+        typeIndex[item.type].unshift(item.id);
+
+        if (typeIndex[item.type].length > 50000) {
+
+            typeIndex[item.type] =
+                typeIndex[item.type].slice(0, 50000);
+        }
+
+        localStorage.setItem(
+            "fin_index_type",
+            JSON.stringify(typeIndex)
+        );
+
+        // -------------------------
+        // 3️⃣ 사용자 인덱스
+        // -------------------------
+        let userIndex =
+            JSON.parse(
+                localStorage.getItem("fin_index_user")
+            ) || {};
+
+        if (!userIndex[item.user]) {
+
+            userIndex[item.user] = [];
+        }
+
+        userIndex[item.user].unshift(item.id);
+
+        if (userIndex[item.user].length > 50000) {
+
+            userIndex[item.user] =
+                userIndex[item.user].slice(0, 50000);
+        }
+
+        localStorage.setItem(
+            "fin_index_user",
+            JSON.stringify(userIndex)
+        );
+
+        console.log("🔥 통합 저장 완료:", item);
+
+    } catch (e) {
+
+        console.log("❌ 통합 저장 오류", e);
+    }
+}
+
+function loadHistory() {
+
+    const mapping = {
+
+        ads: "list_ads",
+        shares: "list_shares",
+        routines: "list_routines",
+        wallets: "list_wallets"
+    };
+
+    for (let type in mapping) {
+
+        const list =
+            getUnifiedDataByType(type);
+
+        const target =
+            document.getElementById(mapping[type]);
+
+        if (!target) continue;
+
+        // 🔥 최신순 정렬
+        list.sort((a, b) =>
+            b.rawTime - a.rawTime
+        );
+
+        target.innerHTML = list.map((item, index) => {
+
+            let detail = "";
+
+            // =========================
+            // 행사
+            // =========================
+            if (type === "ads") {
+
+                detail = `
+                    <div>업종: ${item.meta.shopType || "-"}</div>
+                    <div>지역: ${item.meta.loc || "-"}</div>
+                    <div>문구: ${item.meta.adText || "-"}</div>
+                `;
+            }
+
+            // =========================
+            // 공유
+            // =========================
+            else if (type === "shares") {
+
+                detail = `
+                    <div>금액: ${(item.amount || 0).toLocaleString()}원</div>
+                    <div>목적: ${item.meta.purpose || "-"}</div>
+                `;
+            }
+
+            // =========================
+            // 루틴
+            // =========================
+            else if (type === "routines") {
+
+                detail = `
+                    <div>번호: ${item.meta.phone || "-"}</div>
+                    <div>지역: ${item.meta.loc || "-"}</div>
+                    <div>내용: ${item.meta.routine || "-"}</div>
+                `;
+            }
+
+            // =========================
+            // 지갑
+            // =========================
+            else if (type === "wallets") {
+
+                detail = `
+                    <div>번호: ${item.meta.phone || "-"}</div>
+                    <div>주소: ${item.meta.addr || "-"}</div>
+                    <div>추천인: ${item.meta.ref || "-"}</div>
+                `;
+            }
+
+            return `
+
+                <div style="
+                    border-bottom:1px solid #333;
+                    padding:8px 0;
+                    line-height:1.5;
+                ">
+
+                    <div style="
+                        color:gold;
+                        font-weight:bold;
+                        margin-bottom:4px;
+                    ">
+                        ${list.length - index}. ${item.user}
+                    </div>
+
+                    ${detail}
+
+                    <div style="
+                        color:#888;
+                        font-size:0.72em;
+                        margin-top:4px;
+                    ">
+                        ${item.time}
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join('') || "내역 없음";
+    }
+}
+
+    const aiProducts = [
+    "대출이자수익",
+    "채권",
+    "국내 주식",
+    "해외 주식",
+    "선물 옵션",
+    "해외 선물",
+    "FX 마진",
+    "원유선물",
+    "옥수수",
+    "조",
+    "콩",
+    "살코기돼지",
+    "사료용소고기",
+    "생소고기",
+    "부동산",
+    "금",
+    "은",
+    "동",
+    "니켈",
+    "코인",
+    "외환거래"
+];
+
+// 🔥 분석 텍스트 강제 업데이트 (최하단에 넣기)
+let aiIndex2 = 0;
+
+setInterval(function () {
+
+    const el = document.getElementById("assetName");
+    if (!el) return;
+
+    // 🔥 AI 재테크 화면에서는 멈춤
+    if (currentSection === 'aiFinanceForm') return;
+
+    const list = [
+        "대출이자수익",
+        "채권",
+        "국내 주식",
+        "해외 주식",
+        "선물 옵션",
+        "해외 선물",
+        "FX 마진",
+        "원유선물",
+        "옥수수",
+        "조",
+        "콩",
+        "돼지고기",
+        "소고기",
+        "부동산",
+        "금",
+        "은",
+        "동",
+        "니켈",
+        "코인",
+        "외환거래"
+    ];
+
+    el.innerText = "📡 " + list[aiIndex2] + " 분석 중...";
+
+    aiIndex2++;
+    if (aiIndex2 >= list.length) aiIndex2 = 0;
+
+}, 2000);
+
+    /* [수정] 카메라 촬영 성공 후 데이터 처리 로직 고도화 */
+    async function openRealCamera() {
+        const overlay = document.getElementById('cameraOverlay');
+        const video = document.getElementById('videoStream');
+        speak("카메라를 켭니다."); overlay.style.display = 'flex';
+        try {
+            if (streamObj) { streamObj.getTracks().forEach(t => t.stop()); }
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+            streamObj = stream; video.srcObject = stream;
+            setTimeout(() => { if(document.getElementById('btnCaptureStatus')) document.getElementById('btnCaptureStatus').style.display = "block"; }, 3000);
+        } catch (err) { alert("카메라 권한 확인"); closeCamera(); }
+    }
+
+    function takePhoto() {
+        speak("분석 중입니다.");
+        if (window.Android && window.Android.processRealOCR) { window.Android.processRealOCR(); }
+        else { setTimeout(() => receiveOCRData("샘플 매장", "010-0000-0000", ""), 1500); }
+    }
+
+    /* [대표님 요청 핵심] 루틴 창으로 갈 때 모든 입력을 비우고 커서만 활성화 */
+    function receiveOCRData(shopName, phone, rawData) {
+        closeCamera();
+        showSection('routineForm', document.querySelectorAll('.nav button')[3]);
+
+        // 자동 입력된 문자를 모두 지우고placeholder만 보이게 함
+        const shopInput = document.getElementById('rShopName');
+        const phoneInput = document.getElementById('rShopPhone');
+
+        shopInput.value = shopName
+        phoneInput.value = String(phone).trim();
+
+document.getElementById("ocrConfirmBox").style.display = "block";
+
+speak("촬영 결과가 입력되었습니다. 내용이 맞으면 확인 버튼을 누르고, 틀리면 다시 촬영을 눌러 주세요.");
+
+
+        // "간판명을 입력해 주세요" 음성 안내
+        // speak("간판명을 입력해 주세요.");
+
+        // 즉시 커서 깜빡임(Focus)
+        setTimeout(() => {
+            shopInput.focus();
+            shopInput.click();
+        }, 300);
+    }
+
+    function closeCamera() { document.getElementById('cameraOverlay').style.display = 'none'; if(document.getElementById('btnCaptureStatus')) document.getElementById('btnCaptureStatus').style.display = "none"; if (streamObj) { streamObj.getTracks().forEach(t => t.stop()); streamObj = null; } }
+
+    var loanPercent = 100.0, advertiser = 50000, consumer = 20000, userCount = 10000, isDividendPhase = false, aiProfitRate = 0.00;
+    setInterval(function(){
+        reserveValue += reserveStep; if(reserveValue <= 95.0) { reserveValue = 95.0; reserveStep = 0.04; } if(reserveValue >= 100.0) { reserveValue = 100.0; reserveStep = -0.04; }
+        document.getElementById("reserveValue").innerText = reserveValue.toFixed(2) + "%";
+        if(!pause) {
+            aiProfitRate += (Math.random() * 0.02); document.getElementById("aiRate").innerText = "+" + aiProfitRate.toFixed(2) + "%";
+if (!isDividendPhase) {
+    loanPercent -= 0.5;
+
+    if (loanPercent <= 0) {
+        loanPercent = 0;
+        isDividendPhase = true;
+
+
+
+        setTimeout(function () {
+            isDividendPhase = false;
+            loanPercent = 100.0;
+        }, 15000);
+    }
+}
+
+else { advertiser += (120 + aiProfitRate); consumer += (80 + aiProfitRate); }
+            document.getElementById("loanPercent").innerText = loanPercent.toFixed(1) + "%";
+            userCount += 1; document.getElementById("realtimeUserCount").innerText = userCount.toLocaleString();
+            document.getElementById("advValue").innerText = Math.floor(advertiser).toLocaleString() + "원";
+            document.getElementById("consValue").innerText = Math.floor(consumer).toLocaleString() + "원";
+            document.getElementById("totalValue").innerText = Math.floor(advertiser + consumer).toLocaleString() + "원";
+        }
+    }, 100);
+
+function clickGlobal() {
+
+    stopSpeak();
+
+    currentTab = "global";
+
+    speak("국내외 주문 기능입니다. 현재 이 기능은 준비 중입니다.");
+    alert("국내외 주문 기능입니다. 현재 이 기능은 준비 중입니다");
+}
+
+    var canvas = document.getElementById('stars'), ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    var stars = [];
+    for(var i=0; i<155; i++) stars.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.2, v:Math.random()*0.3, c: ["rgba(255, 120, 120, 0.4)", "rgba(255, 220, 100, 0.4)", "rgba(120, 255, 120, 0.4)", "rgba(120, 150, 255, 0.4)", "rgba(220, 120, 255, 0.4)"][Math.floor(Math.random()*5)]});
+    function draw() { ctx.fillStyle = "rgba(0, 0, 0, 0.2)"; ctx.fillRect(0, 0, canvas.width, canvas.height); stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fillStyle = s.c; ctx.fill(); s.y += s.v; if(s.y > canvas.height) { s.y = -10; s.x = Math.random()*canvas.width; } }); requestAnimationFrame(draw); }
+    draw();
+
+    function openSignCamera() {
+
+    speak("간판 사진 촬영 기능입니다. 간판명과 전화번호가 잘 보이도록 촬영해 주세요.");
+
+    if (window.Android && window.Android.openCamera) {
+        window.Android.openCamera();
+    }
+}
+
+function handlePlaceSearch(text) {
+
+    // 🔥 국내외 주문 탭이 아니면 막기
+    if (currentTab !== "global") {
+        speak("국내외 주문 화면에서만 검색할 수 있습니다.");
+        return;
+    }
+
+    let query = text
+        .replace(/찾아줘/g, "")
+        .replace(/검색/g, "")
+        .replace(/주변/g, "")
+        .replace(/근처/g, "")
+        .trim();
+
+    if (query.length < 2) {
+        speak("검색어를 다시 말씀해 주세요.");
+        return;
+    }
+
+    speak(query + " 검색합니다.");
+
+    if (window.Android && window.Android.openMap) {
+        window.Android.openMap(query);
+    }
+}
+
+
+function clickAI() {
+
+    // 🔥 화면 이동 제거 (핵심)
+    speak("AI 재테크 기능입니다. 현재 이 기능은 준비 중입니다.");
+    alert("AI 재테크 기능입니다. 현재 이 기능은 준비 중입니다.");
+
+}
+
+
+    // 🔥 기존 코드들 (건드리지 마세요)
+
+    function handleProductSelect() {
+        const val = document.getElementById("aiProduct").value;
+        if (val) {
+            speak(val + " 선택되었습니다");
+        }
+    }
+
+
+function confirmOCRResult() {
+    const box = document.getElementById("ocrConfirmBox");
+    if (box) box.style.display = "none";
+
+    const locInput = document.getElementById("rShopLoc");
+
+    if (locInput && !locInput.value.trim()) {
+        speak("지역을 입력해 주세요.");
+        locInput.focus();
+        locInput.click();
+        return;
+    }
+
+    speak("확인되었습니다. 내용이 맞으면 루틴 생성을 눌러 주세요.");
+}
+
+function retryOCRCamera() {
+    const box = document.getElementById("ocrConfirmBox");
+    if (box) box.style.display = "none";
+
+    speak("다시 촬영합니다. 간판명과 전화번호가 잘 보이도록 촬영해 주세요.");
+
+    if (window.Android && window.Android.openCamera) {
+        window.Android.openCamera();
+    }
+}
+
+
+    function showQrGuide() {
+
+    const msg = "다른 기기로 QR을 스캔해 주세요";
+
+    speak(msg);
+
+    const el = document.getElementById("qrMsg");
+
+    if (el) {
+        el.innerText = msg;
+
+        setTimeout(function () {
+            el.innerText = "";
+        }, 3000);
+    }
+}
+
+function submitAIFinanceSafe() {
+
+    speak("AI 재테크 기능은 현재 준비 중입니다.");
+    alert("AI 재테크 기능은 현재 준비 중입니다.");
+
+    return;
+}
+
+    document.getElementById("termsContent").addEventListener("scroll", function() {
+
+    var el = this;
+    var chk = document.getElementById("agreeCheck");
+
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight) {
+        chk.disabled = false;
+    }
+});
+
+
+// 🔥 지갑 현황 표시 (완전체)
+function renderWalletStatus() {
+
+    const container = document.getElementById("walletStatus");
+    if (!container) return;
+
+    const list = JSON.parse(localStorage.getItem("walletList") || "[]");
+
+    // 🔥 최신 데이터가 위로 오게
+    const reversed = list.slice().reverse();
+
+    container.innerHTML = "";
+
+    reversed.forEach(item => {
+
+        const div = document.createElement("div");
+
+        // 🔥 카드 스타일
+        div.style.border = "1px solid #444";
+        div.style.margin = "10px";
+        div.style.padding = "12px";
+        div.style.borderRadius = "10px";
+        div.style.background = "#111";
+        div.style.color = "#fff";
+        div.style.boxShadow = "0 0 6px rgba(0,255,0,0.3)";
+
+        div.innerHTML = `
+            <div style="border:1px solid #444; margin:10px; padding:10px;">
+                <div>👤 ${item.name || "-"}</div>
+                <div>📞 ${item.phone || "-"}</div>
+                <div>📍 ${item.address || "-"}</div>
+                <div>👥 추천인: ${item.ref || "-"}</div>
+                <div>⏰ ${item.time || "-"}</div>
+            </div>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+
+// 🔥 페이지 로드시 자동 실행
+window.addEventListener("load", function () {
+    renderWalletStatus();
+});
+
+
+
+// 🔥 구글 시트 전송 (안전 버전 - 베이스캠프 절대 보호)
+function sendShareToGoogle() {
+
+    try {
+
+        const data = {
+
+            type: "shares",
+
+            name:
+                document.getElementById("sName").value,
+
+            amount:
+                document.getElementById("sAmount").value,
+
+            purpose:
+                document.getElementById("sPurpose").value,
+
+            time:
+                new Date().toLocaleString()
+        };
+
+        fetch(
+            "https://script.google.com/macros/s/AKfycbyKNBIIiLMMXbP4eqBNFhd3R_nkc_Rni4wpY-hF5Dbi2Zl540hbtAmqh3nj9c6JVlq2/exec",
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(data)
+            }
+        );
+
+        console.log("공유 전송", data);
+
+    } catch(e) {
+
+        console.log(e);
+    }
+}
+
+function sendRoutineToGoogle() {
+
+    try {
+
+        const data = {
+
+            type: "routines",
+
+            name:
+                document.getElementById("rShopName").value,
+
+            phone:
+                String(document.getElementById("rShopPhone").value).trim(),
+
+            loc:
+                document.getElementById("rShopLoc").value,
+
+            text:
+                document.getElementById("routineText").value,
+
+            time:
+                new Date().toLocaleString()
+        };
+
+        fetch(
+            "https://script.google.com/macros/s/AKfycbyKNBIIiLMMXbP4eqBNFhd3R_nkc_Rni4wpY-hF5Dbi2Zl540hbtAmqh3nj9c6JVlq2/exec",
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(data)
+            }
+        );
+
+        console.log("루틴 전송", data);
+
+    } catch(e) {
+
+        console.log(e);
+    }
+}
+
+function sendWalletToGoogle() {
+
+    try {
+
+        const data = {
+
+            type: "wallets",
+
+            name:
+                document.getElementById("walletUser").value,
+
+            phone:
+    String(document.getElementById("walletPhone").value).trim(),
+
+            address:
+                document.getElementById("walletAddr").value,
+
+            ref:
+                document.getElementById("referrer").value,
+
+            time:
+                new Date().toLocaleString()
+        };
+
+        fetch(
+            "https://script.google.com/macros/s/AKfycbyKNBIIiLMMXbP4eqBNFhd3R_nkc_Rni4wpY-hF5Dbi2Zl540hbtAmqh3nj9c6JVlq2/exec",
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(data)
+            }
+        );
+
+        console.log("지갑 전송", data);
+
+    } catch(e) {
+
+        console.log(e);
+    }
+}
+
+function sendEventToGoogle() {
+
+    try {
+
+        const data = {
+
+            type: "ads",
+
+            name:
+                document.getElementById("shopName").value,
+
+            shopType:
+                document.getElementById("shopType").value,
+
+            loc:
+                document.getElementById("shopLoc").value,
+
+     adText:
+    document.getElementById("shopAd").value,
+
+msg:
+    document.getElementById("shopAd").value,
+            time:
+                new Date().toLocaleString()
+        };
+
+        fetch(
+            "https://script.google.com/macros/s/AKfycbyKNBIIiLMMXbP4eqBNFhd3R_nkc_Rni4wpY-hF5Dbi2Zl540hbtAmqh3nj9c6JVlq2/exec",
+            {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(data)
+            }
+        );
+
+        console.log("행사 전송", data);
+
+    } catch(e) {
+
+        console.log(e);
+    }
+}
+
+// 🔥 통합 저장 (성능 최적화 버전)
+function saveUnifiedData(data) {
+
+    try {
+
+        // -------------------------
+        // 1️⃣ 전체 저장소
+        // -------------------------
+        let all = JSON.parse(localStorage.getItem("fin_all")) || [];
+
+        const item = {
+            id: Date.now() + "_" + Math.random().toString(36).substr(2,5),
+            type: data.type || "unknown",
+            user: data.user || "",
+            amount: data.amount || 0,
+            meta: data.meta || {},
+            time: new Date().toLocaleString(),
+            rawTime: Date.now()
+        };
+
+        all.unshift(item);
+
+        // 🔥 10만개 제한 (핵심)
+        if (all.length > 100000) {
+            all = all.slice(0, 100000);
+        }
+
+        localStorage.setItem("fin_all", JSON.stringify(all));
+
+        // -------------------------
+        // 2️⃣ 타입 인덱스
+        // -------------------------
+        let typeIndex = JSON.parse(localStorage.getItem("fin_index_type")) || {};
+
+        if (!typeIndex[item.type]) {
+            typeIndex[item.type] = [];
+        }
+
+        typeIndex[item.type].unshift(item.id);
+
+        if (typeIndex[item.type].length > 50000) {
+            typeIndex[item.type] = typeIndex[item.type].slice(0, 50000);
+        }
+
+        localStorage.setItem("fin_index_type", JSON.stringify(typeIndex));
+
+        // -------------------------
+        // 3️⃣ 사용자 인덱스
+        // -------------------------
+        let userIndex = JSON.parse(localStorage.getItem("fin_index_user")) || {};
+
+        if (!userIndex[item.user]) {
+            userIndex[item.user] = [];
+        }
+
+        userIndex[item.user].unshift(item.id);
+
+        if (userIndex[item.user].length > 50000) {
+            userIndex[item.user] = userIndex[item.user].slice(0, 50000);
+        }
+
+        localStorage.setItem("fin_index_user", JSON.stringify(userIndex));
+
+    } catch (e) {
+        console.log("통합 저장 오류", e);
+    }
+}
+
+    // 🔥 전체 데이터 가져오기
+function getAllUnifiedData() {
+
+    return JSON.parse(
+        localStorage.getItem("fin_all")
+    ) || [];
+}
+
+// 🔥 타입별 분기
+function getUnifiedDataByType(type) {
+
+    const all = getAllUnifiedData();
+
+    return all.filter(item =>
+        item.type === type
+    );
+}
+
+// 🔥 사용자별 분기
+function getUnifiedDataByUser(user) {
+
+    const all = getAllUnifiedData();
+
+    return all.filter(item =>
+        item.user === user
+    );
+}
+
+</script>
+
+<script src="js/ai_finance.js"></script>  <!-- 🔥 여기 넣기 -->
+<script src="js/google_sync.js"></script>
 
 </body>
 </html>
