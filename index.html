@@ -319,6 +319,12 @@
 
         </div>
         <button class="submitBtn" onclick="sendWalletToGoogle(); validateWallet();">AI 지갑 설립 완료</button>
+
+        <button onclick="testWebVoice()"
+                style="background:#00ffcc; color:#000; border:none; border-radius:8px; padding:8px; font-size:12px; font-weight:bold; width:100%; margin-top:6px;">
+            음성 테스트
+        </button>
+
     </div>
 </section>
 
@@ -410,6 +416,11 @@
 
 <script>
 
+    function testWebVoice() {
+    isVoiceEnabled = true;
+    speak("핀세계 음성 테스트입니다.");
+}
+
 
     var currentSection = "dashboard", isVoiceEnabled = true, streamObj = null, pause = false;
     // 🔥 👉 이 줄 추가 (여기 위치가 정확함)
@@ -417,17 +428,54 @@ var currentTab = "dashboard";
     var reserveValue = 100.0, reserveStep = -0.04;
 
 function speak(text) {
-    if (isVoiceEnabled && window.Android && window.Android.speak) {
-        if (window.Android.stopSpeak) {
-            window.Android.stopSpeak();
+
+    if (!isVoiceEnabled) return;
+
+    try {
+
+        // 1️⃣ 안드로이드 앱 WebView 음성
+        if (window.Android && window.Android.speak) {
+
+            if (window.Android.stopSpeak) {
+                window.Android.stopSpeak();
+            }
+
+            window.Android.speak(text);
+            return;
         }
-        window.Android.speak(text);
+
+        // 2️⃣ 아이폰/크롬/사파리 웹 음성
+        if ("speechSynthesis" in window) {
+
+            window.speechSynthesis.cancel();
+
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = "ko-KR";
+            utter.rate = 1.0;
+            utter.pitch = 1.0;
+
+            window.speechSynthesis.speak(utter);
+        }
+
+    } catch(e) {
+        console.log("음성 오류:", e);
     }
 }
 
 function stopSpeak() {
-    if (window.Android && window.Android.stopSpeak) {
-        window.Android.stopSpeak();
+
+    try {
+
+        if (window.Android && window.Android.stopSpeak) {
+            window.Android.stopSpeak();
+        }
+
+        if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+        }
+
+    } catch(e) {
+        console.log("음성 중지 오류:", e);
     }
 }
 
@@ -1333,13 +1381,105 @@ function loadHistory() {
                         ${item.time}
                     </div>
 
+                    <button onclick="openHistoryEdit('${item.id}', '${type}')"
+        style="width:100%; padding:6px; margin-top:5px; background:#00ffcc; color:#000; border:none; border-radius:6px; font-weight:bold;">
+    수정
+</button>
                 </div>
-
             `;
 
         }).join('') || "내역 없음";
     }
 }
+
+function openHistoryEdit(id, type) {
+
+    const all = JSON.parse(localStorage.getItem("fin_all")) || [];
+    const item = all.find(x => x.id === id);
+
+    if (!item) {
+        alert("수정할 데이터를 찾지 못했습니다.");
+        return;
+    }
+
+    let newUser = prompt("이름/상호를 수정하세요.", item.user || "");
+    if (newUser === null) return;
+
+    item.user = newUser;
+
+    if (type === "ads") {
+
+        let newShopType = prompt("업종을 수정하세요.", item.meta.shopType || "");
+        if (newShopType === null) return;
+
+        let newLoc = prompt("지역을 수정하세요.", item.meta.loc || "");
+        if (newLoc === null) return;
+
+        let newAdText = prompt("행사 문구를 수정하세요.", item.meta.adText || "");
+        if (newAdText === null) return;
+
+        item.meta.shopType = newShopType;
+        item.meta.loc = newLoc;
+        item.meta.adText = newAdText;
+    }
+
+    else if (type === "shares") {
+
+        let newAmount = prompt("금액을 수정하세요.", item.amount || "");
+        if (newAmount === null) return;
+
+        let newPurpose = prompt("공유 목적을 수정하세요.", item.meta.purpose || "");
+        if (newPurpose === null) return;
+
+        item.amount = Number(newAmount) || 0;
+        item.meta.purpose = newPurpose;
+    }
+
+    else if (type === "routines") {
+
+        let newPhone = prompt("전화번호를 수정하세요.", item.meta.phone || "");
+        if (newPhone === null) return;
+
+        let newLoc = prompt("지역을 수정하세요.", item.meta.loc || "");
+        if (newLoc === null) return;
+
+        let newRoutine = prompt("루틴 내용을 수정하세요.", item.meta.routine || "");
+        if (newRoutine === null) return;
+
+        item.meta.phone = newPhone;
+        item.meta.loc = newLoc;
+        item.meta.routine = newRoutine;
+    }
+
+    else if (type === "wallets") {
+
+        let newPhone = prompt("전화번호를 수정하세요.", item.meta.phone || "");
+        if (newPhone === null) return;
+
+        let newAddr = prompt("주소를 수정하세요.", item.meta.addr || "");
+        if (newAddr === null) return;
+
+        let newRef = prompt("추천인을 수정하세요.", item.meta.ref || "");
+        if (newRef === null) return;
+
+        item.meta.phone = newPhone;
+        item.meta.addr = newAddr;
+        item.meta.ref = newRef;
+    }
+
+    item.editedTime = new Date().toLocaleString();
+
+    localStorage.setItem(
+        "fin_all",
+        JSON.stringify(all)
+    );
+
+    speak("수정 저장이 완료되었습니다.");
+    alert("수정 저장 완료");
+
+    loadHistory();
+}
+
 
     const aiProducts = [
     "대출이자수익",
