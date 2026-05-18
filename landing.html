@@ -2,113 +2,136 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>핀세계</title>
+<title>핀세계 시작하기</title>
 
 <link rel="manifest" href="manifest.json">
-
 <meta name="theme-color" content="#00ff88">
 
-<!-- iPhone PWA -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="핀세계">
-
 <link rel="apple-touch-icon" href="icon-192.png">
 
 <style>
-
-body{
+body {
     margin:0;
-    background:#0d0d0d;
+    background:#000;
     color:white;
-    font-family:Arial,sans-serif;
+    font-family:Arial, sans-serif;
     text-align:center;
 }
 
-.container{
-    padding:30px;
+.box {
+    padding:40px 20px;
 }
 
-.logo{
-    font-size:34px;
+h1 {
     color:#00ff88;
+    font-size:34px;
+}
+
+.ref {
+    color:#00ffcc;
     font-weight:bold;
-    margin-top:40px;
+    margin:15px 0;
 }
 
-.sub{
-    margin-top:10px;
-    color:#ccc;
-}
-
-.btn{
+.start-btn {
     display:block;
-    width:85%;
-    max-width:320px;
-    margin:25px auto;
+    width:86%;
+    max-width:340px;
+    margin:30px auto;
     padding:18px;
-    border-radius:14px;
     background:#00ff88;
-    color:black;
-    text-decoration:none;
+    color:#000;
     font-weight:bold;
-    font-size:18px;
+    font-size:20px;
+    border-radius:14px;
+    text-decoration:none;
 }
 
-.small{
+.guide {
+    display:none;
     margin-top:25px;
-    color:#888;
-    font-size:14px;
+    padding:18px;
+    border:1px solid #00ffcc;
+    border-radius:12px;
+    color:#00ffcc;
+    line-height:1.6;
 }
-
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="box">
 
-<div class="logo">핀세계</div>
+    <h1>핀세계</h1>
 
-<div class="sub">
-공유경제 금융 플랫폼
-</div>
+    <div class="ref">
+        추천인: <span id="refName">신성일</span>
+    </div>
 
-<a class="btn"
-href="https://m.onestore.co.kr/mobilepoc/apps/appsDetail.omp?prodId=OA01004603">
-👉 앱 설치 / 실행
-</a>
+    <a id="startBtn" class="start-btn" href="#">
+        핀세계 시작하기
+    </a>
 
-<div class="small">
-잠시 후 자동 연결됩니다
-</div>
+    <div id="iosGuide" class="guide">
+        아이폰에서는 아래 순서로 홈 화면에 추가해 주세요.<br><br>
+        사파리 하단 공유 버튼(⬆️)<br>
+        → 홈 화면에 추가<br>
+        → 추가
+    </div>
 
 </div>
 
 <script>
-
-// ======================================================
-// 🔥 서비스워커 등록
-// ======================================================
-
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js');
 }
 
-/// ======================================================
-// 🔥 서비스워커 등록
-// ======================================================
+(function () {
 
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-}
+    const params = new URLSearchParams(location.search);
 
-location.replace("https://m.onestore.co.kr/v2/ko-kr/app/0001004603");
+    const ref =
+        params.get("ref") ||
+        "신성일";
 
+    localStorage.setItem("finsegye_referrer", ref);
 
+    document.getElementById("refName").innerText = ref;
+
+    const startBtn = document.getElementById("startBtn");
+    const iosGuide = document.getElementById("iosGuide");
+
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isAndroid = /Android/i.test(navigator.userAgent);
+
+    if (isIOS) {
+
+        iosGuide.style.display = "block";
+
+        startBtn.onclick = function () {
+            iosGuide.style.display = "block";
+            return false;
+        };
+
+    } else if (isAndroid) {
+
+        startBtn.href =
+            "https://m.onestore.co.kr/v2/ko-kr/app/0001004603";
+
+    } else {
+
+        startBtn.href =
+            "https://finsegye.github.io/finsegyeAI/landing.html?ref=" +
+            encodeURIComponent(ref);
+    }
+
+})();
 </script>
 
 </body>
