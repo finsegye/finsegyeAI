@@ -503,11 +503,40 @@
     var reserveValue = 100.0, reserveStep = -0.04;
 
 function speak(text) {
-    if (isVoiceEnabled && window.Android && window.Android.speak) {
-        if (window.Android.stopSpeak) {
-            window.Android.stopSpeak();
+
+    if (!isVoiceEnabled) return;
+
+    try {
+
+        // 🔥 안드로이드 앱(WebView)
+        if (window.Android && window.Android.speak) {
+
+            if (window.Android.stopSpeak) {
+                window.Android.stopSpeak();
+            }
+
+            window.Android.speak(text);
+
         }
-        window.Android.speak(text);
+
+        // 🔥 GitHub / 일반 브라우저
+        else if ('speechSynthesis' in window) {
+
+            window.speechSynthesis.cancel();
+
+            const utter =
+                new SpeechSynthesisUtterance(text);
+
+            utter.lang = 'ko-KR';
+            utter.rate = 1.0;
+            utter.pitch = 1.0;
+
+            window.speechSynthesis.speak(utter);
+        }
+
+    } catch(e) {
+
+        console.log("음성 오류:", e);
     }
 }
 
