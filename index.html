@@ -491,6 +491,26 @@
 
 <script>
 
+
+
+    document.addEventListener("click", function () {
+
+    try {
+
+        if ('speechSynthesis' in window) {
+
+            const unlock =
+                new SpeechSynthesisUtterance("");
+
+            window.speechSynthesis.speak(unlock);
+        }
+
+    } catch(e) {
+        console.log(e);
+    }
+
+}, { once:true });
+
     var currentSection = "dashboard", isVoiceEnabled = true, streamObj = null, pause = false;
 
     // 🔥 현재 탭
