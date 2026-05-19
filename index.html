@@ -470,13 +470,13 @@ function stopSpeak() {
 
     try {
 
+        // 🔥 Android TTS만 중지
         if (window.Android && window.Android.stopSpeak) {
             window.Android.stopSpeak();
         }
 
-        if ("speechSynthesis" in window) {
-            window.speechSynthesis.cancel();
-        }
+        // 🔥 브라우저 cancel 제거
+        // window.speechSynthesis.cancel();
 
     } catch(e) {
         console.log("음성 중지 오류:", e);
