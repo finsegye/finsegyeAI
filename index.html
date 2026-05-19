@@ -145,21 +145,25 @@
         <button onclick="toggleQR()" class="qr-btn">🤝 QR 참여</button>
         <button onclick="toggleRealtimeList()" class="live-btn">실시간 <span id="realtimeUserCount">10,000</span>명</button>
     </div>
-    <div id="qrWrap">
+   <div id="qrWrap">
 
-        <div id="qrBox" onclick="showQrGuide()">
-           <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Ffinsegye.github.io%2FfinsegyeAI%2Findex.html"
-style="width:100%;">
+    <div id="qrBox" onclick="showQrGuide()">
 
-        <div style="color:gold; font-weight:bold; text-align:center; margin-top:5px; font-size:0.85em;">
-            추천인: 신성일
-        </div>
-
-        <!-- 🔥 추가 -->
-        <div id="qrMsg" style="color:#00ffcc; text-align:center; margin-top:6px; font-size:0.8em;"></div>
+       <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Ffinsegye.github.io%2FfinsegyeAI%2Findex.html"
+       style="width:100%;">
 
     </div>
-    <div id="realtimeList"></div>
+
+    <div style="color:gold; font-weight:bold; text-align:center; margin-top:5px; font-size:0.85em;">
+        추천인: 신성일
+    </div>
+
+    <!-- 🔥 추가 -->
+    <div id="qrMsg" style="color:#00ffcc; text-align:center; margin-top:6px; font-size:0.8em;"></div>
+
+</div>
+
+<div id="realtimeList"></div>
     <div onclick="togglePaymentBox()" style="background:rgba(255,215,0,0.1); border:1.5px solid gold; border-radius:10px; padding:8px; margin: 6px auto; width:92%; cursor:pointer; color:gold; display:flex; justify-content:space-between; font-size:0.82em;"><span>💳 실시간 대출 상환 및 결제</span><span id="toggleArrow">▼</span></div>
     <div id="paymentContent" style="display:none; padding:10px; margin:-10px auto 8px; width:92%; background:rgba(20,20,20,0.95); border:1.5px solid gold; border-top:none; border-radius: 0 0 12px 12px;"><input type="number" id="payAmount" placeholder="금액 입력"><button id="payBtn" onclick="executePayment()" class="submitBtn">상환 및 결제</button></div>
     <div style="display:flex; gap:5px; width:96%; margin:8px auto; height:55px;"><button onclick="clickAI()" style="flex:1; background:rgba(255, 255, 255, 0.05); border-radius:10px; color:white; border:1.5px solid #00ffcc; font-size:0.8em;">📈 AI 재테크</button><button onclick="clickGlobal()" style="flex:1; background:rgba(255, 255, 255, 0.05); border-radius:10px; color:white; border:1.5px solid #ff00ff; font-size:0.8em;">🌐 국내외 주문</button><div onclick="startVoiceCommand()" style="flex:1; background:rgba(255, 215, 0, 0.05); border-radius:10px; color:white; border:1.5px solid gold; display:flex; flex-direction:column; justify-content:center; align-items:center; font-size:0.8em; cursor:pointer;">🎙️<span style="font-size: 0.72em; color: gold;">음성 주문</span></div></div>
