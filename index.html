@@ -1800,12 +1800,20 @@ function clickGlobal() {
     function draw() { ctx.fillStyle = "rgba(0, 0, 0, 0.2)"; ctx.fillRect(0, 0, canvas.width, canvas.height); stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fillStyle = s.c; ctx.fill(); s.y += s.v; if(s.y > canvas.height) { s.y = -10; s.x = Math.random()*canvas.width; } }); requestAnimationFrame(draw); }
     draw();
 
-    function openSignCamera() {
+function openSignCamera() {
 
     speak("간판 사진 촬영 기능입니다. 간판명과 전화번호가 잘 보이도록 촬영해 주세요.");
 
+    // 🔥 Android 앱
     if (window.Android && window.Android.openCamera) {
+
         window.Android.openCamera();
+    }
+
+    // 🔥 GitHub 웹브라우저
+    else {
+
+        openRealCamera();
     }
 }
 
