@@ -540,19 +540,17 @@ function speak(text) {
         }
 
         // 🔥 GitHub / 일반 브라우저
-        else if ('speechSynthesis' in window) {
+else if ('speechSynthesis' in window) {
 
-            window.speechSynthesis.cancel();
+    const utter =
+        new SpeechSynthesisUtterance(text);
 
-            const utter =
-                new SpeechSynthesisUtterance(text);
+    utter.lang = 'ko-KR';
+    utter.rate = 1.0;
+    utter.pitch = 1.0;
 
-            utter.lang = 'ko-KR';
-            utter.rate = 1.0;
-            utter.pitch = 1.0;
-
-            window.speechSynthesis.speak(utter);
-        }
+    window.speechSynthesis.speak(utter);
+}
 
     } catch(e) {
 
