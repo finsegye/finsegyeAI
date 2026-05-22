@@ -102,7 +102,14 @@ iPhone은 Safari에서 실행 후<br>
 function openAndroid() {
 
     location.href =
-    "https://m.onestore.co.kr/mobilepoc/apps/appsDetail.omp?prodId=OA01004603";
+    "onestore://common/product/0001004603";
+
+    setTimeout(function(){
+
+        location.href =
+        "https://m.onestore.co.kr/v2/ko-kr/app/0001004603";
+
+    }, 1500);
 }
 
 function openIOS() {
