@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -5,7 +6,7 @@
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>핀세계 연결중...</title>
+<title>핀세계 연결</title>
 
 <style>
 
@@ -13,27 +14,57 @@ body{
     margin:0;
     background:#000;
     color:white;
+    font-family:Arial;
     display:flex;
     justify-content:center;
     align-items:center;
     height:100vh;
-    font-family:Arial;
     text-align:center;
     padding:20px;
 }
 
 .box{
-    max-width:400px;
+    width:100%;
+    max-width:420px;
 }
 
 h1{
     color:#00ffcc;
-    font-size:1.5em;
+    margin-bottom:15px;
 }
 
 p{
-    line-height:1.6;
     color:#ddd;
+    line-height:1.6;
+    margin-bottom:30px;
+}
+
+.btn{
+    display:block;
+    width:100%;
+    padding:18px;
+    margin-bottom:15px;
+    border:none;
+    border-radius:12px;
+    font-size:1.05em;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.android{
+    background:#00ff88;
+    color:black;
+}
+
+.iphone{
+    background:#007aff;
+    color:white;
+}
+
+.small{
+    margin-top:20px;
+    color:#999;
+    font-size:0.9em;
 }
 
 </style>
@@ -43,60 +74,45 @@ p{
 
 <div class="box">
 
-<h1>핀세계 연결중...</h1>
+<h1>핀세계</h1>
 
 <p>
-기기에 맞는 서비스로 자동 연결하고 있습니다.
+사용 중인 기기에 맞는 방식으로 실행해 주세요.
 </p>
+
+<button class="btn android"
+onclick="openAndroid()">
+🤖 Android 앱 실행
+</button>
+
+<button class="btn iphone"
+onclick="openIOS()">
+🍎 iPhone 웹 실행
+</button>
+
+<div class="small">
+iPhone은 Safari에서 실행 후<br>
+"홈 화면에 추가"를 권장합니다.
+</div>
 
 </div>
 
 <script>
 
-// ==========================================
-// 🔥 기기 판별
-// ==========================================
+function openAndroid() {
 
-const ua = navigator.userAgent;
-
-// ==========================================
-// 🍎 iPhone / iPad
-// ==========================================
-
-if (
-    /iPhone|iPad|iPod/i.test(ua)
-) {
-
-    location.replace(
-        "https://finsegye.github.io/finsegyeAI/index.html"
-    );
+    location.href =
+    "https://m.onestore.co.kr/mobilepoc/apps/appsDetail.omp?prodId=OA01004603";
 }
 
-// ==========================================
-// 🤖 Android
-// ==========================================
+function openIOS() {
 
-else if (
-    /Android/i.test(ua)
-) {
-
-    location.replace(
-        "https://m.onestore.co.kr/mobilepoc/apps/appsDetail.omp?prodId=OA01004603"
-    );
-}
-
-// ==========================================
-// 💻 기타 환경
-// ==========================================
-
-else {
-
-    location.replace(
-        "https://finsegye.github.io/finsegyeAI/index.html"
-    );
+    location.href =
+    "https://finsegye.github.io/finsegyeAI/index.html";
 }
 
 </script>
 
 </body>
 </html>
+```
