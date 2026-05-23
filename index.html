@@ -1711,11 +1711,35 @@ setInterval(function () {
         } catch (err) { alert("카메라 권한 확인"); closeCamera(); }
     }
 
-    function takePhoto() {
-        speak("분석 중입니다.");
-        if (window.Android && window.Android.processRealOCR) { window.Android.processRealOCR(); }
-        else { setTimeout(() => receiveOCRData("샘플 매장", "010-0000-0000", ""), 1500); }
+
+function takePhoto() {
+
+    speak("간판명을 분석 중입니다.");
+
+    // 🔥 Android 네이티브 OCR
+    if (
+        window.Android &&
+        window.Android.processRealOCR
+    ) {
+
+        window.Android.processRealOCR();
     }
+
+    // 🔥 GitHub / iPhone / PWA
+    else {
+
+        setTimeout(() => {
+
+            receiveOCRData(
+                "간판명 인식 실패",
+                "",
+                ""
+            );
+
+        }, 1500);
+    }
+}
+
 
     /* [대표님 요청 핵심] 루틴 창으로 갈 때 모든 입력을 비우고 커서만 활성화 */
     function receiveOCRData(shopName, phone, rawData) {
