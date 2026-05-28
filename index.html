@@ -1412,9 +1412,17 @@ saveUnifiedData({
 
 
 function editableLine(id, key, label, value) {
+
+    const safeValue =
+        value || "-";
+
     return `
         <div
             onclick="editOneField(event, '${id}', '${key}', '${label}')"
+            onfocus="speak('${label} ${safeValue}. 수정하려면 한 번 더 눌러 주세요.')"
+            tabindex="0"
+            role="button"
+            aria-label="${label} ${safeValue}. 수정 가능"
             style="
                 cursor:pointer;
                 padding:4px 0;
@@ -1423,7 +1431,7 @@ function editableLine(id, key, label, value) {
         >
             ${label}:
             <span style="color:#00ffcc;">
-                ${value || "-"}
+                ${safeValue}
             </span>
         </div>
     `;
@@ -1434,16 +1442,25 @@ function editOneField(event, id, key, label) {
     const card =
         event.currentTarget.closest(".history-card");
 
-    // 🔥 접힌 상태에서는 수정하지 않고 카드 확대만 되게 둠
+    const line =
+        event.currentTarget;
+
+    const currentText =
+        line.innerText || "";
+
+    // 🔥 접힌 상태에서는 수정하지 않고 음성으로 먼저 안내
     if (!card || !card.classList.contains("expanded")) {
+
+        speak(
+            currentText +
+            ". 먼저 목록을 크게 연 뒤 다시 눌러 수정할 수 있습니다."
+        );
+
         return;
     }
 
     // 🔥 펼쳐진 상태에서만 수정 작동
     event.stopPropagation();
-
-    const line =
-        event.currentTarget;
 
     let all =
         JSON.parse(
@@ -1454,17 +1471,26 @@ function editOneField(event, id, key, label) {
         all.find(x => x.id === id);
 
     if (!target) {
+        speak("데이터를 찾을 수 없습니다.");
         return;
     }
 
     const oldValue =
         target[key] || "";
 
+    speak(
+        label +
+        " 수정입니다. 현재 값은 " +
+        (oldValue || "비어 있음") +
+        "입니다. 내용을 수정해 주세요."
+    );
+
     line.innerHTML =
         label + ": " +
         `<input
             type="text"
             value="${oldValue}"
+            aria-label="${label} 수정 입력창"
             style="
                 width:75%;
                 padding:6px;
@@ -1482,14 +1508,19 @@ function editOneField(event, id, key, label) {
     input.focus();
     input.select();
 
-function saveNow() {
+    let saved = false;
 
-    if (!input) return;
+    function saveNow() {
 
-    const newValue =
-        input.value.trim();
+        if (saved) return;
+        saved = true;
 
-    target[key] = newValue;
+        if (!input) return;
+
+        const newValue =
+            input.value.trim();
+
+        target[key] = newValue;
 
         target.status = "수정";
 
@@ -1502,6 +1533,13 @@ function saveNow() {
         sendEditedDataToGoogle(updatedItem);
 
         loadHistory();
+
+        speak(
+            label +
+            " 수정이 완료되었습니다. 변경된 값은 " +
+            (newValue || "비어 있음") +
+            "입니다."
+        );
     }
 
     input.onkeydown = function(e) {
@@ -1511,6 +1549,7 @@ function saveNow() {
         }
 
         if (e.key === "Escape") {
+            speak("수정을 취소했습니다.");
             loadHistory();
         }
     };
@@ -1519,7 +1558,6 @@ function saveNow() {
         saveNow();
     };
 }
-
 
 
 
