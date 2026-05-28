@@ -2942,6 +2942,45 @@ function getDistanceKm(lat1, lng1, lat2, lng2) {
 }
 
 
+// 🔥 지역 자동 분류
+function detectRegionGroup(text) {
+
+    text = String(text || "").trim();
+
+    if (
+        text.includes("서울")
+    ) {
+        return "서울";
+    }
+
+    if (
+        text.includes("부산")
+    ) {
+        return "부산";
+    }
+
+    if (
+        text.includes("대구")
+    ) {
+        return "대구";
+    }
+
+    if (
+        text.includes("광주")
+    ) {
+        return "광주";
+    }
+
+    if (
+        text.includes("전주") ||
+        text.includes("전북")
+    ) {
+        return "전주";
+    }
+
+    return "기타";
+}
+
 
 
 </script>
