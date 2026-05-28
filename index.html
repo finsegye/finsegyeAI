@@ -1158,9 +1158,14 @@ function resetSectionFields(sectionId) {
         }
     }
 
-    saveUnifiedData({
+saveUnifiedData({
 
     type: "ads",
+
+    regionGroup:
+        detectRegionGroup(
+            document.getElementById('shopLoc').value
+        ),
 
     user: "",
 
