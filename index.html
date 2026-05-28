@@ -1599,19 +1599,28 @@ function loadHistory() {
             // =========================
             if (type === "ads") {
 
-                detail =
+                 detail =
                     editableLine(
                         item.id,
                         "name",
                         "상호명",
                         item.name
                     ) +
+                
+                    editableLine(
+                        item.id,
+                        "category",
+                        "업종",
+                        item.category
+                    ) +
+                
                     editableLine(
                         item.id,
                         "loc",
                         "지역",
                         item.loc
                     ) +
+                
                     editableLine(
                         item.id,
                         "msg",
