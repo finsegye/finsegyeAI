@@ -2626,15 +2626,40 @@ function showGlobalTab(type) {
         // 🔥 등록 메뉴 닫기
         registerBox.style.display = "none";
 
+
+        
+
         // 🔥 주문 메뉴 열기
         orderBox.style.display = "block";
 
-        speak("주문 메뉴를 엽니다.");
+        // 🔥 주문 탭 열 때 주변 광고 목록 즉시 복구
+        const savedLat =
+            Number(localStorage.getItem("fin_current_lat"));
+
+        const savedLng =
+            Number(localStorage.getItem("fin_current_lng"));
+
+        if (
+            savedLat &&
+            savedLng &&
+            typeof searchNearbyStores === "function"
+        ) {
+
+            searchNearbyStores(
+                savedLat,
+                savedLng
+            );
+
+        } else if (typeof showJeonjuAdsFallback === "function") {
+
+            showJeonjuAdsFallback();
+        }
+
+        speak("주문 메뉴를 엽니다. 반경 1킬로미터, 2킬로미터, 전주 지역 광고를 표시합니다.");
 
         return;
     }
 }
-
 
 
 
