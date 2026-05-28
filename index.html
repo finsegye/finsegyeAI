@@ -5553,6 +5553,146 @@ function searchNearbyStores(lat, lng) {
 
 
 
+
+// ======================================================
+// 🔔 핀세계 GitHub 자동 업데이트 알림
+// ======================================================
+
+const FINSEGYE_APP_VERSION = "20260528";
+
+function playUpdatePing() {
+
+    try {
+
+        const ctx =
+            new (window.AudioContext || window.webkitAudioContext)();
+
+        const osc =
+            ctx.createOscillator();
+
+        const gain =
+            ctx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.value = 880;
+
+        gain.gain.value = 0.12;
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+
+        setTimeout(function () {
+            osc.stop();
+            ctx.close();
+        }, 180);
+
+    } catch(e) {
+        console.log("핑 소리 오류", e);
+    }
+}
+
+function showUpdateBalloon(data) {
+
+    if (document.getElementById("finUpdateBalloon")) {
+        return;
+    }
+
+    const box =
+        document.createElement("div");
+
+    box.id = "finUpdateBalloon";
+
+    box.style.position = "fixed";
+    box.style.left = "50%";
+    box.style.bottom = "85px";
+    box.style.transform = "translateX(-50%)";
+    box.style.width = "88%";
+    box.style.maxWidth = "360px";
+    box.style.background = "rgba(0,0,0,0.96)";
+    box.style.border = "2px solid gold";
+    box.style.borderRadius = "16px";
+    box.style.padding = "16px";
+    box.style.zIndex = "200000";
+    box.style.color = "white";
+    box.style.textAlign = "center";
+    box.style.boxShadow = "0 0 18px gold";
+
+    box.innerHTML = `
+        <div style="color:gold; font-weight:bold; font-size:1.05em; margin-bottom:8px;">
+            🔔 핀세계 업데이트
+        </div>
+
+        <div style="font-size:0.9em; line-height:1.5; margin-bottom:12px;">
+            ${data.message || "새 버전이 준비되었습니다."}
+        </div>
+
+        <button onclick="location.href='${data.url}'"
+            style="
+                width:100%;
+                padding:12px;
+                background:gold;
+                color:#000;
+                border:none;
+                border-radius:10px;
+                font-weight:bold;
+                font-size:1em;
+            ">
+            최신 버전으로 실행
+        </button>
+
+        <button onclick="document.getElementById('finUpdateBalloon').remove()"
+            style="
+                width:100%;
+                margin-top:8px;
+                padding:9px;
+                background:#222;
+                color:#aaa;
+                border:1px solid #444;
+                border-radius:10px;
+                font-size:0.85em;
+            ">
+            나중에
+        </button>
+    `;
+
+    document.body.appendChild(box);
+
+    playUpdatePing();
+
+    speak("핀세계 새 버전이 준비되었습니다. 최신 버전으로 실행해 주세요.");
+}
+
+function checkFinsegyeUpdate() {
+
+    fetch(
+        "https://finsegye.github.io/finsegyeAI/version.json?v=" + Date.now()
+    )
+    .then(res => res.json())
+    .then(data => {
+
+        if (!data.version) return;
+
+        if (data.version !== FINSEGYE_APP_VERSION) {
+
+            showUpdateBalloon(data);
+        }
+    })
+    .catch(function(e) {
+        console.log("업데이트 확인 실패", e);
+    });
+}
+
+setTimeout(function () {
+    checkFinsegyeUpdate();
+}, 1500);
+
+    
+
+
+
+
 </script>
 
 <script src="js/ai_finance.js"></script>  <!-- 🔥 여기 넣기 -->
