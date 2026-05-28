@@ -1607,28 +1607,30 @@ detail =
         item.id,
         "name",
         "상호명",
-        item.name
+        item.name || "-"
     ) +
+
     editableLine(
         item.id,
         "category",
         "업종",
-        item.category
+        item.category || "-"
     ) +
+
     editableLine(
         item.id,
         "loc",
         "지역",
-        item.loc
+        item.loc || "-"
     ) +
+
     editableLine(
         item.id,
         "msg",
         "문구",
-        item.msg
+        item.msg || "-"
     );
-            }
-
+}
             // =========================
             // 공유
             // =========================
