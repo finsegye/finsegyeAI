@@ -1189,8 +1189,16 @@ saveUnifiedData({
     msg:
         document.getElementById('shopAd').value,
 
-    text: ""
+text: ""
 });
+
+    // 🔥 기존 베이스캠프 유지
+    saveAndFinish(
+        'ads',
+        document.getElementById('shopName').value,
+        "행사 신청이 완료되었습니다."
+    );
+}
 
 
 function validateShare() {
