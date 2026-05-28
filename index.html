@@ -1158,22 +1158,14 @@ function resetSectionFields(sectionId) {
         }
     }
 
-saveUnifiedData({
+    saveUnifiedData({
 
     type: "ads",
-
-    regionGroup:
-        detectRegionGroup(
-            document.getElementById('shopLoc').value
-        ),
 
     user: "",
 
     name:
         document.getElementById('shopName').value,
-
-    category:
-        document.getElementById('shopType').value,
 
     amount: "",
 
@@ -1189,7 +1181,7 @@ saveUnifiedData({
     msg:
         document.getElementById('shopAd').value,
 
-text: ""
+    text: ""
 });
 
     // 🔥 기존 베이스캠프 유지
@@ -1607,28 +1599,19 @@ function loadHistory() {
             // =========================
             if (type === "ads") {
 
-                 detail =
+                detail =
                     editableLine(
                         item.id,
                         "name",
                         "상호명",
                         item.name
                     ) +
-                
-                    editableLine(
-                        item.id,
-                        "category",
-                        "업종",
-                        item.category
-                    ) +
-                
                     editableLine(
                         item.id,
                         "loc",
                         "지역",
                         item.loc
                     ) +
-                
                     editableLine(
                         item.id,
                         "msg",
@@ -2462,10 +2445,7 @@ status:
 
         name:
             data.name || "",
-        
-        category:
-            data.category || "",
-        
+
         amount:
             data.amount || "",
 
@@ -2480,11 +2460,6 @@ status:
 
         loc:
             data.loc || "",
-
-
-        regionGroup:
-            data.regionGroup || "",
-    
 
         msg:
             data.msg || "",
@@ -2962,62 +2937,7 @@ function getDistanceKm(lat1, lng1, lat2, lng2) {
 }
 
 
-// 🔥 지역 자동 분류
-function detectRegionGroup(text) {
 
-    text = String(text || "").trim();
-
-    if (
-        text.includes("서울")
-    ) {
-        return "서울";
-    }
-
-    if (
-        text.includes("부산")
-    ) {
-        return "부산";
-    }
-
-    if (
-        text.includes("대구")
-    ) {
-        return "대구";
-    }
-
-    if (
-        text.includes("광주")
-    ) {
-        return "광주";
-    }
-
-    if (
-        text.includes("대전")
-    ) {
-        return "대전";
-    }
-
-    if (
-        text.includes("강원")
-    ) {
-        return "강원";
-    }
-
-    if (
-        text.includes("제주")
-    ) {
-        return "제주";
-    }
-
-    if (
-        text.includes("전주") ||
-        text.includes("전북")
-    ) {
-        return "전주";
-    }
-
-    return "기타";
-}
 
 </script>
 
