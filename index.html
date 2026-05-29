@@ -3128,7 +3128,44 @@ function getDistanceKm(lat1, lng1, lat2, lng2) {
     return R * c;
 }
 
+function detectAdRegionGroup(text) {
 
+    text = String(text || "").trim();
+
+    if (
+        text.includes("전주") ||
+        text.includes("전북")
+    ) {
+        return "전주";
+    }
+
+    if (
+        text.includes("서울") ||
+        text.includes("부산") ||
+        text.includes("대구") ||
+        text.includes("광주") ||
+        text.includes("대전") ||
+        text.includes("제주") ||
+        text.includes("강원") ||
+        text.includes("한국") ||
+        text.includes("전국")
+    ) {
+        return "전국";
+    }
+
+    if (
+        text.includes("일본") ||
+        text.includes("미국") ||
+        text.includes("중국") ||
+        text.includes("필리핀") ||
+        text.includes("인도네시아") ||
+        text.includes("말레이시아")
+    ) {
+        return "해외";
+    }
+
+    return "기타";
+}
 
 
 </script>
