@@ -2815,9 +2815,12 @@ function getFinsegyeAdStores() {
                 name:
                     x.name || x.user || "등록 매장",
 
-                category:
-                    x.msg || x.text || x.purpose || "행사 광고",
-
+               category:
+                x.category || x.msg || x.text || x.purpose || "행사 광고",
+                
+                msg:
+                    x.msg || x.text || x.purpose || "",
+                
                 region:
                     x.loc || x.addr || "전주",
 
@@ -3074,8 +3077,17 @@ function renderStoreGroup(title, list) {
                         <div style="color:#00ffcc; font-weight:bold;">
                             ${x.name}
                         </div>
-                        <div>업종: ${x.category}</div>
-                        <div>지역: ${x.region}${distanceText}</div>
+         <div>업종: ${x.category || "행사 광고"}</div>
+
+        <div>지역: ${x.region || "-"}${distanceText}</div>
+        
+        <div style="
+            margin-top:5px;
+            color:gold;
+            font-weight:bold;
+        ">
+            행사문구: ${x.msg || x.adText || x.category || "등록된 행사 문구가 없습니다."}
+        </div>
                     </div>
                 `;
             }).join("")}
