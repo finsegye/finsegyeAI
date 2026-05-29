@@ -3162,6 +3162,74 @@ function getDistanceKm(lat1, lng1, lat2, lng2) {
     return R * c;
 }
 
+
+
+function detectCityProvinceByGPS(lat, lng) {
+
+    lat = Number(lat);
+    lng = Number(lng);
+
+    if (!lat || !lng) {
+        return {
+            city: "전주",
+            province: "전북",
+            country: "한국"
+        };
+    }
+
+    // 서울
+    if (lat >= 37.40 && lat <= 37.75 && lng >= 126.75 && lng <= 127.20) {
+        return { city: "서울", province: "수도권", country: "한국" };
+    }
+
+    // 부산
+    if (lat >= 35.00 && lat <= 35.35 && lng >= 128.80 && lng <= 129.35) {
+        return { city: "부산", province: "경남권", country: "한국" };
+    }
+
+    // 대구
+    if (lat >= 35.75 && lat <= 36.00 && lng >= 128.45 && lng <= 128.80) {
+        return { city: "대구", province: "경북권", country: "한국" };
+    }
+
+    // 광주
+    if (lat >= 35.05 && lat <= 35.30 && lng >= 126.70 && lng <= 127.00) {
+        return { city: "광주", province: "전남권", country: "한국" };
+    }
+
+    // 대전
+    if (lat >= 36.20 && lat <= 36.50 && lng >= 127.25 && lng <= 127.55) {
+        return { city: "대전", province: "충청권", country: "한국" };
+    }
+
+    // 제주
+    if (lat >= 33.10 && lat <= 33.60 && lng >= 126.10 && lng <= 126.95) {
+        return { city: "제주", province: "제주", country: "한국" };
+    }
+
+    // 전주
+    if (lat >= 35.70 && lat <= 35.95 && lng >= 127.00 && lng <= 127.30) {
+        return { city: "전주", province: "전북", country: "한국" };
+    }
+
+    // 한국 기타
+    if (lat >= 33.0 && lat <= 39.0 && lng >= 124.0 && lng <= 132.0) {
+        return { city: "기타", province: "전국", country: "한국" };
+    }
+
+    return {
+        city: "해외",
+        province: "해외",
+        country: "해외"
+    };
+}
+
+
+
+
+
+    
+
 function detectAdRegionGroup(text) {
 
     text = String(text || "").trim();
