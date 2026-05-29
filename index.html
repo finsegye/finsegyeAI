@@ -2941,6 +2941,17 @@ function renderOrderAdToggles(lat, lng) {
             x.distance <= 2
         );
 
+
+
+
+    const currentCity =
+        localStorage.getItem("fin_current_city") || "전주";
+
+    const currentProvince =
+        localStorage.getItem("fin_current_province") || "전북";
+
+
+        
     const groups = [
 
         {
@@ -2954,27 +2965,39 @@ function renderOrderAdToggles(lat, lng) {
         },
 
         {
-            title: "🏙 전주 지역 광고",
-            list: stores.filter(x =>
-                (x.region || "").includes("전주")
-            )
-        },
+    title: "🏙 " + currentCity + " 지역 광고",
+    list: stores.filter(x =>
+        (x.region || "").includes(currentCity)
+    )
+},
 
-        {
-            title: "🇰🇷 전국 지역 광고",
-            list: stores.filter(x =>
-                (x.region || "").includes("전국") ||
-                (x.region || "").includes("한국") ||
-                (x.region || "").includes("서울") ||
-                (x.region || "").includes("부산") ||
-                (x.region || "").includes("대구") ||
-                (x.region || "").includes("광주") ||
-                (x.region || "").includes("대전") ||
-                (x.region || "").includes("제주") ||
-                (x.region || "").includes("강원")
-            )
-        },
+{
+    title: "🌐 " + currentProvince + " 권역 광고",
+    list: stores.filter(x =>
+        (x.region || "").includes(currentProvince)
+    )
+},
 
+{
+    title: "🇰🇷 전국 지역 광고",
+    list: stores.filter(x =>
+        (x.region || "").includes("전국") ||
+        (x.region || "").includes("한국") ||
+        (x.region || "").includes("서울") ||
+        (x.region || "").includes("부산") ||
+        (x.region || "").includes("대구") ||
+        (x.region || "").includes("광주") ||
+        (x.region || "").includes("대전") ||
+        (x.region || "").includes("제주") ||
+        (x.region || "").includes("강원") ||
+        (x.region || "").includes("전주") ||
+        (x.region || "").includes("전북") ||
+        (x.region || "").includes("경남") ||
+        (x.region || "").includes("경북") ||
+        (x.region || "").includes("전남") ||
+        (x.region || "").includes("충청")
+    )
+},
         {
             title: "🇯🇵 일본 지역 광고",
             list: stores.filter(x =>
