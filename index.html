@@ -2989,9 +2989,16 @@ function renderOrderAdToggles(lat, lng) {
                     <span>▼</span>
                 </div>
 
-                <div id="${boxId}" style="display:none; padding:10px; background:#050505;">
-                    ${renderStoreGroup("", group.list)}
-                </div>
+  <div id="${boxId}"
+     style="
+        display:none;
+        padding:10px;
+        background:#050505;
+        max-height:250px;
+        overflow-y:auto;
+     ">
+    ${renderStoreGroup("", group.list)}
+</div>
 
             </div>
         `;
