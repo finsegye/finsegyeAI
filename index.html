@@ -2763,12 +2763,10 @@ function showJeonjuAdsFallback() {
 
     if (!nearStoreList) return;
 
-    const stores =
-        getFinsegyeAdStores()
-        .filter(x => (x.region || "").includes("전주"));
-
     nearStoreList.innerHTML =
-        renderStoreGroup("🏙 전주 지역 광고", stores);
+        renderOrderAdToggles(null, null);
+
+    speak("지역별 광고 목록을 표시합니다.");
 }
 
 function getFinsegyeAdStores() {
