@@ -1162,6 +1162,15 @@ function resetSectionFields(sectionId) {
 
     type: "ads",
 
+
+    regionGroup:
+        detectAdRegionGroup(
+            document.getElementById('shopLoc').value
+        ),
+    
+
+        
+
     user: "",
 
     name:
@@ -1286,6 +1295,13 @@ function validateRoutine() {
 saveUnifiedData({
 
     type: "routines",
+
+
+    regionGroup:
+        detectAdRegionGroup(
+            document.getElementById('rShopLoc').value
+        ),
+        
 
     user: "",
 
