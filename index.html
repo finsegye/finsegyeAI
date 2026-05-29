@@ -1158,20 +1158,17 @@ function resetSectionFields(sectionId) {
         }
     }
 
-    saveUnifiedData({
+   saveUnifiedData({
 
     type: "ads",
-
-
-
-    
-
-        
 
     user: "",
 
     name:
         document.getElementById('shopName').value,
+
+    category:
+        document.getElementById('shopType').value,
 
     amount: "",
 
@@ -1186,6 +1183,12 @@ function resetSectionFields(sectionId) {
 
     msg:
         document.getElementById('shopAd').value,
+
+    lat:
+        Number(localStorage.getItem("fin_current_lat")) || "",
+
+    lng:
+        Number(localStorage.getItem("fin_current_lng")) || "",
 
     text: ""
 });
