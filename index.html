@@ -2739,11 +2739,24 @@ function checkCurrentLocation() {
             localStorage.setItem("fin_current_lat", lat);
             localStorage.setItem("fin_current_lng", lng);
 
+            const area =
+                detectCityProvinceByGPS(lat, lng);
+            
+            localStorage.setItem("fin_current_city", area.city);
+            localStorage.setItem("fin_current_province", area.province);
+            localStorage.setItem("fin_current_country", area.country);
+
+
+
+
+            
+
             target.innerHTML =
                 "📍 현재 위치 확인 완료<br>" +
                 "위도: " + lat.toFixed(5) + "<br>" +
-                "경도: " + lng.toFixed(5) + "<br><br>" +
-                "아래에 반경 1km, 2km, 전주 지역 광고를 표시합니다.";
+                "경도: " + lng.toFixed(5) + "<br>" +
+                "지역: " + area.city + " / " + area.province + "<br><br>" +
+                "아래에 반경 1km, 2km, 현재 지역 광고를 표시합니다.";
 
             speak("현재 위치를 확인했습니다.");
 
