@@ -2751,44 +2751,11 @@ function searchNearbyStores(lat, lng) {
 
     if (!nearStoreList) return;
 
-    const stores = getFinsegyeAdStores();
-
-    const withDistance =
-        stores.map(function(store) {
-
-            const d =
-                getDistanceKm(
-                    lat,
-                    lng,
-                    store.lat,
-                    store.lng
-                );
-
-            return {
-                ...store,
-                distance: d
-            };
-        });
-
-    const within1 =
-        withDistance.filter(x => x.distance <= 1);
-
-    const within2 =
-        withDistance.filter(x => x.distance > 1 && x.distance <= 2);
-
-    const jeonju =
-        stores.filter(x =>
-            (x.region || "").includes("전주")
-        );
-
     nearStoreList.innerHTML =
-        renderStoreGroup("📍 반경 1km 광고", within1) +
-        renderStoreGroup("📍 반경 2km 광고", within2) +
-        renderStoreGroup("🏙 전주 지역 광고", jeonju);
+        renderOrderAdToggles(lat, lng);
 
-    speak("주변 광고 목록을 표시했습니다.");
+    speak("지역별 광고 목록을 표시했습니다.");
 }
-
 function showJeonjuAdsFallback() {
 
     const nearStoreList =
