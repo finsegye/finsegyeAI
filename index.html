@@ -1382,6 +1382,30 @@ function saveAdMediaEditor() {
         document.getElementById('shopName').value,
         "행사 신청이 완료되었습니다."
     );
+
+    // 🔥 입력창 초기화
+    document.getElementById('shopName').value = "";
+
+    document.getElementById('shopType').value = "";
+
+    document.getElementById('shopLoc').value = "";
+
+    document.getElementById('shopAd').value = "";
+
+    document.getElementById('shopImageUrl').value = "";
+
+    document.getElementById('shopVideoUrl').value = "";
+
+    // 🔥 미리보기 초기화
+    const preview =
+        document.getElementById("shopAdPreview");
+
+    if (preview) {
+
+        preview.innerText = "";
+
+    }
+
 }
 
 
