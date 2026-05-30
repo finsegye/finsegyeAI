@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>FINSEGYE - Final Perfect Audio Master</title>
-
     <link rel="manifest" href="manifest.json">
 
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2893,26 +2892,42 @@ function getFinsegyeAdStores() {
         .filter(x => x.type === "ads" || x.type === "routines")
         .map(function(x) {
 
-            return {
-                name:
-                    x.name || x.user || "등록 매장",
+return {
 
-               category:
-                x.category || x.msg || x.text || x.purpose || "행사 광고",
-                
-                msg:
-                    x.msg || x.text || x.purpose || "",
-                
-                region:
-                    x.loc || x.addr || "전주",
+    name:
+        x.name || x.user || "등록 매장",
 
-                lat:
-                    Number(x.lat) || 35.8242,
+    category:
+        x.category ||
+        x.msg ||
+        x.text ||
+        x.purpose ||
+        "행사 광고",
 
-                lng:
-                    Number(x.lng) || 127.1480
-            };
-        });
+    msg:
+        x.msg ||
+        x.text ||
+        x.purpose ||
+        "",
+
+    // 🔥 추가
+    imageUrl:
+        x.imageUrl || "",
+
+    // 🔥 추가
+    videoUrl:
+        x.videoUrl || "",
+
+    region:
+        x.loc || x.addr || "전주",
+
+    lat:
+        Number(x.lat) || 35.8242,
+
+    lng:
+        Number(x.lng) || 127.1480
+};
+});
 
    const sampleAds = [
 
