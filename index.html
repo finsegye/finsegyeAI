@@ -217,29 +217,7 @@
         </div>
 
         <div class="input-group">
-            <div onclick="openAdMediaEditor()"
-     style="
-        width:100%;
-        padding:12px;
-        background:#000;
-        color:#fff;
-        border:1.5px solid #444;
-        border-radius:8px;
-        box-sizing:border-box;
-        cursor:pointer;
-     ">
-    <div style="color:gold; font-weight:bold;">
-        행사 문구 / 사진 / 짧은 동영상 첨부
-    </div>
-    <div id="shopAdPreview"
-         style="color:#aaa; font-size:0.85em; margin-top:5px;">
-        눌러서 큰 화면에서 입력하세요.
-    </div>
-</div>
-
-<input type="hidden" id="shopAd">
-<input type="hidden" id="shopImageUrl">
-<input type="hidden" id="shopVideoUrl">
+            <input type="text" id="shopAd" placeholder="행사 문구를 입력해 주세요" onfocus="speak('행사 문구를 입력해 주세요')">
         </div>
 
         <button class="submitBtn" onclick="sendEventToGoogle(); validateEvent();">
@@ -247,60 +225,6 @@
         </button>
     </div>
 </section>
-
-
-<section id="adMediaEditor" class="raised-form">
-    <div class="form-box">
-
-        <div style="text-align:center; color:gold; font-weight:bold; margin-bottom:10px;">
-            📢 행사 광고 만들기
-        </div>
-
-        <div class="input-group">
-            <textarea id="shopAdTextEditor"
-                      placeholder="행사 문구를 입력해 주세요"
-                      style="
-                        width:100%;
-                        height:120px;
-                        background:#000;
-                        color:#fff;
-                        border:1.5px solid #444;
-                        border-radius:8px;
-                        padding:10px;
-                        box-sizing:border-box;
-                        font-size:1em;
-                      "></textarea>
-        </div>
-
-        <div class="input-group">
-            <input type="text"
-                   id="shopImageUrlEditor"
-                   placeholder="사진 주소를 입력해 주세요">
-        </div>
-
-        <div class="input-group">
-            <input type="text"
-                   id="shopVideoUrlEditor"
-                   placeholder="짧은 동영상 주소를 입력해 주세요">
-        </div>
-
-        <button class="submitBtn" onclick="saveAdMediaEditor()">
-            광고 내용 저장
-        </button>
-
-        <button class="submitBtn"
-                style="margin-top:6px; background:#222 !important; color:#aaa !important;"
-                onclick="showSection('adApplyForm', document.querySelectorAll('.nav button')[1])">
-            ← 행사 신청으로 돌아가기
-        </button>
-
-    </div>
-</section>
-
-
-
-
-    
 
 <section id="shareForm" class="raised-form">
     <div class="form-box">
@@ -1228,124 +1152,6 @@ function resetSectionFields(sectionId) {
 
 
 
-
-
-function openAdMediaEditor() {
-
-    document.querySelectorAll('section')
-        .forEach(s => s.style.display = 'none');
-
-    const box =
-        document.getElementById("adMediaEditor");
-
-    if (box) {
-        box.style.display = "block";
-    }
-
-    speak("행사 문구와 사진, 짧은 동영상을 입력하는 화면입니다.");
-}
-
-
-function saveAdMediaEditor() {
-
-    const textEl =
-        document.getElementById("shopAdTextEditor");
-
-    const imageEl =
-        document.getElementById("shopImageUrlEditor");
-
-    const videoEl =
-        document.getElementById("shopVideoUrlEditor");
-
-    const hiddenText =
-        document.getElementById("shopAd");
-
-    const hiddenImage =
-        document.getElementById("shopImageUrl");
-
-    const hiddenVideo =
-        document.getElementById("shopVideoUrl");
-
-    const preview =
-        document.getElementById("shopAdPreview");
-
-    const text =
-        textEl ? textEl.value.trim() : "";
-
-    const imageUrl =
-        imageEl ? imageEl.value.trim() : "";
-
-    const videoUrl =
-        videoEl ? videoEl.value.trim() : "";
-
-    if (!text && !imageUrl && !videoUrl) {
-        speak("행사 문구, 사진 주소, 동영상 주소 중 하나 이상 입력해 주세요.");
-        return;
-    }
-
-    if (hiddenText) {
-        hiddenText.value = text || "사진 또는 동영상 광고";
-    }
-
-    if (hiddenImage) {
-        hiddenImage.value = imageUrl;
-    }
-
-    if (hiddenVideo) {
-        hiddenVideo.value = videoUrl;
-    }
-
-    if (preview) {
-        preview.innerText =
-            text ||
-            imageUrl ||
-            videoUrl ||
-            "광고 내용이 저장되었습니다.";
-    }
-
-speak("광고 내용이 저장되었습니다.");
-
-alert("광고 내용이 저장되었습니다.");
-
-// 🔥 에디터 입력창 초기화
-if (textEl) {
-    textEl.value = "";
-}
-
-if (imageEl) {
-    imageEl.value = "";
-}
-
-if (videoEl) {
-    videoEl.value = "";
-}
-
-// 🔥 실제 저장 hidden 값 초기화
-if (hiddenText) {
-    hiddenText.value = "";
-}
-
-if (hiddenImage) {
-    hiddenImage.value = "";
-}
-
-if (hiddenVideo) {
-    hiddenVideo.value = "";
-}
-
-// 🔥 미리보기 초기화
-if (preview) {
-    preview.innerText =
-        "눌러서 큰 화면에서 입력하세요.";
-}
-
-showSection(
-    "adApplyForm",
-    document.querySelectorAll(".nav button")[1]
-);
-}
-    
-
  function validateEvent() {
 
     const f = [
@@ -1400,12 +1206,6 @@ showSection(
     lng:
         Number(localStorage.getItem("fin_current_lng")) || "",
 
-    imageUrl:
-        document.getElementById("shopImageUrl").value,
-
-    videoUrl:
-        document.getElementById("shopVideoUrl").value,
-
     text: ""
 });
 
@@ -1415,30 +1215,6 @@ showSection(
         document.getElementById('shopName').value,
         "행사 신청이 완료되었습니다."
     );
-
-    // 🔥 입력창 초기화
-    document.getElementById('shopName').value = "";
-
-    document.getElementById('shopType').value = "";
-
-    document.getElementById('shopLoc').value = "";
-
-    document.getElementById('shopAd').value = "";
-
-    document.getElementById('shopImageUrl').value = "";
-
-    document.getElementById('shopVideoUrl').value = "";
-
-    // 🔥 미리보기 초기화
-    const preview =
-        document.getElementById("shopAdPreview");
-
-    if (preview) {
-
-        preview.innerText = "";
-
-    }
-
 }
 
 
@@ -2696,14 +2472,11 @@ status:
         user:
             data.user || "",
 
-name:
-    data.name || "",
+        name:
+            data.name || "",
 
-category:
-    data.category || "",
-
-amount:
-    data.amount || "",
+        amount:
+            data.amount || "",
 
         purpose:
             data.purpose || "",
@@ -2730,17 +2503,11 @@ amount:
 
     
 
-msg:
-    data.msg || "",
+        msg:
+            data.msg || "",
 
-imageUrl:
-    data.imageUrl || "",
-
-videoUrl:
-    data.videoUrl || "",
-
-text:
-    data.text || "",
+        text:
+            data.text || "",
 
 time:
     data.time ||
