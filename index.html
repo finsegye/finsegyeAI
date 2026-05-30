@@ -3177,13 +3177,44 @@ function renderStoreGroup(title, list) {
 
         <div>지역: ${x.region || "-"}${distanceText}</div>
         
-        <div style="
-            margin-top:5px;
-            color:gold;
-            font-weight:bold;
-        ">
-            행사문구: ${x.msg || x.adText || x.category || "등록된 행사 문구가 없습니다."}
-        </div>
+<div style="
+    margin-top:5px;
+    color:gold;
+    font-weight:bold;
+">
+    행사문구: ${x.msg || x.adText || x.category || "등록된 행사 문구가 없습니다."}
+</div>
+
+${x.imageUrl ? `
+    <div style="margin-top:8px;">
+        <img
+            src="${x.imageUrl}"
+            style="
+                width:100%;
+                border-radius:12px;
+                max-height:220px;
+                object-fit:cover;
+                border:1px solid #00ffcc;
+            "
+        >
+    </div>
+` : ""}
+
+${x.videoUrl ? `
+    <div style="margin-top:8px;">
+        <video
+            controls
+            style="
+                width:100%;
+                border-radius:12px;
+                max-height:260px;
+                border:1px solid #ff00ff;
+            "
+        >
+            <source src="${x.videoUrl}">
+        </video>
+    </div>
+` : ""}
                     </div>
                 `;
             }).join("")}
