@@ -3449,7 +3449,9 @@ function saveAdEditor() {
     const videoInput =
         document.getElementById("adVideoFile");
 
+    // =========================
     // 🔥 문구 저장
+    // =========================
     document.getElementById("shopAd").value =
         text;
 
@@ -3462,14 +3464,20 @@ function saveAdEditor() {
         imageInput.files[0]
     ) {
 
-        const imageURL =
-            URL.createObjectURL(
-                imageInput.files[0]
-            );
+        const reader = new FileReader();
 
-        document.getElementById(
-            "shopAdImage"
-        ).value = imageURL;
+        reader.onload = function(e) {
+
+            document.getElementById(
+                "shopAdImage"
+            ).value = e.target.result;
+
+            updateAdPreview();
+        };
+
+        reader.readAsDataURL(
+            imageInput.files[0]
+        );
     }
 
     // =========================
@@ -3481,40 +3489,38 @@ function saveAdEditor() {
         videoInput.files[0]
     ) {
 
-        const videoURL =
-            URL.createObjectURL(
-                videoInput.files[0]
-            );
+        const reader = new FileReader();
 
-        document.getElementById(
-            "shopAdVideo"
-        ).value = videoURL;
+        reader.onload = function(e) {
+
+            document.getElementById(
+                "shopAdVideo"
+            ).value = e.target.result;
+
+            updateAdPreview();
+        };
+
+        reader.readAsDataURL(
+            videoInput.files[0]
+        );
     }
 
     // =========================
     // 🔥 미리보기 출력
     // =========================
-    const preview =
-        document.getElementById(
-            "adPreviewBox"
-        );
+    updateAdPreview();
 
-    if (preview) {
-
-        let html =
-            text ||
-            "눌러서 큰 화면에서 행사 문구를 입력하세요";
-
-        preview.innerHTML = html;
-    }
-
-    // 🔥 저장 완료 음성
+    // =========================
+    // 🔥 저장 완료
+    // =========================
     speak("행사 문구가 저장되었습니다.");
 
     // =========================
     // 🔥 입력 초기화
     // =========================
-    document.getElementById("bigAdText").value = "";
+    document.getElementById(
+        "bigAdText"
+    ).value = "";
 
     if (imageInput) {
         imageInput.value = "";
@@ -3524,13 +3530,118 @@ function saveAdEditor() {
         videoInput.value = "";
     }
 
+    // =========================
     // 🔥 전체화면 닫기
+    // =========================
     closeAdEditor();
 }
 
-/* 🔥 추가 끝 */
+function updateAdPreview() {
+
+    const preview =
+        document.getElementById(
+            "adPreviewBox"
+        );
+
+    if (!preview) return;
+
+    const text =
+        document.getElementById(
+            "shopAd"
+        ).value;
+
+    preview.innerHTML =
+        text ||
+        "눌러서 큰 화면에서 행사 문구를 입력하세요";
+
+    // =========================
+    // 🔥 이미지 출력
+    // =========================
+    const imgPreview =
+        document.getElementById(
+            "adImagePreview"
+        );
+
+    const img =
+        document.getElementById(
+            "shopAdImage"
+        ).value;
+
+    if (imgPreview) {
+
+        if (img) {
+
+            imgPreview.style.display =
+                "block";
+
+            imgPreview.innerHTML = `
+                <img
+                    src="${img}"
+                    style="
+                        width:100%;
+                        border-radius:12px;
+                        max-height:240px;
+                        object-fit:cover;
+                        border:1px solid #00ffcc;
+                    "
+                >
+            `;
+
+        } else {
+
+            imgPreview.style.display =
+                "none";
+        }
+    }
+
+    // =========================
+    // 🔥 동영상 출력
+    // =========================
+    const videoPreview =
+        document.getElementById(
+            "adVideoPreview"
+        );
+
+    const video =
+        document.getElementById(
+            "shopAdVideo"
+        ).value;
+
+    if (videoPreview) {
+
+        if (video) {
+
+            videoPreview.style.display =
+                "block";
+
+            videoPreview.innerHTML = `
+                <video
+                    controls
+                    playsinline
+                    preload="metadata"
+                    style="
+                        width:100%;
+                        border-radius:12px;
+                        max-height:260px;
+                        border:1px solid #ff00ff;
+                        background:#000;
+                    "
+                >
+                    <source src="${video}">
+                </video>
+            `;
+
+        } else {
+
+            videoPreview.style.display =
+                "none";
+        }
+    }
+}
 
 </script>
+
+
 
 <!-- 🔥 여기 추가 -->
 <div
@@ -3575,17 +3686,38 @@ function saveAdEditor() {
             font-size:1.05em;
             resize:none;
         "
-    ></textarea>
 
-    <div style="margin-top:15px;">
+></textarea>
 
-        <div style="
-            color:#00ffcc;
-            font-weight:bold;
-            margin-bottom:6px;
-        ">
-            사진 첨부
-        </div>
+<!-- 🔥 사진 미리보기 -->
+<div
+    id="adImagePreview"
+    style="
+        margin-top:10px;
+        display:none;
+    "
+></div>
+
+<!-- 🔥 동영상 미리보기 -->
+<div
+    id="adVideoPreview"
+    style="
+        margin-top:10px;
+        display:none;
+    "
+></div>
+
+<div style="margin-top:15px;">
+
+    <div style="
+        color:#00ffcc;
+        font-weight:bold;
+        margin-bottom:6px;
+    ">
+        사진 첨부
+    </div>
+
+
 
         <input
             type="file"
