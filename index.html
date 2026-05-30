@@ -3447,53 +3447,6 @@ function saveAdEditor() {
             text ||
             "눌러서 큰 화면에서 행사 문구를 입력하세요";
 
-        // 🔥 이미지 표시
-        const img =
-            document.getElementById(
-                "shopAdImage"
-            ).value;
-
-        if (img) {
-
-            html += `
-                <div style="margin-top:10px;">
-                    <img
-                        src="${img}"
-                        style="
-                            width:100%;
-                            border-radius:10px;
-                            max-height:220px;
-                            object-fit:cover;
-                        "
-                    >
-                </div>
-            `;
-        }
-
-        // 🔥 동영상 표시
-        const video =
-            document.getElementById(
-                "shopAdVideo"
-            ).value;
-
-        if (video) {
-
-            html += `
-                <div style="margin-top:10px;">
-                    <video
-                        controls
-                        style="
-                            width:100%;
-                            border-radius:10px;
-                            max-height:240px;
-                        "
-                    >
-                        <source src="${video}">
-                    </video>
-                </div>
-            `;
-        }
-
         preview.innerHTML = html;
     }
 
