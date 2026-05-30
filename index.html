@@ -3614,22 +3614,29 @@ function updateAdPreview() {
             videoPreview.style.display =
                 "block";
 
-            videoPreview.innerHTML = `
-                <video
-                    controls
-                    playsinline
-                    preload="metadata"
-                    style="
-                        width:100%;
-                        border-radius:12px;
-                        max-height:260px;
-                        border:1px solid #ff00ff;
-                        background:#000;
-                    "
-                >
-                    <source src="${video}">
-                </video>
-            `;
+
+videoPreview.innerHTML = `
+    <video
+        controls
+        playsinline
+        webkit-playsinline
+        preload="metadata"
+        style="
+            width:100%;
+            border-radius:12px;
+            max-height:260px;
+            border:1px solid #ff00ff;
+            background:#000;
+        "
+    >
+        <source
+            src="${video}"
+            type="video/mp4"
+        >
+    </video>
+`;
+
+
 
         } else {
 
