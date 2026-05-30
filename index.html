@@ -1303,13 +1303,46 @@ function saveAdMediaEditor() {
             "광고 내용이 저장되었습니다.";
     }
 
-    speak("광고 내용이 저장되었습니다.");
-    alert("광고 내용이 저장되었습니다.");
+speak("광고 내용이 저장되었습니다.");
 
-    showSection(
-        "adApplyForm",
-        document.querySelectorAll(".nav button")[1]
-    );
+alert("광고 내용이 저장되었습니다.");
+
+// 🔥 에디터 입력창 초기화
+if (textEl) {
+    textEl.value = "";
+}
+
+if (imageEl) {
+    imageEl.value = "";
+}
+
+if (videoEl) {
+    videoEl.value = "";
+}
+
+// 🔥 실제 저장 hidden 값 초기화
+if (hiddenText) {
+    hiddenText.value = "";
+}
+
+if (hiddenImage) {
+    hiddenImage.value = "";
+}
+
+if (hiddenVideo) {
+    hiddenVideo.value = "";
+}
+
+// 🔥 미리보기 초기화
+if (preview) {
+    preview.innerText =
+        "눌러서 큰 화면에서 입력하세요.";
+}
+
+showSection(
+    "adApplyForm",
+    document.querySelectorAll(".nav button")[1]
+);
 }
     
 
