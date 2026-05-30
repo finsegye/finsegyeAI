@@ -1229,10 +1229,16 @@ function resetSectionFields(sectionId) {
     loc:
         document.getElementById('shopLoc').value,
 
-    msg:
-        document.getElementById('shopAd').value,
+msg:
+    document.getElementById('shopAd').value,
 
-    lat:
+imageUrl:
+    document.getElementById("shopAdImage").value,
+
+videoUrl:
+    document.getElementById("shopAdVideo").value,
+
+lat:
         Number(localStorage.getItem("fin_current_lat")) || "",
 
     lng:
@@ -2535,11 +2541,17 @@ status:
 
     
 
-        msg:
-            data.msg || "",
+ msg:
+    data.msg || "",
 
-        text:
-            data.text || "",
+text:
+    data.text || "",
+
+imageUrl:
+    data.imageUrl || "",
+
+videoUrl:
+    data.videoUrl || "",
 
 time:
     data.time ||
