@@ -1248,32 +1248,67 @@ function openAdMediaEditor() {
 
 function saveAdMediaEditor() {
 
-    const text =
-        document.getElementById("shopAdTextEditor").value.trim();
+    const textEl =
+        document.getElementById("shopAdTextEditor");
 
-    const imageUrl =
-        document.getElementById("shopImageUrlEditor").value.trim();
+    const imageEl =
+        document.getElementById("shopImageUrlEditor");
 
-    const videoUrl =
-        document.getElementById("shopVideoUrlEditor").value.trim();
+    const videoEl =
+        document.getElementById("shopVideoUrlEditor");
 
-    document.getElementById("shopAd").value = text;
-    document.getElementById("shopImageUrl").value = imageUrl;
-    document.getElementById("shopVideoUrl").value = videoUrl;
+    const hiddenText =
+        document.getElementById("shopAd");
+
+    const hiddenImage =
+        document.getElementById("shopImageUrl");
+
+    const hiddenVideo =
+        document.getElementById("shopVideoUrl");
 
     const preview =
         document.getElementById("shopAdPreview");
 
+    const text =
+        textEl ? textEl.value.trim() : "";
+
+    const imageUrl =
+        imageEl ? imageEl.value.trim() : "";
+
+    const videoUrl =
+        videoEl ? videoEl.value.trim() : "";
+
+    if (!text && !imageUrl && !videoUrl) {
+        speak("행사 문구, 사진 주소, 동영상 주소 중 하나 이상 입력해 주세요.");
+        return;
+    }
+
+    if (hiddenText) {
+        hiddenText.value = text || "사진 또는 동영상 광고";
+    }
+
+    if (hiddenImage) {
+        hiddenImage.value = imageUrl;
+    }
+
+    if (hiddenVideo) {
+        hiddenVideo.value = videoUrl;
+    }
+
     if (preview) {
         preview.innerText =
-            text || "행사 문구가 저장되었습니다.";
+            text ||
+            imageUrl ||
+            videoUrl ||
+            "광고 내용이 저장되었습니다.";
     }
 
     speak("광고 내용이 저장되었습니다.");
+    alert("광고 내용이 저장되었습니다.");
 
     showSection(
-        'adApplyForm',
-        document.querySelectorAll('.nav button')[1]
+        "adApplyForm",
+        document.querySelectorAll(".nav button")[1]
     );
 }
     
@@ -2604,11 +2639,14 @@ status:
         user:
             data.user || "",
 
-        name:
-            data.name || "",
+name:
+    data.name || "",
 
-        amount:
-            data.amount || "",
+category:
+    data.category || "",
+
+amount:
+    data.amount || "",
 
         purpose:
             data.purpose || "",
@@ -2635,17 +2673,17 @@ status:
 
     
 
-        msg:
-            data.msg || "",
-        
-        imageUrl:
-            data.imageUrl || "",
-        
-        videoUrl:
-            data.videoUrl || "",
-        
-        text:
-            data.text || "",
+msg:
+    data.msg || "",
+
+imageUrl:
+    data.imageUrl || "",
+
+videoUrl:
+    data.videoUrl || "",
+
+text:
+    data.text || "",
 
 time:
     data.time ||
