@@ -1174,6 +1174,27 @@ function resetSectionFields(sectionId) {
 
 
 
+
+
+function openAdMediaEditor() {
+
+    document.querySelectorAll('section')
+        .forEach(s => s.style.display = 'none');
+
+    const box =
+        document.getElementById("adMediaEditor");
+
+    if (box) {
+        box.style.display = "block";
+    }
+
+    speak("행사 문구와 사진, 짧은 동영상을 입력하는 화면입니다.");
+}
+
+
+
+    
+
  function validateEvent() {
 
     const f = [
