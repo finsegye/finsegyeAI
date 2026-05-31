@@ -3644,7 +3644,7 @@ function closeAdEditor() {
     speak("행사 문구 입력창을 닫습니다.");
 }
 
-function saveAdEditor() {
+async function saveAdEditor() {
 
     const text =
         document.getElementById("bigAdText").value;
@@ -3670,20 +3670,14 @@ function saveAdEditor() {
         imageInput.files[0]
     ) {
 
-        const reader = new FileReader();
+        const imgBase64 =
+            await fileToBase64(
+                imageInput.files[0]
+            );
 
-        reader.onload = function(e) {
-
-            document.getElementById(
-                "shopAdImage"
-            ).value = e.target.result;
-
-            updateAdPreview();
-        };
-
-        reader.readAsDataURL(
-            imageInput.files[0]
-        );
+        document.getElementById(
+            "shopAdImage"
+        ).value = imgBase64;
     }
 
     // =========================
@@ -3695,24 +3689,18 @@ function saveAdEditor() {
         videoInput.files[0]
     ) {
 
-        const reader = new FileReader();
+        const videoBase64 =
+            await fileToBase64(
+                videoInput.files[0]
+            );
 
-        reader.onload = function(e) {
-
-            document.getElementById(
-                "shopAdVideo"
-            ).value = e.target.result;
-
-            updateAdPreview();
-        };
-
-        reader.readAsDataURL(
-            videoInput.files[0]
-        );
+        document.getElementById(
+            "shopAdVideo"
+        ).value = videoBase64;
     }
 
     // =========================
-    // 🔥 미리보기 출력
+    // 🔥 미리보기 갱신
     // =========================
     updateAdPreview();
 
@@ -3722,26 +3710,33 @@ function saveAdEditor() {
     speak("행사 문구가 저장되었습니다.");
 
     // =========================
-    // 🔥 입력 초기화
-    // =========================
-    document.getElementById(
-        "bigAdText"
-    ).value = "";
-
-    if (imageInput) {
-        imageInput.value = "";
-    }
-
-    if (videoInput) {
-        videoInput.value = "";
-    }
-
-    // =========================
     // 🔥 전체화면 닫기
     // =========================
     closeAdEditor();
 }
 
+
+
+
+
+function fileToBase64(file) {
+
+    return new Promise(function(resolve, reject) {
+
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            resolve(e.target.result);
+        };
+
+        reader.onerror = reject;
+
+        reader.readAsDataURL(file);
+    });
+}
+
+
+    
 function updateAdPreview() {
 
     const preview =
