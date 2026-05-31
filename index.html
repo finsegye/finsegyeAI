@@ -3011,11 +3011,9 @@ function renderOrderAdToggles(lat, lng) {
             list: within2
         },
 
-        {
-    title: "🏙 " + currentCity + " 지역 광고",
-    list: stores.filter(x =>
-        (x.region || "").includes(currentCity)
-    )
+{
+    title: "🏙 전체 지역 광고",
+    list: stores
 },
 
 {
