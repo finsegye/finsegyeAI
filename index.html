@@ -3406,8 +3406,10 @@ function openAdEditor() {
         document.getElementById("adEditorOverlay");
 
     if (!overlay) return;
-
     overlay.style.display = "block";
+    overlay.style.pointerEvents = "auto";
+    overlay.style.visibility = "visible";
+    document.body.style.overflow = "hidden";
 
     const oldText =
         document.getElementById("shopAd").value || "";
@@ -3433,7 +3435,13 @@ function closeAdEditor() {
 
     if (!overlay) return;
 
+    // 🔥 완전 숨김
     overlay.style.display = "none";
+    overlay.style.pointerEvents = "none";
+    overlay.style.visibility = "hidden";
+
+    // 🔥 스크롤 복구
+    document.body.style.overflow = "auto";
 
     speak("행사 문구 입력창을 닫습니다.");
 }
