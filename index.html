@@ -3571,27 +3571,31 @@ if (
         preview.innerHTML = html;
     }
 
-    // 🔥 저장 완료 음성
-    speak("행사 문구가 저장되었습니다.");
+     // 🔥 저장 완료 후 약간 대기
+    setTimeout(function() {
 
-    // =========================
-    // 🔥 입력 초기화
-    // =========================
-    document.getElementById("bigAdText").value = "";
+        // 🔥 저장 완료 음성
+        speak("행사 문구가 저장되었습니다.");
 
-    if (imageInput) {
-        imageInput.value = "";
-    }
+        // =========================
+        // 🔥 입력 초기화
+        // =========================
+        document.getElementById("bigAdText").value = "";
 
-    if (videoInput) {
-        videoInput.value = "";
-    }
+        if (imageInput) {
+            imageInput.value = "";
+        }
 
-    // 🔥 전체화면 닫기
-    closeAdEditor();
+        if (videoInput) {
+            videoInput.value = "";
+        }
+
+        // 🔥 전체화면 닫기
+        closeAdEditor();
+
+    }, 700);
 }
 
-/* 🔥 추가 끝 */
 
 </script>
 
