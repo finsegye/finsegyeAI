@@ -1175,13 +1175,51 @@ function resetSectionFields(sectionId) {
 
 
 
-     function saveAndFinish(type, val, msg) {
-        let h = JSON.parse(localStorage.getItem('fin_'+type)) || [];
-        h.unshift({name: val, time: new Date().toLocaleString(), rawTime: new Date().getTime()});
-        localStorage.setItem('fin_'+type, JSON.stringify(h));
-        speak(msg); alert(msg);
-        resetAllForms(); showSection('dashboard', document.querySelectorAll('.nav button')[0]);
+function saveAndFinish(type, val, msg) {
+
+    let h =
+        JSON.parse(
+            localStorage.getItem('fin_' + type)
+        ) || [];
+
+    h.unshift({
+        name: val,
+        time: new Date().toLocaleString(),
+        rawTime: new Date().getTime()
+    });
+
+    localStorage.setItem(
+        'fin_' + type,
+        JSON.stringify(h)
+    );
+
+    speak(msg);
+
+    alert(msg);
+
+    resetAllForms();
+
+    if (type === "ads") {
+
+        showSection(
+            'globalOrderForm',
+            document.querySelectorAll('.nav button')[0]
+        );
+
+        setTimeout(function () {
+
+            showGlobalTab("order");
+
+        }, 300);
+
+    } else {
+
+        showSection(
+            'dashboard',
+            document.querySelectorAll('.nav button')[0]
+        );
     }
+}
 
 
 
