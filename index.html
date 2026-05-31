@@ -1121,7 +1121,15 @@ function goToBank() {
 function resetAllForms() {
 
     // 🔥 input 초기화
-    document.querySelectorAll('input').forEach(i => i.value = "");
+    document.querySelectorAll('input').forEach(i => {
+
+    // 🔥 hidden 저장값 보호
+    if (i.type === "hidden") {
+        return;
+    }
+
+    i.value = "";
+});
 
     // 🔥 textarea 초기화
     document.querySelectorAll('textarea').forEach(t => t.value = "");
