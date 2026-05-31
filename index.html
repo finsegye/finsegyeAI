@@ -3430,6 +3430,19 @@ function openAdEditor() {
 
 function closeAdEditor() {
 
+    // 🔥 현재 입력된 문구 가져오기
+    const text =
+        document.getElementById("bigAdText").value;
+
+    // 🔥 입력중 문구 자동 저장
+    if (text && text.trim()) {
+
+        document.getElementById("shopAd").value =
+            text;
+
+        updateAdPreview();
+    }
+
     const overlay =
         document.getElementById("adEditorOverlay");
 
