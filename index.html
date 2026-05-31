@@ -1199,26 +1199,54 @@ function saveAndFinish(type, val, msg) {
 
     resetAllForms();
 
-    if (type === "ads") {
+if (type === "ads") {
 
-        showSection(
-            'globalOrderForm',
-            document.querySelectorAll('.nav button')[0]
-        );
+    // 🔥 국내외 등록 및 주문 화면 열기
+    document.querySelectorAll('section')
+        .forEach(s => s.style.display = 'none');
 
-        setTimeout(function () {
+    const globalForm =
+        document.getElementById("globalOrderForm");
 
-            showGlobalTab("order");
-
-        }, 300);
-
-    } else {
-
-        showSection(
-            'dashboard',
-            document.querySelectorAll('.nav button')[0]
-        );
+    if (globalForm) {
+        globalForm.style.display = "block";
     }
+
+    // 🔥 등록 박스 닫기
+    const registerBox =
+        document.getElementById("globalRegisterBox");
+
+    if (registerBox) {
+        registerBox.style.display = "none";
+    }
+
+    // 🔥 주문 박스 강제 열기
+    const orderBox =
+        document.getElementById("globalOrderBox");
+
+    if (orderBox) {
+        orderBox.style.display = "block";
+    }
+
+    // 🔥 주문 목록 즉시 다시 그림
+    const savedLat =
+        Number(localStorage.getItem("fin_current_lat"));
+
+    const savedLng =
+        Number(localStorage.getItem("fin_current_lng"));
+
+    if (
+        typeof searchNearbyStores === "function"
+    ) {
+        searchNearbyStores(savedLat, savedLng);
+    }
+
+} else {
+
+    showSection(
+        'dashboard',
+        document.querySelectorAll('.nav button')[0]
+    );
 }
 
 
