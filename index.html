@@ -2480,23 +2480,7 @@ function sendEventToGoogle(e) {
             body: JSON.stringify(data)
         });
 
-        // 3. 주문 탭(#realtimeList)에 데이터 즉시 노출
-        const orderTab = document.getElementById("realtimeList");
-        if (orderTab) {
-            orderTab.style.display = "block"; // 🔥 중요: 숨겨져 있던 주문 탭을 강제로 보이게 함!
-            
-            const newEventCard = document.createElement("div");
-            newEventCard.style.cssText = "background: rgba(15,15,15,0.98); border: 1.5px solid #00ffcc; border-radius: 10px; padding: 10px; margin-top: 10px; color: white;";
-            
-            newEventCard.innerHTML = `
-                <h3 style="color: gold; margin: 0;">${data.name}</h3>
-                <p style="font-size: 0.9em;">📍 ${data.loc}</p>
-                <p style="color: #00ffcc;">📢 ${data.adText}</p>
-                ${data.image ? `<img src="${data.image}" style="width:100%; border-radius:8px;">` : ""}
-            `;
-            
-            orderTab.prepend(newEventCard); // 목록 맨 위에 새 글 추가
-        }
+
 
         alert("등록이 완료되었습니다.");
         speak("신청이 완료되었습니다.");
