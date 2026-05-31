@@ -3504,43 +3504,55 @@ function saveAdEditor() {
     document.getElementById("shopAd").value =
         text;
 
-    // =========================
-    // 🔥 이미지 저장
-    // =========================
-    if (
-        imageInput &&
-        imageInput.files &&
-        imageInput.files[0]
-    ) {
+// =========================
+// 🔥 이미지 저장
+// =========================
+if (
+    imageInput &&
+    imageInput.files &&
+    imageInput.files[0]
+) {
 
-        const imageURL =
-            URL.createObjectURL(
-                imageInput.files[0]
-            );
+    const reader =
+        new FileReader();
+
+    reader.onload = function(e) {
 
         document.getElementById(
             "shopAdImage"
-        ).value = imageURL;
-    }
+        ).value =
+            e.target.result;
+    };
 
-    // =========================
-    // 🔥 동영상 저장
-    // =========================
-    if (
-        videoInput &&
-        videoInput.files &&
-        videoInput.files[0]
-    ) {
+    reader.readAsDataURL(
+        imageInput.files[0]
+    );
+}
 
-        const videoURL =
-            URL.createObjectURL(
-                videoInput.files[0]
-            );
+// =========================
+// 🔥 동영상 저장
+// =========================
+if (
+    videoInput &&
+    videoInput.files &&
+    videoInput.files[0]
+) {
+
+    const reader =
+        new FileReader();
+
+    reader.onload = function(e) {
 
         document.getElementById(
             "shopAdVideo"
-        ).value = videoURL;
-    }
+        ).value =
+            e.target.result;
+    };
+
+    reader.readAsDataURL(
+        videoInput.files[0]
+    );
+}
 
     // =========================
     // 🔥 미리보기 출력
