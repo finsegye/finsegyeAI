@@ -1377,18 +1377,31 @@ function saveAndFinish(type, val, msg) {
         {id:'shopAd', n:'문구'}
     ];
 
-    for(let x of f) {
+for(let x of f) {
 
-        if(!document.getElementById(x.id).value) {
+    const el =
+        document.getElementById(x.id);
+
+    if (!el || !el.value) {
+
+        // 🔥 hidden 값은 포커스 금지
+        if (x.id === "shopAd") {
+
+            speak("행사 문구를 입력해 주세요.");
+
+            openAdEditor();
+
+        } else {
 
             hiPassSpeak(
                 x.n + " 항목을 입력해 주세요.",
                 x.id
             );
-
-            return;
         }
+
+        return;
     }
+}
 
    saveUnifiedData({
 
