@@ -1136,24 +1136,159 @@ function resetAllForms() {
 // 🔥🔥🔥 바로 여기 아래 추가 🔥🔥🔥
 function resetSectionFields(sectionId) {
 
-    const section = document.getElementById(sectionId);
+    const section =
+        document.getElementById(sectionId);
+
     if (!section) return;
 
+    // =========================
+    // 🔥 input 초기화
+    // =========================
     section.querySelectorAll('input').forEach(i => {
+
         if (i.type === "checkbox") {
+
             i.checked = false;
+
         } else {
+
             i.value = "";
         }
     });
 
+    // =========================
+    // 🔥 select 초기화
+    // =========================
     section.querySelectorAll('select').forEach(s => {
+
         s.selectedIndex = 0;
     });
 
+    // =========================
+    // 🔥 textarea 초기화
+    // =========================
     section.querySelectorAll('textarea').forEach(t => {
+
         t.value = "";
     });
+
+    // =========================
+    // 🔥 행사 신청 전용 초기화
+    // =========================
+    if (sectionId === "adApplyForm") {
+
+        // 🔥 hidden 값 초기화
+        const ad =
+            document.getElementById("shopAd");
+
+        const img =
+            document.getElementById("shopAdImage");
+
+        const video =
+            document.getElementById("shopAdVideo");
+
+        if (ad) {
+            ad.value = "";
+        }
+
+        if (img) {
+            img.value = "";
+        }
+
+        if (video) {
+            video.value = "";
+        }
+
+        // =========================
+        // 🔥 큰 입력창 초기화
+        // =========================
+        const bigText =
+            document.getElementById("bigAdText");
+
+        if (bigText) {
+
+            bigText.value = "";
+        }
+
+        // =========================
+        // 🔥 파일 input 초기화
+        // =========================
+        const imageFile =
+            document.getElementById("adImageFile");
+
+        const videoFile =
+            document.getElementById("adVideoFile");
+
+        if (imageFile) {
+
+            imageFile.value = "";
+        }
+
+        if (videoFile) {
+
+            videoFile.value = "";
+        }
+
+        // =========================
+        // 🔥 이미지 미리보기 제거
+        // =========================
+        const imgPreview =
+            document.getElementById("adImagePreview");
+
+        if (imgPreview) {
+
+            imgPreview.innerHTML = "";
+
+            imgPreview.style.display = "none";
+        }
+
+        // =========================
+        // 🔥 동영상 미리보기 제거
+        // =========================
+        const videoPreview =
+            document.getElementById("adVideoPreview");
+
+        if (videoPreview) {
+
+            videoPreview.innerHTML = "";
+
+            videoPreview.style.display = "none";
+        }
+
+        // =========================
+        // 🔥 행사 문구 안내 복구
+        // =========================
+        const preview =
+            document.getElementById("adPreviewBox");
+
+        if (preview) {
+
+            preview.innerHTML =
+                "눌러서 큰 화면에서 행사 문구를 입력하세요";
+
+            preview.style.color = "#888";
+        }
+
+        // =========================
+        // 🔥 overlay 닫기 보정
+        // =========================
+        const overlay =
+            document.getElementById("adEditorOverlay");
+
+        if (overlay) {
+
+            overlay.style.display = "none";
+
+            overlay.style.pointerEvents = "none";
+
+            overlay.style.visibility = "hidden";
+        }
+
+        // =========================
+        // 🔥 스크롤 복구
+        // =========================
+        document.body.style.overflow = "auto";
+    }
 }
 
 
