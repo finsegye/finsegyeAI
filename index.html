@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>FINSEGYE - Final Perfect Audio Master</title>
+
     <link rel="manifest" href="manifest.json">
 
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -251,10 +252,9 @@
 
 </div>
 
-<button class="submitBtn"
-    onclick="validateEvent();">
-    행사 신청하기
-</button>
+        <button class="submitBtn" onclick="sendEventToGoogle(); validateEvent();">
+            행사 신청하기
+        </button>
     </div>
 </section>
 
@@ -1051,13 +1051,9 @@ if (id !== "globalOrderForm") {
     target.style.display = 'block';
 
     // 🔥 입력 초기화
-if (
-    id !== 'dashboard' &&
-    id !== 'mypage' &&
-    id !== 'adApplyForm'
-) {
-    resetSectionFields(id);
-}
+    if (id !== 'dashboard' && id !== 'mypage') {
+        resetSectionFields(id);
+    }
 
     if (btn) btn.classList.add('active');
 
@@ -1140,164 +1136,24 @@ function resetAllForms() {
 // 🔥🔥🔥 바로 여기 아래 추가 🔥🔥🔥
 function resetSectionFields(sectionId) {
 
-    const section =
-        document.getElementById(sectionId);
-
+    const section = document.getElementById(sectionId);
     if (!section) return;
 
-    // =========================
-    // 🔥 input 초기화
-    // =========================
-section.querySelectorAll('input').forEach(i => {
+    section.querySelectorAll('input').forEach(i => {
+        if (i.type === "checkbox") {
+            i.checked = false;
+        } else {
+            i.value = "";
+        }
+    });
 
-    // 🔥 hidden 저장값은 건드리지 않음
-    if (i.type === "hidden") {
-        return;
-    }
-
-    if (i.type === "checkbox") {
-
-        i.checked = false;
-
-    } else {
-
-        i.value = "";
-    }
-});
-
-    // =========================
-    // 🔥 select 초기화
-    // =========================
     section.querySelectorAll('select').forEach(s => {
-
         s.selectedIndex = 0;
     });
 
-    // =========================
-    // 🔥 textarea 초기화
-    // =========================
     section.querySelectorAll('textarea').forEach(t => {
-
         t.value = "";
     });
-
-    // =========================
-    // 🔥 행사 신청 전용 초기화
-    // =========================
-    if (sectionId === "adApplyForm") {
-
-        // 🔥 hidden 값 초기화
-        const ad =
-            document.getElementById("shopAd");
-
-        const img =
-            document.getElementById("shopAdImage");
-
-        const video =
-            document.getElementById("shopAdVideo");
-
-        if (ad) {
-            ad.value = "";
-        }
-
-        if (img) {
-            img.value = "";
-        }
-
-        if (video) {
-            video.value = "";
-        }
-
-        // =========================
-        // 🔥 큰 입력창 초기화
-        // =========================
-        const bigText =
-            document.getElementById("bigAdText");
-
-        if (bigText) {
-
-            bigText.value = "";
-        }
-
-        // =========================
-        // 🔥 파일 input 초기화
-        // =========================
-        const imageFile =
-            document.getElementById("adImageFile");
-
-        const videoFile =
-            document.getElementById("adVideoFile");
-
-        if (imageFile) {
-
-            imageFile.value = "";
-        }
-
-        if (videoFile) {
-
-            videoFile.value = "";
-        }
-
-        // =========================
-        // 🔥 이미지 미리보기 제거
-        // =========================
-        const imgPreview =
-            document.getElementById("adImagePreview");
-
-        if (imgPreview) {
-
-            imgPreview.innerHTML = "";
-
-            imgPreview.style.display = "none";
-        }
-
-        // =========================
-        // 🔥 동영상 미리보기 제거
-        // =========================
-        const videoPreview =
-            document.getElementById("adVideoPreview");
-
-        if (videoPreview) {
-
-            videoPreview.innerHTML = "";
-
-            videoPreview.style.display = "none";
-        }
-
-        // =========================
-        // 🔥 행사 문구 안내 복구
-        // =========================
-        const preview =
-            document.getElementById("adPreviewBox");
-
-        if (preview) {
-
-            preview.innerHTML =
-                "눌러서 큰 화면에서 행사 문구를 입력하세요";
-
-            preview.style.color = "#888";
-        }
-
-        // =========================
-        // 🔥 overlay 닫기 보정
-        // =========================
-        const overlay =
-            document.getElementById("adEditorOverlay");
-
-        if (overlay) {
-
-            overlay.style.display = "none";
-
-            overlay.style.pointerEvents = "none";
-
-            overlay.style.visibility = "hidden";
-        }
-
-        // =========================
-        // 🔥 스크롤 복구
-        // =========================
-        document.body.style.overflow = "auto";
-    }
 }
 
 
@@ -1307,53 +1163,13 @@ section.querySelectorAll('input').forEach(i => {
 
 
 
-function saveAndFinish(type, val, msg) {
-
-    let h =
-        JSON.parse(
-            localStorage.getItem('fin_' + type)
-        ) || [];
-
-    h.unshift({
-        name: val,
-        time: new Date().toLocaleString(),
-        rawTime: new Date().getTime()
-    });
-
-    localStorage.setItem(
-        'fin_' + type,
-        JSON.stringify(h)
-    );
-
-    speak(msg);
-
-    alert(msg);
-
-    // 🔥 전체 초기화 제거
-    // resetAllForms();
-
-    // 🔥 현재 섹션만 초기화
-    if (type === "ads") {
-        resetSectionFields("adApplyForm");
+     function saveAndFinish(type, val, msg) {
+        let h = JSON.parse(localStorage.getItem('fin_'+type)) || [];
+        h.unshift({name: val, time: new Date().toLocaleString(), rawTime: new Date().getTime()});
+        localStorage.setItem('fin_'+type, JSON.stringify(h));
+        speak(msg); alert(msg);
+        resetAllForms(); showSection('dashboard', document.querySelectorAll('.nav button')[0]);
     }
-
-    if (type === "shares") {
-        resetSectionFields("shareForm");
-    }
-
-    if (type === "routines") {
-        resetSectionFields("routineForm");
-    }
-
-    if (type === "wallets") {
-        resetSectionFields("bankForm");
-    }
-
-    showSection(
-        'dashboard',
-        document.querySelectorAll('.nav button')[0]
-    );
-}
 
 
 
@@ -1377,31 +1193,18 @@ function saveAndFinish(type, val, msg) {
         {id:'shopAd', n:'문구'}
     ];
 
-for(let x of f) {
+    for(let x of f) {
 
-    const el =
-        document.getElementById(x.id);
-
-    if (!el || !el.value) {
-
-        // 🔥 hidden 값은 포커스 금지
-        if (x.id === "shopAd") {
-
-            speak("행사 문구를 입력해 주세요.");
-
-            openAdEditor();
-
-        } else {
+        if(!document.getElementById(x.id).value) {
 
             hiPassSpeak(
                 x.n + " 항목을 입력해 주세요.",
                 x.id
             );
-        }
 
-        return;
+            return;
+        }
     }
-}
 
    saveUnifiedData({
 
@@ -1549,7 +1352,7 @@ saveUnifiedData({
 
 
 
-        
+       
 
     user: "",
 
@@ -2727,7 +2530,7 @@ status:
 
         lat:
             data.lat || "",
-        
+       
         lng:
             data.lng || "",
 
@@ -2736,7 +2539,7 @@ status:
         regionGroup:
             data.regionGroup || "",
 
-    
+   
 
  msg:
     data.msg || "",
@@ -2910,7 +2713,7 @@ function showGlobalTab(type) {
         registerBox.style.display = "none";
 
 
-        
+       
 
         // 🔥 주문 메뉴 열기
         orderBox.style.display = "block";
@@ -2982,7 +2785,7 @@ function checkCurrentLocation() {
 
             const area =
                 detectCityProvinceByGPS(lat, lng);
-            
+           
             localStorage.setItem("fin_current_city", area.city);
             localStorage.setItem("fin_current_province", area.province);
             localStorage.setItem("fin_current_country", area.country);
@@ -2990,7 +2793,7 @@ function checkCurrentLocation() {
 
 
 
-            
+           
 
             target.innerHTML =
                 "📍 현재 위치 확인 완료<br>" +
@@ -3051,7 +2854,7 @@ function checkCurrentLocation() {
 
 
 
-    
+   
 
 function searchNearbyStores(lat, lng) {
 
@@ -3090,42 +2893,26 @@ function getFinsegyeAdStores() {
         .filter(x => x.type === "ads" || x.type === "routines")
         .map(function(x) {
 
-return {
+            return {
+                name:
+                    x.name || x.user || "등록 매장",
 
-    name:
-        x.name || x.user || "등록 매장",
+               category:
+                x.category || x.msg || x.text || x.purpose || "행사 광고",
+               
+                msg:
+                    x.msg || x.text || x.purpose || "",
+               
+                region:
+                    x.loc || x.addr || "전주",
 
-    category:
-        x.category ||
-        x.msg ||
-        x.text ||
-        x.purpose ||
-        "행사 광고",
+                lat:
+                    Number(x.lat) || 35.8242,
 
-    msg:
-        x.msg ||
-        x.text ||
-        x.purpose ||
-        "",
-
-    // 🔥 추가
-    imageUrl:
-        x.imageUrl || "",
-
-    // 🔥 추가
-    videoUrl:
-        x.videoUrl || "",
-
-    region:
-        x.loc || x.addr || "전주",
-
-    lat:
-        Number(x.lat) || 35.8242,
-
-    lng:
-        Number(x.lng) || 127.1480
-};
-});
+                lng:
+                    Number(x.lng) || 127.1480
+            };
+        });
 
    const sampleAds = [
 
@@ -3208,7 +2995,7 @@ function renderOrderAdToggles(lat, lng) {
         localStorage.getItem("fin_current_province") || "전북";
 
 
-        
+       
     const groups = [
 
         {
@@ -3401,7 +3188,7 @@ function renderStoreGroup(title, list) {
          <div>업종: ${x.category || "행사 광고"}</div>
 
         <div>지역: ${x.region || "-"}${distanceText}</div>
-        
+       
 <div style="
     margin-top:5px;
     color:gold;
@@ -3459,7 +3246,7 @@ ${x.videoUrl ? `
 
 
 
-    
+   
 
 function getDistanceKm(lat1, lng1, lat2, lng2) {
 
@@ -3552,7 +3339,7 @@ function detectCityProvinceByGPS(lat, lng) {
 
 
 
-    
+   
 
 function detectAdRegionGroup(text) {
 
@@ -3604,10 +3391,8 @@ function openAdEditor() {
         document.getElementById("adEditorOverlay");
 
     if (!overlay) return;
+
     overlay.style.display = "block";
-    overlay.style.pointerEvents = "auto";
-    overlay.style.visibility = "visible";
-    document.body.style.overflow = "hidden";
 
     const oldText =
         document.getElementById("shopAd").value || "";
@@ -3628,36 +3413,17 @@ function openAdEditor() {
 
 function closeAdEditor() {
 
-    // 🔥 현재 입력된 문구 가져오기
-    const text =
-        document.getElementById("bigAdText").value;
-
-    // 🔥 입력중 문구 자동 저장
-    if (text && text.trim()) {
-
-        document.getElementById("shopAd").value =
-            text;
-
-        updateAdPreview();
-    }
-
     const overlay =
         document.getElementById("adEditorOverlay");
 
     if (!overlay) return;
 
-    // 🔥 완전 숨김
     overlay.style.display = "none";
-    overlay.style.pointerEvents = "none";
-    overlay.style.visibility = "hidden";
-
-    // 🔥 스크롤 복구
-    document.body.style.overflow = "auto";
 
     speak("행사 문구 입력창을 닫습니다.");
 }
 
-async function saveAdEditor() {
+function saveAdEditor() {
 
     const text =
         document.getElementById("bigAdText").value;
@@ -3668,9 +3434,7 @@ async function saveAdEditor() {
     const videoInput =
         document.getElementById("adVideoFile");
 
-    // =========================
     // 🔥 문구 저장
-    // =========================
     document.getElementById("shopAd").value =
         text;
 
@@ -3683,14 +3447,14 @@ async function saveAdEditor() {
         imageInput.files[0]
     ) {
 
-        const imgBase64 =
-            await fileToBase64(
+        const imageURL =
+            URL.createObjectURL(
                 imageInput.files[0]
             );
 
         document.getElementById(
             "shopAdImage"
-        ).value = imgBase64;
+        ).value = imageURL;
     }
 
     // =========================
@@ -3702,167 +3466,56 @@ async function saveAdEditor() {
         videoInput.files[0]
     ) {
 
-        const videoBase64 =
-            await fileToBase64(
+        const videoURL =
+            URL.createObjectURL(
                 videoInput.files[0]
             );
 
         document.getElementById(
             "shopAdVideo"
-        ).value = videoBase64;
+        ).value = videoURL;
     }
 
     // =========================
-    // 🔥 미리보기 갱신
+    // 🔥 미리보기 출력
     // =========================
-    updateAdPreview();
-
-    // =========================
-    // 🔥 저장 완료
-    // =========================
-    speak("행사 문구가 저장되었습니다.");
-
-    // =========================
-    // 🔥 전체화면 닫기
-    // =========================
-    closeAdEditor();
-}
-
-
-
-
-
-function fileToBase64(file) {
-
-    return new Promise(function(resolve, reject) {
-
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            resolve(e.target.result);
-        };
-
-        reader.onerror = reject;
-
-        reader.readAsDataURL(file);
-    });
-}
-
-
-    
-function updateAdPreview() {
-
     const preview =
         document.getElementById(
             "adPreviewBox"
         );
 
-    if (!preview) return;
+    if (preview) {
 
-    const text =
-        document.getElementById(
-            "shopAd"
-        ).value;
+        let html =
+            text ||
+            "눌러서 큰 화면에서 행사 문구를 입력하세요";
 
-    preview.innerHTML =
-        text ||
-        "눌러서 큰 화면에서 행사 문구를 입력하세요";
-
-    // =========================
-    // 🔥 이미지 출력
-    // =========================
-    const imgPreview =
-        document.getElementById(
-            "adImagePreview"
-        );
-
-    const img =
-        document.getElementById(
-            "shopAdImage"
-        ).value;
-
-    if (imgPreview) {
-
-        if (img) {
-
-            imgPreview.style.display =
-                "block";
-
-            imgPreview.innerHTML = `
-                <img
-                    src="${img}"
-                    style="
-                        width:100%;
-                        border-radius:12px;
-                        max-height:240px;
-                        object-fit:cover;
-                        border:1px solid #00ffcc;
-                    "
-                >
-            `;
-
-        } else {
-
-            imgPreview.style.display =
-                "none";
-        }
+        preview.innerHTML = html;
     }
 
+    // 🔥 저장 완료 음성
+    speak("행사 문구가 저장되었습니다.");
+
     // =========================
-    // 🔥 동영상 출력
+    // 🔥 입력 초기화
     // =========================
-    const videoPreview =
-        document.getElementById(
-            "adVideoPreview"
-        );
+    document.getElementById("bigAdText").value = "";
 
-    const video =
-        document.getElementById(
-            "shopAdVideo"
-        ).value;
-
-    if (videoPreview) {
-
-        if (video) {
-
-            videoPreview.style.display =
-                "block";
-
-
-videoPreview.innerHTML = `
-    <video
-        controls
-        playsinline
-        webkit-playsinline
-        preload="metadata"
-        style="
-            width:100%;
-            border-radius:12px;
-            max-height:260px;
-            border:1px solid #ff00ff;
-            background:#000;
-        "
-    >
-        <source
-            src="${video}"
-            type="video/mp4"
-        >
-    </video>
-`;
-
-
-
-        } else {
-
-            videoPreview.style.display =
-                "none";
-        }
+    if (imageInput) {
+        imageInput.value = "";
     }
+
+    if (videoInput) {
+        videoInput.value = "";
+    }
+
+    // 🔥 전체화면 닫기
+    closeAdEditor();
 }
 
+/* 🔥 추가 끝 */
+
 </script>
-
-
 
 <!-- 🔥 여기 추가 -->
 <div
@@ -3879,9 +3532,6 @@ videoPreview.innerHTML = `
         padding:12px;
         box-sizing:border-box;
         overflow-y:auto;
-
-        pointer-events:none;
-        visibility:hidden;
     "
 >
 
@@ -3910,38 +3560,17 @@ videoPreview.innerHTML = `
             font-size:1.05em;
             resize:none;
         "
+    ></textarea>
 
-></textarea>
+    <div style="margin-top:15px;">
 
-<!-- 🔥 사진 미리보기 -->
-<div
-    id="adImagePreview"
-    style="
-        margin-top:10px;
-        display:none;
-    "
-></div>
-
-<!-- 🔥 동영상 미리보기 -->
-<div
-    id="adVideoPreview"
-    style="
-        margin-top:10px;
-        display:none;
-    "
-></div>
-
-<div style="margin-top:15px;">
-
-    <div style="
-        color:#00ffcc;
-        font-weight:bold;
-        margin-bottom:6px;
-    ">
-        사진 첨부
-    </div>
-
-
+        <div style="
+            color:#00ffcc;
+            font-weight:bold;
+            margin-bottom:6px;
+        ">
+            사진 첨부
+        </div>
 
         <input
             type="file"
