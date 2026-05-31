@@ -2409,8 +2409,12 @@ fetch(
     }
 }
 
-function sendEventToGoogle() {
+// 🔥 괄호 안에 e 가 추가되었습니다.
+function sendEventToGoogle(e) { 
     try {
+        // 🔥 브라우저가 멋대로 화면을 새로고침(바탕화면으로 이동)하는 것을 강력하게 막습니다.
+        if (e) e.preventDefault(); 
+
         const data = {
             type: "ads",
             name: document.getElementById("shopName").value,
@@ -2427,7 +2431,6 @@ function sendEventToGoogle() {
             time: new Date().toLocaleString()
         };
 
-        // 1. 구글 시트로 데이터 전송 (no-cors 방식)
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             mode: "no-cors", 
@@ -2439,24 +2442,17 @@ function sendEventToGoogle() {
             speak("신청이 완료되었습니다."); 
             alert("행사 신청이 완료되어 주문 탭에 등록됩니다.");
             
-            // 🔥 [추가된 부분] 구글 시트에서 불러오지 않고, 즉시 주문 탭 화면에 직접 그려버리기
-            // 앞서 보여주신 CSS의 #realtimeList 를 주문 탭 목록 공간으로 가정했습니다.
             const orderTab = document.getElementById("realtimeList"); 
             
             if (orderTab) {
-                orderTab.style.display = "block"; // 숨겨져 있다면 보이게 처리
+                orderTab.style.display = "block";
                 
-                // 새로운 행사 카드를 HTML로 만듭니다
                 const newEventCard = document.createElement("div");
                 newEventCard.style.cssText = "background: rgba(15,15,15,0.98); border: 1.5px solid gold; border-radius: 10px; padding: 10px; margin-top: 10px; text-align: left;";
                 
-                // 이미지 태그 생성 (이미지 주소가 있을 경우에만)
                 const imageHTML = data.image ? `<img src="${data.image}" style="width: 100%; border-radius: 8px; margin-top: 5px;">` : "";
-                
-                // 동영상 태그 생성 (동영상 주소가 있을 경우에만)
                 const videoHTML = data.video ? `<video src="${data.video}" controls style="width: 100%; border-radius: 8px; margin-top: 5px;"></video>` : "";
 
-                // 화면에 뿌려질 내용 조립
                 newEventCard.innerHTML = `
                     <h3 style="color: gold; margin: 0 0 5px 0; font-size: 1.1em;">${data.name} <span style="font-size: 0.7em; color: #ccc;">(${data.shopType})</span></h3>
                     <p style="color: #fff; font-size: 0.9em; margin: 0 0 10px 0;">📍 ${data.loc}</p>
@@ -2465,18 +2461,20 @@ function sendEventToGoogle() {
                     ${videoHTML}
                 `;
                 
-                // 주문 탭 맨 위에 방금 만든 카드를 꽂아 넣습니다 (prepend)
                 orderTab.prepend(newEventCard);
+                
+                // 🔥 등록이 끝나면 텅 빈 입력칸으로 초기화하기 (선택 사항)
+                // document.getElementById("shopName").value = "";
+                // document.getElementById("shopAd").value = "";
             }
-
         })
         .catch(error => {
             console.error("전송 에러:", error);
             alert("네트워크 오류가 발생했습니다.");
         });
 
-    } catch(e) {
-        console.log("코드 에러:", e);
+    } catch(err) {
+        console.log("코드 에러:", err);
     }
 }
 
