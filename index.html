@@ -1148,17 +1148,22 @@ function resetSectionFields(sectionId) {
     // =========================
     // 🔥 input 초기화
     // =========================
-    section.querySelectorAll('input').forEach(i => {
+section.querySelectorAll('input').forEach(i => {
 
-        if (i.type === "checkbox") {
+    // 🔥 hidden 저장값은 건드리지 않음
+    if (i.type === "hidden") {
+        return;
+    }
 
-            i.checked = false;
+    if (i.type === "checkbox") {
 
-        } else {
+        i.checked = false;
 
-            i.value = "";
-        }
-    });
+    } else {
+
+        i.value = "";
+    }
+});
 
     // =========================
     // 🔥 select 초기화
