@@ -1302,13 +1302,53 @@ function resetSectionFields(sectionId) {
 
 
 
-     function saveAndFinish(type, val, msg) {
-        let h = JSON.parse(localStorage.getItem('fin_'+type)) || [];
-        h.unshift({name: val, time: new Date().toLocaleString(), rawTime: new Date().getTime()});
-        localStorage.setItem('fin_'+type, JSON.stringify(h));
-        speak(msg); alert(msg);
-        resetAllForms(); showSection('dashboard', document.querySelectorAll('.nav button')[0]);
+function saveAndFinish(type, val, msg) {
+
+    let h =
+        JSON.parse(
+            localStorage.getItem('fin_' + type)
+        ) || [];
+
+    h.unshift({
+        name: val,
+        time: new Date().toLocaleString(),
+        rawTime: new Date().getTime()
+    });
+
+    localStorage.setItem(
+        'fin_' + type,
+        JSON.stringify(h)
+    );
+
+    speak(msg);
+
+    alert(msg);
+
+    // 🔥 전체 초기화 제거
+    // resetAllForms();
+
+    // 🔥 현재 섹션만 초기화
+    if (type === "ads") {
+        resetSectionFields("adApplyForm");
     }
+
+    if (type === "shares") {
+        resetSectionFields("shareForm");
+    }
+
+    if (type === "routines") {
+        resetSectionFields("routineForm");
+    }
+
+    if (type === "wallets") {
+        resetSectionFields("bankForm");
+    }
+
+    showSection(
+        'dashboard',
+        document.querySelectorAll('.nav button')[0]
+    );
+}
 
 
 
