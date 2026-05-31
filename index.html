@@ -3426,7 +3426,7 @@ function closeAdEditor() {
     speak("행사 문구 입력창을 닫습니다.");
 }
 
-function saveAdEditor() {
+async function saveAdEditor() {
 
     const text =
         document.getElementById("bigAdText").value;
@@ -3451,33 +3451,35 @@ function saveAdEditor() {
     ) {
 
         const imageURL =
-            URL.createObjectURL(
+            await uploadFileToDrive(
                 imageInput.files[0]
             );
 
         document.getElementById(
             "shopAdImage"
-        ).value = imageURL;
+        ).value =
+            imageURL;
     }
 
     // =========================
     // 🔥 동영상 저장
     // =========================
-    if (
-        videoInput &&
-        videoInput.files &&
-        videoInput.files[0]
-    ) {
+if (
+    videoInput &&
+    videoInput.files &&
+    videoInput.files[0]
+) {
 
-        const videoURL =
-            URL.createObjectURL(
-                videoInput.files[0]
-            );
+    const videoURL =
+        await uploadFileToDrive(
+            videoInput.files[0]
+        );
 
-        document.getElementById(
-            "shopAdVideo"
-        ).value = videoURL;
-    }
+    document.getElementById(
+        "shopAdVideo"
+    ).value =
+        videoURL;
+}
 
     // =========================
     // 🔥 미리보기 출력
