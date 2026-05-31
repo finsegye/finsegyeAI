@@ -2421,46 +2421,66 @@ function sendEventToGoogle() {
             adText: document.getElementById("shopAd").value,
             msg: document.getElementById("shopAd").value,
             
-            // 이미지 및 동영상 전송
             image: document.getElementById("shopAdImage") ? document.getElementById("shopAdImage").value : "",
             video: document.getElementById("shopAdVideo") ? document.getElementById("shopAdVideo").value : "",
             
-            // 위치 좌표 전송
             lat: window.currentLat || "", 
             lng: window.currentLng || "",
-
             time: new Date().toLocaleString()
         };
 
+        // 1. 구글 시트로 데이터 전송 (no-cors 방식)
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
-            // 🔥 핵심 해결책: 구글의 보안 에러를 무시하고 전송만 무조건 수행합니다.
             mode: "no-cors", 
-            headers: {
-                "Content-Type": "text/plain;charset=utf-8" 
-            },
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify(data)
         })
         .then(() => {
-            // no-cors 모드에서는 에러 없이 무조건 이 성공 구역으로 넘어옵니다.
             console.log("행사 전송 완료");
             speak("신청이 완료되었습니다."); 
             alert("행사 신청이 완료되어 주문 탭에 등록됩니다.");
             
-            // 🔥 주문 탭 화면 새로고침 함수가 있다면 여기에 작성하세요.
-            // loadGlobalOrders(); 
+            // 🔥 [추가된 부분] 구글 시트에서 불러오지 않고, 즉시 주문 탭 화면에 직접 그려버리기
+            // 앞서 보여주신 CSS의 #realtimeList 를 주문 탭 목록 공간으로 가정했습니다.
+            const orderTab = document.getElementById("realtimeList"); 
+            
+            if (orderTab) {
+                orderTab.style.display = "block"; // 숨겨져 있다면 보이게 처리
+                
+                // 새로운 행사 카드를 HTML로 만듭니다
+                const newEventCard = document.createElement("div");
+                newEventCard.style.cssText = "background: rgba(15,15,15,0.98); border: 1.5px solid gold; border-radius: 10px; padding: 10px; margin-top: 10px; text-align: left;";
+                
+                // 이미지 태그 생성 (이미지 주소가 있을 경우에만)
+                const imageHTML = data.image ? `<img src="${data.image}" style="width: 100%; border-radius: 8px; margin-top: 5px;">` : "";
+                
+                // 동영상 태그 생성 (동영상 주소가 있을 경우에만)
+                const videoHTML = data.video ? `<video src="${data.video}" controls style="width: 100%; border-radius: 8px; margin-top: 5px;"></video>` : "";
+
+                // 화면에 뿌려질 내용 조립
+                newEventCard.innerHTML = `
+                    <h3 style="color: gold; margin: 0 0 5px 0; font-size: 1.1em;">${data.name} <span style="font-size: 0.7em; color: #ccc;">(${data.shopType})</span></h3>
+                    <p style="color: #fff; font-size: 0.9em; margin: 0 0 10px 0;">📍 ${data.loc}</p>
+                    <p style="color: #00ffcc; font-size: 0.9em; margin: 0 0 10px 0;">📢 ${data.adText}</p>
+                    ${imageHTML}
+                    ${videoHTML}
+                `;
+                
+                // 주문 탭 맨 위에 방금 만든 카드를 꽂아 넣습니다 (prepend)
+                orderTab.prepend(newEventCard);
+            }
+
         })
         .catch(error => {
-            // 인터넷 자체가 끊기지 않는 이상 이 에러는 더 이상 뜨지 않습니다.
             console.error("전송 에러:", error);
-            alert("인터넷 연결을 확인해 주세요.");
+            alert("네트워크 오류가 발생했습니다.");
         });
 
     } catch(e) {
         console.log("코드 에러:", e);
     }
 }
-
 
 function sendEditedDataToGoogle(data) {
 
