@@ -647,6 +647,9 @@
     const GOOGLE_SCRIPT_URL =
     "https://script.google.com/macros/s/AKfycby6B7gZiNNFqnBvF909WuFMSpRbqKYJY5lRhi-3XMWFQZFDVVKL2sHFsdUptBipFXathg/exec";
 
+    const DRIVE_UPLOAD_URL =
+    "https://script.google.com/macros/s/AKfycbz9iL5-ywX8lIpPI96cCzEpTNIEh2Q7lA1r1hquzYUFpWLfaKbCX6EHTy6ons7djX_Z/exec";
+    
     var reserveValue = 100.0, reserveStep = -0.04;
 
 function speak(text) {
@@ -3513,7 +3516,81 @@ function saveAdEditor() {
     closeAdEditor();
 }
 
-/* 🔥 추가 끝 */
+async function uploadFileToDrive(file) {
+
+    try {
+
+        const base64 =
+            await toBase64(file);
+
+        const res =
+            await fetch(
+                DRIVE_UPLOAD_URL,
+                {
+                    method: "POST",
+                    body: JSON.stringify({
+
+                        fileName:
+                            file.name,
+
+                        mimeType:
+                            file.type,
+
+                        base64:
+                            base64.split(",")[1]
+                    })
+                }
+            );
+
+        const data =
+            await res.json();
+
+        if (data.success) {
+
+            return data.url;
+
+        } else {
+
+            alert(
+                "업로드 실패"
+            );
+
+            return "";
+        }
+
+    } catch(e) {
+
+        console.log(e);
+
+        alert(
+            "드라이브 업로드 오류"
+        );
+
+        return "";
+    }
+}
+
+
+    function toBase64(file) {
+
+    return new Promise(
+        (resolve, reject) => {
+
+            const reader =
+                new FileReader();
+
+            reader.readAsDataURL(file);
+
+            reader.onload =
+                () => resolve(
+                    reader.result
+                );
+
+            reader.onerror =
+                error => reject(error);
+        }
+    );
+}
 
 </script>
 
