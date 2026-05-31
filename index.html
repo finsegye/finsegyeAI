@@ -1051,9 +1051,13 @@ if (id !== "globalOrderForm") {
     target.style.display = 'block';
 
     // 🔥 입력 초기화
-    if (id !== 'dashboard' && id !== 'mypage') {
-        resetSectionFields(id);
-    }
+if (
+    id !== 'dashboard' &&
+    id !== 'mypage' &&
+    id !== 'adApplyForm'
+) {
+    resetSectionFields(id);
+}
 
     if (btn) btn.classList.add('active');
 
