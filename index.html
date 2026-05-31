@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>FINSEGYE - Final Perfect Audio Master</title>
+
     <link rel="manifest" href="manifest.json">
 
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1351,7 +1352,7 @@ saveUnifiedData({
 
 
 
-        
+       
 
     user: "",
 
@@ -2529,7 +2530,7 @@ status:
 
         lat:
             data.lat || "",
-        
+       
         lng:
             data.lng || "",
 
@@ -2538,7 +2539,7 @@ status:
         regionGroup:
             data.regionGroup || "",
 
-    
+   
 
  msg:
     data.msg || "",
@@ -2712,7 +2713,7 @@ function showGlobalTab(type) {
         registerBox.style.display = "none";
 
 
-        
+       
 
         // 🔥 주문 메뉴 열기
         orderBox.style.display = "block";
@@ -2784,7 +2785,7 @@ function checkCurrentLocation() {
 
             const area =
                 detectCityProvinceByGPS(lat, lng);
-            
+           
             localStorage.setItem("fin_current_city", area.city);
             localStorage.setItem("fin_current_province", area.province);
             localStorage.setItem("fin_current_country", area.country);
@@ -2792,7 +2793,7 @@ function checkCurrentLocation() {
 
 
 
-            
+           
 
             target.innerHTML =
                 "📍 현재 위치 확인 완료<br>" +
@@ -2853,7 +2854,7 @@ function checkCurrentLocation() {
 
 
 
-    
+   
 
 function searchNearbyStores(lat, lng) {
 
@@ -2892,42 +2893,26 @@ function getFinsegyeAdStores() {
         .filter(x => x.type === "ads" || x.type === "routines")
         .map(function(x) {
 
-return {
+            return {
+                name:
+                    x.name || x.user || "등록 매장",
 
-    name:
-        x.name || x.user || "등록 매장",
+               category:
+                x.category || x.msg || x.text || x.purpose || "행사 광고",
+               
+                msg:
+                    x.msg || x.text || x.purpose || "",
+               
+                region:
+                    x.loc || x.addr || "전주",
 
-    category:
-        x.category ||
-        x.msg ||
-        x.text ||
-        x.purpose ||
-        "행사 광고",
+                lat:
+                    Number(x.lat) || 35.8242,
 
-    msg:
-        x.msg ||
-        x.text ||
-        x.purpose ||
-        "",
-
-    // 🔥 추가
-    imageUrl:
-        x.imageUrl || "",
-
-    // 🔥 추가
-    videoUrl:
-        x.videoUrl || "",
-
-    region:
-        x.loc || x.addr || "전주",
-
-    lat:
-        Number(x.lat) || 35.8242,
-
-    lng:
-        Number(x.lng) || 127.1480
-};
-});
+                lng:
+                    Number(x.lng) || 127.1480
+            };
+        });
 
    const sampleAds = [
 
@@ -3010,7 +2995,7 @@ function renderOrderAdToggles(lat, lng) {
         localStorage.getItem("fin_current_province") || "전북";
 
 
-        
+       
     const groups = [
 
         {
@@ -3203,7 +3188,7 @@ function renderStoreGroup(title, list) {
          <div>업종: ${x.category || "행사 광고"}</div>
 
         <div>지역: ${x.region || "-"}${distanceText}</div>
-        
+       
 <div style="
     margin-top:5px;
     color:gold;
@@ -3261,7 +3246,7 @@ ${x.videoUrl ? `
 
 
 
-    
+   
 
 function getDistanceKm(lat1, lng1, lat2, lng2) {
 
@@ -3354,7 +3339,7 @@ function detectCityProvinceByGPS(lat, lng) {
 
 
 
-    
+   
 
 function detectAdRegionGroup(text) {
 
@@ -3449,9 +3434,7 @@ function saveAdEditor() {
     const videoInput =
         document.getElementById("adVideoFile");
 
-    // =========================
     // 🔥 문구 저장
-    // =========================
     document.getElementById("shopAd").value =
         text;
 
@@ -3464,20 +3447,14 @@ function saveAdEditor() {
         imageInput.files[0]
     ) {
 
-        const reader = new FileReader();
+        const imageURL =
+            URL.createObjectURL(
+                imageInput.files[0]
+            );
 
-        reader.onload = function(e) {
-
-            document.getElementById(
-                "shopAdImage"
-            ).value = e.target.result;
-
-            updateAdPreview();
-        };
-
-        reader.readAsDataURL(
-            imageInput.files[0]
-        );
+        document.getElementById(
+            "shopAdImage"
+        ).value = imageURL;
     }
 
     // =========================
@@ -3489,38 +3466,40 @@ function saveAdEditor() {
         videoInput.files[0]
     ) {
 
-        const reader = new FileReader();
+        const videoURL =
+            URL.createObjectURL(
+                videoInput.files[0]
+            );
 
-        reader.onload = function(e) {
-
-            document.getElementById(
-                "shopAdVideo"
-            ).value = e.target.result;
-
-            updateAdPreview();
-        };
-
-        reader.readAsDataURL(
-            videoInput.files[0]
-        );
+        document.getElementById(
+            "shopAdVideo"
+        ).value = videoURL;
     }
 
     // =========================
     // 🔥 미리보기 출력
     // =========================
-    updateAdPreview();
+    const preview =
+        document.getElementById(
+            "adPreviewBox"
+        );
 
-    // =========================
-    // 🔥 저장 완료
-    // =========================
+    if (preview) {
+
+        let html =
+            text ||
+            "눌러서 큰 화면에서 행사 문구를 입력하세요";
+
+        preview.innerHTML = html;
+    }
+
+    // 🔥 저장 완료 음성
     speak("행사 문구가 저장되었습니다.");
 
     // =========================
     // 🔥 입력 초기화
     // =========================
-    document.getElementById(
-        "bigAdText"
-    ).value = "";
+    document.getElementById("bigAdText").value = "";
 
     if (imageInput) {
         imageInput.value = "";
@@ -3530,125 +3509,13 @@ function saveAdEditor() {
         videoInput.value = "";
     }
 
-    // =========================
     // 🔥 전체화면 닫기
-    // =========================
     closeAdEditor();
 }
 
-function updateAdPreview() {
-
-    const preview =
-        document.getElementById(
-            "adPreviewBox"
-        );
-
-    if (!preview) return;
-
-    const text =
-        document.getElementById(
-            "shopAd"
-        ).value;
-
-    preview.innerHTML =
-        text ||
-        "눌러서 큰 화면에서 행사 문구를 입력하세요";
-
-    // =========================
-    // 🔥 이미지 출력
-    // =========================
-    const imgPreview =
-        document.getElementById(
-            "adImagePreview"
-        );
-
-    const img =
-        document.getElementById(
-            "shopAdImage"
-        ).value;
-
-    if (imgPreview) {
-
-        if (img) {
-
-            imgPreview.style.display =
-                "block";
-
-            imgPreview.innerHTML = `
-                <img
-                    src="${img}"
-                    style="
-                        width:100%;
-                        border-radius:12px;
-                        max-height:240px;
-                        object-fit:cover;
-                        border:1px solid #00ffcc;
-                    "
-                >
-            `;
-
-        } else {
-
-            imgPreview.style.display =
-                "none";
-        }
-    }
-
-    // =========================
-    // 🔥 동영상 출력
-    // =========================
-    const videoPreview =
-        document.getElementById(
-            "adVideoPreview"
-        );
-
-    const video =
-        document.getElementById(
-            "shopAdVideo"
-        ).value;
-
-    if (videoPreview) {
-
-        if (video) {
-
-            videoPreview.style.display =
-                "block";
-
-
-videoPreview.innerHTML = `
-    <video
-        controls
-        playsinline
-        webkit-playsinline
-        preload="metadata"
-        style="
-            width:100%;
-            border-radius:12px;
-            max-height:260px;
-            border:1px solid #ff00ff;
-            background:#000;
-        "
-    >
-        <source
-            src="${video}"
-            type="video/mp4"
-        >
-    </video>
-`;
-
-
-
-        } else {
-
-            videoPreview.style.display =
-                "none";
-        }
-    }
-}
+/* 🔥 추가 끝 */
 
 </script>
-
-
 
 <!-- 🔥 여기 추가 -->
 <div
@@ -3693,38 +3560,17 @@ videoPreview.innerHTML = `
             font-size:1.05em;
             resize:none;
         "
+    ></textarea>
 
-></textarea>
+    <div style="margin-top:15px;">
 
-<!-- 🔥 사진 미리보기 -->
-<div
-    id="adImagePreview"
-    style="
-        margin-top:10px;
-        display:none;
-    "
-></div>
-
-<!-- 🔥 동영상 미리보기 -->
-<div
-    id="adVideoPreview"
-    style="
-        margin-top:10px;
-        display:none;
-    "
-></div>
-
-<div style="margin-top:15px;">
-
-    <div style="
-        color:#00ffcc;
-        font-weight:bold;
-        margin-bottom:6px;
-    ">
-        사진 첨부
-    </div>
-
-
+        <div style="
+            color:#00ffcc;
+            font-weight:bold;
+            margin-bottom:6px;
+        ">
+            사진 첨부
+        </div>
 
         <input
             type="file"
