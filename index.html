@@ -3481,12 +3481,17 @@ function openAdEditor() {
 function closeAdEditor() {
 
     const overlay =
-        document.getElementById("adEditorOverlay");
+        document.getElementById(
+            "adEditorOverlay"
+        );
 
     if (!overlay) return;
 
     overlay.style.display = "none";
+    overlay.style.visibility = "hidden";
+    overlay.style.pointerEvents = "none";
 
+    document.body.style.overflow = "auto";
 }
 
 function saveAdEditor() {
