@@ -2413,7 +2413,7 @@ fetch(
 
 // 🔥 괄호 안에 e 가 추가되었습니다.
 function sendEventToGoogle(e) {
-    e.preventDefault(); // 새로고침 방지
+    if (e) e.preventDefault(); // 1. 새로고침 막기
     
     try {
         const data = {
@@ -2422,11 +2422,15 @@ function sendEventToGoogle(e) {
             shopType: document.getElementById("shopType").value,
             loc: document.getElementById("shopLoc").value,
             adText: document.getElementById("shopAd").value,
+            msg: document.getElementById("shopAd").value,
             image: document.getElementById("shopAdImage") ? document.getElementById("shopAdImage").value : "",
+            video: document.getElementById("shopAdVideo") ? document.getElementById("shopAdVideo").value : "",
+            lat: window.currentLat || "", 
+            lng: window.currentLng || "",
             time: new Date().toLocaleString()
         };
 
-        // 데이터 전송
+        // 2. 구글 시트 전송
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             mode: "no-cors",
@@ -2434,25 +2438,29 @@ function sendEventToGoogle(e) {
             body: JSON.stringify(data)
         });
 
-        // 🔥 화면에 즉시 표시 (주문 탭)
-        const orderTab = document.getElementById("realtimeList"); 
+        // 3. 주문 탭(#realtimeList)에 데이터 즉시 노출
+        const orderTab = document.getElementById("realtimeList");
         if (orderTab) {
-            orderTab.style.display = "block"; // 주문 탭이 안 보이던 것을 보이게 함
+            orderTab.style.display = "block"; // 🔥 중요: 숨겨져 있던 주문 탭을 강제로 보이게 함!
+            
             const newEventCard = document.createElement("div");
-            newEventCard.style.cssText = "background: rgba(15,15,15,0.98); border: 1.5px solid gold; border-radius: 10px; padding: 10px; margin-top: 10px;";
+            newEventCard.style.cssText = "background: rgba(15,15,15,0.98); border: 1.5px solid #00ffcc; border-radius: 10px; padding: 10px; margin-top: 10px; color: white;";
+            
             newEventCard.innerHTML = `
-                <h3 style="color: gold;">${data.name}</h3>
-                <p style="color: #fff;">${data.adText}</p>
+                <h3 style="color: gold; margin: 0;">${data.name}</h3>
+                <p style="font-size: 0.9em;">📍 ${data.loc}</p>
+                <p style="color: #00ffcc;">📢 ${data.adText}</p>
                 ${data.image ? `<img src="${data.image}" style="width:100%; border-radius:8px;">` : ""}
             `;
-            orderTab.prepend(newEventCard); // 목록의 맨 위에 추가
+            
+            orderTab.prepend(newEventCard); // 목록 맨 위에 새 글 추가
         }
 
         alert("등록이 완료되었습니다.");
         speak("신청이 완료되었습니다.");
 
     } catch(err) {
-        console.log("에러 발생:", err);
+        console.error("전송 에러:", err);
     }
 }
 
