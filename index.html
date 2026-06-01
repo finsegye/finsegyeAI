@@ -3499,6 +3499,8 @@ async function uploadFileToDrive(file) {
         const base64 =
             await toBase64(file);
 
+alert("업로드 시작");
+
 const res =
     await fetch(
         DRIVE_UPLOAD_URL,
