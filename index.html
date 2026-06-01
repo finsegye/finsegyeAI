@@ -3437,6 +3437,7 @@ function closeAdEditor() {
 }
 
 
+```javascript
 async function saveAdEditor() {
 
     const text =
@@ -3454,39 +3455,24 @@ async function saveAdEditor() {
         "shopAd"
     ).value = text;
 
-    // =========================
-    // 🔥 이미지 업로드
-    // =========================
-
+    // 🔥 테스트용 이미지 저장
     if (
         imageInput &&
         imageInput.files &&
         imageInput.files[0]
     ) {
 
-const imageURL =
-    "TEST_IMAGE";
-
-        // 🔥 업로드 실패
-        if (!imageURL) {
-
-            alert(
-                "이미지 업로드 실패"
-            );
-
-            return;
-        }
-
         document.getElementById(
             "shopAdImage"
         ).value =
-            imageURL;
+            "TEST_IMAGE";
     }
 
     alert(
-        "행사 문구 저장 완료"
+        "저장 완료"
     );
 }
+```
 
 
 
