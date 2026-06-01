@@ -3430,7 +3430,12 @@ function closeAdEditor() {
 
     if (!overlay) return;
 
-    overlay.style.display = "none";
+
+overlay.style.display = "none";
+
+overlay.style.pointerEvents = "none";
+
+
 
     speak("행사 문구 입력창을 닫습니다.");
 }
