@@ -647,9 +647,6 @@
     const GOOGLE_SCRIPT_URL =
     "https://script.google.com/macros/s/AKfycby6B7gZiNNFqnBvF909WuFMSpRbqKYJY5lRhi-3XMWFQZFDVVKL2sHFsdUptBipFXathg/exec";
 
-    const DRIVE_UPLOAD_URL =
-    "https://script.google.com/macros/s/AKfycbz9iL5-ywX8lIpPI96cCzEpTNIEh2Q7lA1r1hquzYUFpWLfaKbCX6EHTy6ons7djX_Z/exec";
-    
     var reserveValue = 100.0, reserveStep = -0.04;
 
 function speak(text) {
@@ -3417,153 +3414,106 @@ function openAdEditor() {
 function closeAdEditor() {
 
     const overlay =
-        document.getElementById(
-            "adEditorOverlay"
-        );
+        document.getElementById("adEditorOverlay");
 
     if (!overlay) return;
 
-    overlay.style.display =
-        "none";
+    overlay.style.display = "none";
 
-    overlay.style.visibility =
-        "hidden";
-
-    overlay.style.pointerEvents =
-        "none";
-
-    document.body.style.overflow =
-        "auto";
+    speak("행사 문구 입력창을 닫습니다.");
 }
 
-
-```javascript
-async function saveAdEditor() {
+function saveAdEditor() {
 
     const text =
-        document.getElementById(
-            "bigAdText"
-        ).value;
+        document.getElementById("bigAdText").value;
 
     const imageInput =
-        document.getElementById(
-            "adImageFile"
-        );
+        document.getElementById("adImageFile");
+
+    const videoInput =
+        document.getElementById("adVideoFile");
 
     // 🔥 문구 저장
-    document.getElementById(
-        "shopAd"
-    ).value = text;
+    document.getElementById("shopAd").value =
+        text;
 
-    // 🔥 테스트용 이미지 저장
+    // =========================
+    // 🔥 이미지 저장
+    // =========================
     if (
         imageInput &&
         imageInput.files &&
         imageInput.files[0]
     ) {
 
+        const imageURL =
+            URL.createObjectURL(
+                imageInput.files[0]
+            );
+
         document.getElementById(
             "shopAdImage"
-        ).value =
-            "TEST_IMAGE";
+        ).value = imageURL;
     }
 
-    alert(
-        "저장 완료"
-    );
-}
-```
+    // =========================
+    // 🔥 동영상 저장
+    // =========================
+    if (
+        videoInput &&
+        videoInput.files &&
+        videoInput.files[0]
+    ) {
 
+        const videoURL =
+            URL.createObjectURL(
+                videoInput.files[0]
+            );
 
+        document.getElementById(
+            "shopAdVideo"
+        ).value = videoURL;
+    }
 
-async function uploadFileToDrive(file) {
-
-    try {
-
-        const base64 =
-            await toBase64(file);
-
-alert("업로드 시작");
-
-const res =
-    await fetch(
-        DRIVE_UPLOAD_URL,
-        {
-            method: "POST",
-
-            headers: {
-                "Content-Type":
-                    "text/plain;charset=utf-8"
-            },
-
-            body: JSON.stringify({
-
-                fileName:
-                    file.name,
-
-                mimeType:
-                    file.type,
-
-                base64:
-                    base64.split(",")[1]
-            })
-        }
-    );
-
-        const text =
-    await res.text();
-
-alert(text);
-
-const data =
-    JSON.parse(text);
-
-if (data.success) {
-
-    return data.url;
-
-} else {
-
-    alert(
-        JSON.stringify(data)
-    );
-
-    return "";
-}
-
-    } catch(e) {
-
-        console.log(e);
-
-        alert(
-            "드라이브 업로드 오류"
+    // =========================
+    // 🔥 미리보기 출력
+    // =========================
+    const preview =
+        document.getElementById(
+            "adPreviewBox"
         );
 
-        return "";
+    if (preview) {
+
+        let html =
+            text ||
+            "눌러서 큰 화면에서 행사 문구를 입력하세요";
+
+        preview.innerHTML = html;
     }
+
+    // 🔥 저장 완료 음성
+    speak("행사 문구가 저장되었습니다.");
+
+    // =========================
+    // 🔥 입력 초기화
+    // =========================
+    document.getElementById("bigAdText").value = "";
+
+    if (imageInput) {
+        imageInput.value = "";
+    }
+
+    if (videoInput) {
+        videoInput.value = "";
+    }
+
+    // 🔥 전체화면 닫기
+    closeAdEditor();
 }
 
-
-    function toBase64(file) {
-
-    return new Promise(
-        (resolve, reject) => {
-
-            const reader =
-                new FileReader();
-
-            reader.readAsDataURL(file);
-
-            reader.onload =
-                () => resolve(
-                    reader.result
-                );
-
-            reader.onerror =
-                error => reject(error);
-        }
-    );
-}
+/* 🔥 추가 끝 */
 
 </script>
 
