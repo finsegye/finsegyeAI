@@ -3522,12 +3522,14 @@ function saveAdEditor() {
         imageInput.value = "";
     }
 
-    if (videoInput) {
-        videoInput.value = "";
-    }
 
-    // 🔥 전체화면 닫기
-    closeAdEditor();
+if (videoInput) {
+    videoInput.value = "";
+}
+
+validateEvent();
+
+
 }
 
 
