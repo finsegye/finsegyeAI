@@ -614,6 +614,12 @@
     <button onclick="showSection('routineForm', this)">행사루틴</button>
     <button onclick="showSection('bankForm', this)">지갑설립</button>
     <button onclick="showSection('mypage', this)">나의현황</button>
+    
+<button onclick="testImageSave()">
+테스트 이미지 저장
+</button>
+
+
 </div>
 
 <script>
@@ -3513,7 +3519,18 @@ function saveAdEditor() {
     closeAdEditor();
 }
 
-/* 🔥 추가 끝 */
+
+function testImageSave() {
+
+    document.getElementById(
+        "shopAdImage"
+    ).value =
+        "https://picsum.photos/300";
+
+    alert("테스트 이미지 저장 완료");
+}
+
+
 
 </script>
 
