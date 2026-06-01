@@ -3417,33 +3417,47 @@ function openAdEditor() {
 function closeAdEditor() {
 
     const overlay =
-        document.getElementById("adEditorOverlay");
+        document.getElementById(
+            "adEditorOverlay"
+        );
 
     if (!overlay) return;
 
-    overlay.style.display = "none";
+    overlay.style.display =
+        "none";
 
-    speak("행사 문구 입력창을 닫습니다.");
+    overlay.style.visibility =
+        "hidden";
+
+    overlay.style.pointerEvents =
+        "none";
+
+    document.body.style.overflow =
+        "auto";
 }
 
+```javascript
 async function saveAdEditor() {
 
     const text =
-        document.getElementById("bigAdText").value;
+        document.getElementById(
+            "bigAdText"
+        ).value;
 
     const imageInput =
-        document.getElementById("adImageFile");
-
-    const videoInput =
-        document.getElementById("adVideoFile");
+        document.getElementById(
+            "adImageFile"
+        );
 
     // 🔥 문구 저장
-    document.getElementById("shopAd").value =
-        text;
+    document.getElementById(
+        "shopAd"
+    ).value = text;
 
     // =========================
-    // 🔥 이미지 저장
+    // 🔥 이미지 업로드
     // =========================
+
     if (
         imageInput &&
         imageInput.files &&
@@ -3455,68 +3469,28 @@ async function saveAdEditor() {
                 imageInput.files[0]
             );
 
+        // 🔥 업로드 실패
+        if (!imageURL) {
+
+            alert(
+                "이미지 업로드 실패"
+            );
+
+            return;
+        }
+
         document.getElementById(
             "shopAdImage"
         ).value =
             imageURL;
     }
 
-    // =========================
-    // 🔥 동영상 저장
-    // =========================
-if (
-    videoInput &&
-    videoInput.files &&
-    videoInput.files[0]
-) {
-
-    const videoURL =
-        await uploadFileToDrive(
-            videoInput.files[0]
-        );
-
-    document.getElementById(
-        "shopAdVideo"
-    ).value =
-        videoURL;
+    alert(
+        "행사 문구 저장 완료"
+    );
 }
+```
 
-    // =========================
-    // 🔥 미리보기 출력
-    // =========================
-    const preview =
-        document.getElementById(
-            "adPreviewBox"
-        );
-
-    if (preview) {
-
-        let html =
-            text ||
-            "눌러서 큰 화면에서 행사 문구를 입력하세요";
-
-        preview.innerHTML = html;
-    }
-
-    // 🔥 저장 완료 음성
-    speak("행사 문구가 저장되었습니다.");
-
-    // =========================
-    // 🔥 입력 초기화
-    // =========================
-    document.getElementById("bigAdText").value = "";
-
-    if (imageInput) {
-        imageInput.value = "";
-    }
-
-    if (videoInput) {
-        videoInput.value = "";
-    }
-
-    // 🔥 전체화면 닫기
-    closeAdEditor();
-}
 
 async function uploadFileToDrive(file) {
 
