@@ -3553,18 +3553,18 @@ const res =
         const data =
             await res.json();
 
-        if (data.success) {
+if (data.success) {
 
-            return data.url;
+    return data.url;
 
-        } else {
+} else {
 
-            alert(
-                "업로드 실패"
-            );
+    alert(
+        JSON.stringify(data)
+    );
 
-            return "";
-        }
+    return "";
+}
 
     } catch(e) {
 
