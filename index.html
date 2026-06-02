@@ -2623,8 +2623,14 @@ status:
 
 
 
-        regionGroup:
-            data.regionGroup || "",
+     adRange:
+    data.adRange || "",
+
+city:
+    data.city || "",
+
+province:
+    data.province || "",
 
    
 
@@ -3002,6 +3008,15 @@ function getFinsegyeAdStores() {
                 region:
                     x.loc || x.addr || "전주",
 
+                adRange:
+    x.adRange || "1km",
+
+city:
+    x.city || "전주",
+
+province:
+    x.province || "전북",
+
                 lat:
                     Number(x.lat) || 35.8242,
 
@@ -3098,18 +3113,27 @@ function renderOrderAdToggles(lat, lng) {
     {
         title: "📍 반경 1km 광고",
 
-        list: stores.filter(x =>
-            x.adRange === "1km"
-        )
+list: stores.filter(x =>
+
+    x.adRange === "1km" &&
+
+    typeof x.distance === "number" &&
+    x.distance <= 1
+)
     },
 
     // 🔥 반경 2km
     {
         title: "📍 반경 2km 광고",
 
-        list: stores.filter(x =>
-            x.adRange === "2km"
-        )
+list: stores.filter(x =>
+
+    x.adRange === "2km" &&
+
+    typeof x.distance === "number" &&
+    x.distance > 1 &&
+    x.distance <= 2
+)
     },
 
     // 🔥 현재 도시 광고
