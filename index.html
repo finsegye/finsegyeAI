@@ -3161,29 +3161,37 @@ list: stores.filter(x =>
         )
     },
 
-    // 🔥 현재 도 광고
-    {
-        title:
-            "🌎 " + currentProvince + " 광고",
+// 🔥 현재 도 광고
+{
+    title:
+        "🌎 " + currentProvince + " 광고",
 
-        list: stores.filter(x =>
+    list: stores.filter(x =>
 
-            x.province === currentProvince && (
+        x.province === currentProvince && (
 
-                x.adRange === "province" ||
-                x.adRange === "city"
+            x.adRange === "province" ||
+            x.adRange === "city" ||
+            x.adRange === "1km" ||
+            x.adRange === "2km"
 
-            )
         )
-    },
+    )
+},
 
     // 🔥 전국 광고
     {
         title: "🇰🇷 전국 광고",
 
-        list: stores.filter(x =>
-            x.adRange === "nation"
-        )
+list: stores.filter(x =>
+
+    x.adRange === "nation" ||
+    x.adRange === "province" ||
+    x.adRange === "city" ||
+    x.adRange === "1km" ||
+    x.adRange === "2km"
+
+)
     },
 
     // 🔥 해외 광고
