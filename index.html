@@ -1255,6 +1255,14 @@ function resetSectionFields(sectionId) {
 
  function validateEvent() {
 
+     const currentCity =
+    localStorage.getItem("fin_current_city")
+    || "전주";
+
+const currentProvince =
+    localStorage.getItem("fin_current_province")
+    || "전북";
+
     const f = [
         {id:'shopName', n:'상호'},
         {id:'shopType', n:'업종'},
