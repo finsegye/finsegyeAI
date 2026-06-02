@@ -216,6 +216,75 @@
             <input type="text" id="shopLoc" placeholder="행사 지역을 입력해 주세요" onfocus="speak('행사 지역을 입력해 주세요')">
         </div>
 
+        
+        <!-- 🔥 광고 노출 범위 선택 -->
+<div id="adRangeBox" style="
+    margin-top:10px;
+    padding:12px;
+    border:1px solid #444;
+    border-radius:12px;
+    background:#111;
+    color:white;
+    text-align:left;
+">
+
+    <div style="
+        color:gold;
+        font-weight:bold;
+        margin-bottom:10px;
+    ">
+        📍 광고 노출 범위 선택
+    </div>
+
+    <label style="display:block;margin-bottom:8px;">
+        <input type="radio"
+               name="adRange"
+               value="1km"
+               checked>
+        반경 1km
+    </label>
+
+    <label style="display:block;margin-bottom:8px;">
+        <input type="radio"
+               name="adRange"
+               value="2km">
+        반경 2km
+    </label>
+
+    <label style="display:block;margin-bottom:8px;">
+        <input type="radio"
+               name="adRange"
+               value="city">
+        현재 시/군
+    </label>
+
+    <label style="display:block;margin-bottom:8px;">
+        <input type="radio"
+               name="adRange"
+               value="province">
+        현재 도
+    </label>
+
+    <label style="display:block;margin-bottom:8px;">
+        <input type="radio"
+               name="adRange"
+               value="nation">
+        전국
+    </label>
+
+    <label style="display:block;">
+        <input type="radio"
+               name="adRange"
+               value="global">
+        해외
+    </label>
+
+</div>
+
+
+
+        
+
 <div class="input-group">
 
     <!-- 🔥 토글 오픈 버튼 -->
@@ -1206,9 +1275,24 @@ function resetSectionFields(sectionId) {
         }
     }
 
-   saveUnifiedData({
+     // 🔥 광고 범위 선택값
+const selectedAdRange =
+    document.querySelector(
+        'input[name="adRange"]:checked'
+    )?.value || "1km";
+
+saveUnifiedData({
 
     type: "ads",
+
+    city:
+        currentCity,
+
+    province:
+        currentProvince,
+
+    adRange:
+        selectedAdRange,
 
     user: "",
 
@@ -1228,6 +1312,9 @@ function resetSectionFields(sectionId) {
 
     loc:
         document.getElementById('shopLoc').value,
+
+    adRange:
+        selectedAdRange,
 
 msg:
     document.getElementById('shopAd').value,
@@ -2780,6 +2867,15 @@ function checkCurrentLocation() {
             const lat = pos.coords.latitude;
             const lng = pos.coords.longitude;
 
+            // 🔥 현재 도시 자동 판별
+const currentCity =
+    localStorage.getItem("fin_current_city")
+    || "전주";
+
+const currentProvince =
+    localStorage.getItem("fin_current_province")
+    || "전북";
+
             localStorage.setItem("fin_current_lat", lat);
             localStorage.setItem("fin_current_lng", lng);
 
@@ -2998,103 +3094,75 @@ function renderOrderAdToggles(lat, lng) {
        
     const groups = [
 
-        {
-            title: "📍 반경 1km 광고",
-            list: within1
-        },
+    // 🔥 반경 1km
+    {
+        title: "📍 반경 1km 광고",
 
-        {
-            title: "📍 반경 2km 광고",
-            list: within2
-        },
+        list: stores.filter(x =>
+            x.adRange === "1km"
+        )
+    },
 
-        {
-    title: "🏙 " + currentCity + " 지역 광고",
-    list: stores.filter(x =>
-        (x.region || "").includes(currentCity)
-    )
-},
+    // 🔥 반경 2km
+    {
+        title: "📍 반경 2km 광고",
 
-{
-    title: "🌐 " + currentProvince + " 권역 광고",
-    list: stores.filter(x =>
-        (x.region || "").includes(currentProvince)
-    )
-},
+        list: stores.filter(x =>
+            x.adRange === "2km"
+        )
+    },
 
-{
-    title: "🇰🇷 전국 지역 광고",
-    list: stores.filter(x =>
-        (x.region || "").includes("전국") ||
-        (x.region || "").includes("한국") ||
-        (x.region || "").includes("서울") ||
-        (x.region || "").includes("부산") ||
-        (x.region || "").includes("대구") ||
-        (x.region || "").includes("광주") ||
-        (x.region || "").includes("대전") ||
-        (x.region || "").includes("제주") ||
-        (x.region || "").includes("강원") ||
-        (x.region || "").includes("전주") ||
-        (x.region || "").includes("전북") ||
-        (x.region || "").includes("경남") ||
-        (x.region || "").includes("경북") ||
-        (x.region || "").includes("전남") ||
-        (x.region || "").includes("충청")
-    )
-},
-        {
-            title: "🇯🇵 일본 지역 광고",
-            list: stores.filter(x =>
-                (x.region || "").includes("일본") ||
-                (x.region || "").includes("도쿄") ||
-                (x.region || "").includes("오사카")
+    // 🔥 현재 도시 광고
+    {
+        title:
+            "🏙 " + currentCity + " 지역 광고",
+
+        list: stores.filter(x =>
+
+            x.city === currentCity && (
+
+                x.adRange === "city" ||
+                x.adRange === "1km" ||
+                x.adRange === "2km"
+
             )
-        },
+        )
+    },
 
-        {
-            title: "🇺🇸 미국 지역 광고",
-            list: stores.filter(x =>
-                (x.region || "").includes("미국") ||
-                (x.region || "").includes("뉴욕") ||
-                (x.region || "").includes("LA") ||
-                (x.region || "").includes("로스앤젤레스")
+    // 🔥 현재 도 광고
+    {
+        title:
+            "🌎 " + currentProvince + " 광고",
+
+        list: stores.filter(x =>
+
+            x.province === currentProvince && (
+
+                x.adRange === "province" ||
+                x.adRange === "city"
+
             )
-        },
+        )
+    },
 
-        {
-            title: "🇨🇳 중국 지역 광고",
-            list: stores.filter(x =>
-                (x.region || "").includes("중국") ||
-                (x.region || "").includes("상하이") ||
-                (x.region || "").includes("베이징")
-            )
-        },
+    // 🔥 전국 광고
+    {
+        title: "🇰🇷 전국 광고",
 
-        {
-            title: "🇵🇭 필리핀 지역 광고",
-            list: stores.filter(x =>
-                (x.region || "").includes("필리핀") ||
-                (x.region || "").includes("마닐라")
-            )
-        },
+        list: stores.filter(x =>
+            x.adRange === "nation"
+        )
+    },
 
-        {
-            title: "🇮🇩 인도네시아 지역 광고",
-            list: stores.filter(x =>
-                (x.region || "").includes("인도네시아") ||
-                (x.region || "").includes("자카르타")
-            )
-        },
+    // 🔥 해외 광고
+    {
+        title: "🌍 해외 광고",
 
-        {
-            title: "🇲🇾 말레이시아 지역 광고",
-            list: stores.filter(x =>
-                (x.region || "").includes("말레이시아") ||
-                (x.region || "").includes("쿠알라룸푸르")
-            )
-        }
-    ];
-
+        list: stores.filter(x =>
+            x.adRange === "global"
+        )
+    }
+];
     return groups.map(function(group, index) {
 
         const boxId =
