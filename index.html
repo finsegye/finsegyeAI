@@ -3546,6 +3546,9 @@ if (
         console.log("이미지 변환 완료");
         console.log(base64);
 
+        alert("업로드 요청 시작");
+
+
         const res =
             await fetch(
                 UPLOAD_SCRIPT_URL,
@@ -3618,6 +3621,7 @@ if (
         console.log("동영상 변환 완료");
         
         console.log(base64);
+        alert("동영상 업로드 요청 시작");
         
         const res =
         await fetch(
