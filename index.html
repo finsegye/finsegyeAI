@@ -3467,7 +3467,6 @@ function closeAdEditor(isSaved = false) {
 
 async function saveAdEditor() {
 
-```
 const text =
     document.getElementById("bigAdText").value;
 
@@ -3698,14 +3697,12 @@ if (videoInput) {
 }
 
 closeAdEditor(true);
-```
 
 }
 
 // 🔥 Base64 변환 함수
 function fileToBase64(file) {
 
-```
 return new Promise(function(resolve, reject) {
 
     const reader =
@@ -3724,7 +3721,6 @@ return new Promise(function(resolve, reject) {
 
     reader.readAsDataURL(file);
 });
-```
 
 }
 
