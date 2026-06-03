@@ -3500,8 +3500,13 @@ if (
         const file =
             imageInput.files[0];
 
+        console.log("이미지 변환 시작");
+
         const base64 =
             await fileToBase64(file);
+
+        console.log("이미지 변환 완료");
+        console.log(base64);
 
         const res =
             await fetch(
@@ -3565,13 +3570,20 @@ if (
     try {
 
         const file =
-            videoInput.files[0];
+        videoInput.files[0];
 
-        const base64 =
-            await fileToBase64(file);
+console.log("동영상 변환 시작");
 
-        const res =
-            await fetch(
+const base64 =
+await fileToBase64(file);
+
+console.log("동영상 변환 완료");
+
+console.log(base64);
+
+const res =
+await fetch(
+
                  UPLOAD_SCRIPT_URL,
                 {
                     method: "POST",
