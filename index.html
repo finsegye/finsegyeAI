@@ -3509,170 +3509,27 @@ resolve(result);
 }
 
 
-async function saveAdEditor() {
+function saveAdEditor() {
 
 const text =
     document.getElementById("bigAdText").value;
 
-const imageInput =
-    document.getElementById("adImageFile");
+const imageUrl =
+    document.getElementById("adImageUrl").value;
 
-const videoInput =
-    document.getElementById("adVideoFile");
+const videoUrl =
+    document.getElementById("adVideoUrl").value;
 
-// 🔥 기본 문구 저장
+// 🔥 문구 저장
 document.getElementById("shopAd").value =
     text;
 
-// =========================
-// 🔥 이미지 업로드
-// =========================
-if (
-    imageInput &&
-    imageInput.files &&
-    imageInput.files[0]
-) {
+// 🔥 URL 저장
+document.getElementById("shopAdImage").value =
+    imageUrl;
 
-    try {
-
-        const file =
-            imageInput.files[0];
-
-        console.log("이미지 변환 시작");
-
-        const base64 =
-            await fileToBase64(file);
-
-        console.log("이미지 변환 완료");
-        console.log(base64);
-
-        alert("업로드 요청 시작");
-
-
-        const res =
-            await fetch(
-                UPLOAD_SCRIPT_URL,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-
-                        fileName:
-                            file.name,
-
-                        mimeType:
-                            file.type,
-
-                        base64:
-                            base64
-
-                    })
-                }
-            );
-
-        const result =
-            await res.json();
-
-        if (
-            result.success &&
-            result.url
-        ) {
-
-            document.getElementById(
-                "shopAdImage"
-            ).value =
-                result.url;
-        }
-
-    } catch(e) {
-
-        console.log(e);
-
-        alert(
-            "사진 업로드 실패"
-        );
-    }
-}
-
-// =========================
-// 🔥 동영상 업로드
-// =========================
-if (
-    videoInput &&
-    videoInput.files &&
-    videoInput.files[0]
-) {
-
-    try {
-
-        const file =
-        videoInput.files[0];
-
-        console.log("동영상 변환 시작");
-        
-        const base64 =
-        await fileToBase64(file);
-        
-        console.log("동영상 변환 완료");
-        
-        console.log(base64);
-        alert("동영상 업로드 요청 시작");
-        
-        const res =
-        await fetch(
-
-                 UPLOAD_SCRIPT_URL,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-
-                        fileName:
-                            file.name,
-
-                        mimeType:
-                            file.type,
-
-                        base64:
-                            base64
-
-                    })
-                }
-            );
-
-        const result =
-            await res.json();
-
-        if (
-            result.success &&
-            result.url
-        ) {
-
-            document.getElementById(
-                "shopAdVideo"
-            ).value =
-                result.url;
-        }
-
-    } catch(e) {
-
-        console.log(e);
-
-        alert(
-            "동영상 업로드 실패"
-        );
-    }
-}
+document.getElementById("shopAdVideo").value =
+    videoUrl;
 
 // =========================
 // 🔥 미리보기 출력
@@ -3689,11 +3546,6 @@ if (preview) {
         "눌러서 큰 화면에서 행사 문구를 입력하세요";
 
     // 🔥 이미지 표시
-    const imageUrl =
-        document.getElementById(
-            "shopAdImage"
-        ).value;
-
     if (imageUrl) {
 
         html += `
@@ -3712,11 +3564,6 @@ if (preview) {
     }
 
     // 🔥 동영상 표시
-    const videoUrl =
-        document.getElementById(
-            "shopAdVideo"
-        ).value;
-
     if (videoUrl) {
 
         html += `
@@ -3743,26 +3590,14 @@ if (preview) {
 
 speak("행사 문구가 저장되었습니다.");
 
-// 🔥 입력 초기화
-document.getElementById(
-    "bigAdText"
-).value = "";
-
-if (imageInput) {
-    imageInput.value = "";
-}
-
-if (videoInput) {
-    videoInput.value = "";
-}
-
 closeAdEditor(true);
 
+
 }
 
 
 
-/* 🔥 추가 끝 */
+
 
 </script>
 
