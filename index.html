@@ -3471,6 +3471,44 @@ function closeAdEditor(isSaved = false) {
     }
 }
 
+
+
+
+
+
+
+
+// 🔥 Base64 변환 함수
+function fileToBase64(file) {
+
+return new Promise(function(resolve, reject) {
+
+    const reader =
+        new FileReader();
+
+   reader.onload = function() {
+
+
+const result =
+    reader.result.split(",")[1];
+
+console.log(result);
+
+resolve(result);
+
+
+};
+
+
+    reader.onerror =
+        reject;
+
+    reader.readAsDataURL(file);
+});
+
+}
+
+
 async function saveAdEditor() {
 
 const text =
@@ -3572,17 +3610,17 @@ if (
         const file =
         videoInput.files[0];
 
-console.log("동영상 변환 시작");
-
-const base64 =
-await fileToBase64(file);
-
-console.log("동영상 변환 완료");
-
-console.log(base64);
-
-const res =
-await fetch(
+        console.log("동영상 변환 시작");
+        
+        const base64 =
+        await fileToBase64(file);
+        
+        console.log("동영상 변환 완료");
+        
+        console.log(base64);
+        
+        const res =
+        await fetch(
 
                  UPLOAD_SCRIPT_URL,
                 {
@@ -3718,35 +3756,6 @@ closeAdEditor(true);
 
 }
 
-// 🔥 Base64 변환 함수
-function fileToBase64(file) {
-
-return new Promise(function(resolve, reject) {
-
-    const reader =
-        new FileReader();
-
-   reader.onload = function() {
-
-
-const result =
-    reader.result.split(",")[1];
-
-console.log(result);
-
-resolve(result);
-
-
-};
-
-
-    reader.onerror =
-        reject;
-
-    reader.readAsDataURL(file);
-});
-
-}
 
 
 /* 🔥 추가 끝 */
