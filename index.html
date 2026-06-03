@@ -1221,11 +1221,7 @@ const currentProvince =
         }
     }
 
-     // 🔥 광고 범위 선택값
-const selectedAdRange =
-    document.querySelector(
-        'input[name="adRange"]:checked'
-    )?.value || "1km";
+
 
 saveUnifiedData({
 
@@ -1237,8 +1233,7 @@ saveUnifiedData({
     province:
         currentProvince,
 
-    adRange:
-        selectedAdRange,
+
 
     user: "",
 
@@ -1259,8 +1254,7 @@ saveUnifiedData({
     loc:
         document.getElementById('shopLoc').value,
 
-    adRange:
-        selectedAdRange,
+
 
 msg:
     document.getElementById('shopAd').value,
@@ -3061,8 +3055,6 @@ function renderOrderAdToggles(lat, lng) {
 
 list: stores.filter(x =>
 
-    x.adRange === "1km" &&
-
     typeof x.distance === "number" &&
     x.distance <= 1
 )
@@ -3074,10 +3066,7 @@ list: stores.filter(x =>
 
 list: stores.filter(x =>
 
-    x.adRange === "2km" &&
-
     typeof x.distance === "number" &&
-    x.distance > 1 &&
     x.distance <= 2
 )
     },
