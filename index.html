@@ -216,12 +216,12 @@
             <input type="text" id="shopLoc" placeholder="행사 지역을 입력해 주세요" onfocus="speak('행사 지역을 입력해 주세요')">
         </div>
 
-        
+       
 
 
 
 
-        
+       
 
 <div class="input-group">
 
@@ -659,7 +659,7 @@
 
 
 
-    
+   
     var reserveValue = 100.0, reserveStep = -0.04;
 
 function speak(text) {
@@ -3471,50 +3471,65 @@ function closeAdEditor(isSaved = false) {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
 async function saveAdEditor() {
 
-    speak("사진과 동영상을 업로드합니다.");
+const text =
+    document.getElementById("bigAdText").value;
 
-    const text =
-        document.getElementById("bigAdText").value;
+const imageInput =
+    document.getElementById("adImageFile");
 
-    const imageFile =
-        document.getElementById("adImageFile").files[0];
+const videoInput =
+    document.getElementById("adVideoFile");
 
-    const videoFile =
-        document.getElementById("adVideoFile").files[0];
+// 🔥 기본 문구 저장
+document.getElementById("shopAd").value =
+    text;
 
-    let imageUrl = "";
-    let videoUrl = "";
+// =========================
+// 🔥 이미지 업로드
+// =========================
+if (
+    imageInput &&
+    imageInput.files &&
+    imageInput.files[0]
+) {
 
-    // =========================
-    // 🔥 사진 업로드
-    // =========================
-    if (imageFile) {
+    try {
 
-        const imageBase64 =
-            await fileToBase64(imageFile);
+        const file =
+            imageInput.files[0];
+
+        console.log("이미지 변환 시작");
+
+        const base64 =
+            await fileToBase64(file);
+
+        console.log("이미지 변환 완료");
+        console.log(base64);
 
         const res =
             await fetch(
                 UPLOAD_SCRIPT_URL,
                 {
                     method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
                     body: JSON.stringify({
-                        type: "image",
-                        fileName: imageFile.name,
-                        mimeType: imageFile.type,
-                        base64: imageBase64
+
+                        fileName:
+                            file.name,
+
+                        mimeType:
+                            file.type,
+
+                        base64:
+                            base64
+
                     })
                 }
             );
@@ -3522,27 +3537,73 @@ async function saveAdEditor() {
         const result =
             await res.json();
 
-        imageUrl = result.url || "";
+        if (
+            result.success &&
+            result.url
+        ) {
+
+            document.getElementById(
+                "shopAdImage"
+            ).value =
+                result.url;
+        }
+
+    } catch(e) {
+
+        console.log(e);
+
+        alert(
+            "사진 업로드 실패"
+        );
     }
+}
 
-    // =========================
-    // 🔥 동영상 업로드
-    // =========================
-    if (videoFile) {
+// =========================
+// 🔥 동영상 업로드
+// =========================
+if (
+    videoInput &&
+    videoInput.files &&
+    videoInput.files[0]
+) {
 
-        const videoBase64 =
-            await fileToBase64(videoFile);
+    try {
 
-        const res =
-            await fetch(
-                UPLOAD_SCRIPT_URL,
+        const file =
+        videoInput.files[0];
+
+console.log("동영상 변환 시작");
+
+const base64 =
+await fileToBase64(file);
+
+console.log("동영상 변환 완료");
+
+console.log(base64);
+
+const res =
+await fetch(
+
+                 UPLOAD_SCRIPT_URL,
                 {
                     method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
                     body: JSON.stringify({
-                        type: "video",
-                        fileName: videoFile.name,
-                        mimeType: videoFile.type,
-                        base64: videoBase64
+
+                        fileName:
+                            file.name,
+
+                        mimeType:
+                            file.type,
+
+                        base64:
+                            base64
+
                     })
                 }
             );
@@ -3550,29 +3611,46 @@ async function saveAdEditor() {
         const result =
             await res.json();
 
-        videoUrl = result.url || "";
+        if (
+            result.success &&
+            result.url
+        ) {
+
+            document.getElementById(
+                "shopAdVideo"
+            ).value =
+                result.url;
+        }
+
+    } catch(e) {
+
+        console.log(e);
+
+        alert(
+            "동영상 업로드 실패"
+        );
     }
+}
 
-    // =========================
-    // 🔥 저장
-    // =========================
-    document.getElementById("shopAd").value =
-        text;
+// =========================
+// 🔥 미리보기 출력
+// =========================
+const preview =
+    document.getElementById(
+        "adPreviewBox"
+    );
 
-    document.getElementById("shopAdImage").value =
-        imageUrl;
-
-    document.getElementById("shopAdVideo").value =
-        videoUrl;
-
-    // =========================
-    // 🔥 미리보기
-    // =========================
-    const preview =
-        document.getElementById("adPreviewBox");
+if (preview) {
 
     let html =
-        text || "";
+        text ||
+        "눌러서 큰 화면에서 행사 문구를 입력하세요";
+
+    // 🔥 이미지 표시
+    const imageUrl =
+        document.getElementById(
+            "shopAdImage"
+        ).value;
 
     if (imageUrl) {
 
@@ -3591,6 +3669,12 @@ async function saveAdEditor() {
         `;
     }
 
+    // 🔥 동영상 표시
+    const videoUrl =
+        document.getElementById(
+            "shopAdVideo"
+        ).value;
+
     if (videoUrl) {
 
         html += `
@@ -3598,6 +3682,7 @@ async function saveAdEditor() {
                 <video
                     controls
                     playsinline
+                    preload="metadata"
                     style="
                         width:100%;
                         border-radius:12px;
@@ -3612,132 +3697,181 @@ async function saveAdEditor() {
     }
 
     preview.innerHTML = html;
+}
 
-    speak("업로드가 완료되었습니다.");
+speak("행사 문구가 저장되었습니다.");
 
-    closeAdEditor(true);
+// 🔥 입력 초기화
+document.getElementById(
+    "bigAdText"
+).value = "";
+
+if (imageInput) {
+    imageInput.value = "";
+}
+
+if (videoInput) {
+    videoInput.value = "";
+}
+
+closeAdEditor(true);
+
+}
+
+// 🔥 Base64 변환 함수
+function fileToBase64(file) {
+
+return new Promise(function(resolve, reject) {
+
+    const reader =
+        new FileReader();
+
+   reader.onload = function() {
+
+
+const result =
+    reader.result.split(",")[1];
+
+console.log(result);
+
+resolve(result);
+
+
+};
+
+
+    reader.onerror =
+        reject;
+
+    reader.readAsDataURL(file);
+});
+
 }
 
 
-
-
+/* 🔥 추가 끝 */
 
 </script>
 
-<!-- 🔥 사진 업로드 -->
-
-<div style="margin-top:15px;">
-
-
-<div style="
-    color:#00ffcc;
-    font-weight:bold;
-    margin-bottom:6px;
-">
-    사진 첨부
-</div>
-
-<button
-    type="button"
-    onclick="
-        document
-            .getElementById('adImageFile')
-            .click();
-    "
+<!-- 🔥 여기 추가 -->
+<div
+    id="adEditorOverlay"
     style="
+        display:none;
+        position:fixed;
+        top:42px;
+        bottom:65px;
+        left:0;
         width:100%;
-        padding:14px;
-        border-radius:12px;
-        background:#00aa88;
-        color:#fff;
-        font-size:18px;
-        border:none;
+        background:#000;
+        z-index:999999;
+        padding:12px;
+        box-sizing:border-box;
+        overflow-y:auto;
     "
 >
-    사진 선택
-</button>
 
-<input
-    type="file"
-    id="adImageFile"
-    accept="image/*"
-    capture="environment"
-    style="display:none;"
->
+    <div style="
+        color:gold;
+        font-weight:bold;
+        margin-bottom:10px;
+        text-align:center;
+        font-size:1.1em;
+    ">
+        행사 문구 입력
+    </div>
 
+    <textarea
+        id="bigAdText"
+        placeholder="행사 문구를 입력해 주세요"
+        style="
+            width:100%;
+            height:220px;
+            background:#111;
+            color:#fff;
+            border:1.5px solid gold;
+            border-radius:12px;
+            padding:12px;
+            box-sizing:border-box;
+            font-size:1.05em;
+            resize:none;
+        "
+    ></textarea>
 
-</div>
+    <div style="margin-top:15px;">
 
-<!-- 🔥 동영상 업로드 -->
+        <div style="
+            color:#00ffcc;
+            font-weight:bold;
+            margin-bottom:6px;
+        ">
+            사진 첨부
+        </div>
 
-<div style="margin-top:15px;">
+        <input
+            type="file"
+            id="adImageFile"
+            accept="image/*"
+            style="
+                width:100%;
+                background:#111;
+                color:#fff;
+                padding:10px;
+                border-radius:10px;
+            "
+        >
+    </div>
 
+    <div style="margin-top:15px;">
 
-<div style="
-    color:#ff00ff;
-    font-weight:bold;
-    margin-bottom:6px;
-">
-    동영상 첨부
-</div>
+        <div style="
+            color:#ff00ff;
+            font-weight:bold;
+            margin-bottom:6px;
+        ">
+            동영상 첨부
+        </div>
 
-<button
-    type="button"
-    onclick="
-        document
-            .getElementById('adVideoFile')
-            .click();
-    "
-    style="
-        width:100%;
-        padding:14px;
-        border-radius:12px;
-        background:#aa0088;
-        color:#fff;
-        font-size:18px;
-        border:none;
-    "
->
-    동영상 선택
-</button>
+        <input
+            type="file"
+            id="adVideoFile"
+            accept="video/*"
+            style="
+                width:100%;
+                background:#111;
+                color:#fff;
+                padding:10px;
+                border-radius:10px;
+            "
+        >
+    </div>
 
-<input
-    type="file"
-    id="adVideoFile"
-    accept="video/*"
-    capture="environment"
-    style="display:none;"
->
+    <div style="
+        display:flex;
+        gap:8px;
+        margin-top:20px;
+    ">
 
+        <button
+            onclick="saveAdEditor()"
+            class="submitBtn"
+            style="background:gold !important;"
+        >
+            저장
+        </button>
 
-</div>
+        <button
+            onclick="closeAdEditor()"
+            class="submitBtn"
+            style="
+                background:#222 !important;
+                color:#aaa !important;
+            "
+        >
+            취소
+        </button>
 
-<div style="
-    display:flex;
-    gap:8px;
-    margin-top:20px;
-">
-
-
-<button
-    onclick="saveAdEditor()"
-    class="submitBtn"
-    style="background:gold !important;"
->
-    저장
-</button>
-
-<button
-    onclick="closeAdEditor()"
-    class="submitBtn"
-    style="
-        background:#222 !important;
-        color:#aaa !important;
-    "
->
-    취소
-</button>
-
+    </div>
 
 </div>
 
