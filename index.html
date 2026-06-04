@@ -3808,18 +3808,33 @@ resolve(result);
             사진 첨부
         </div>
 
-        <input
-            type="file"
-            id="adImageFile"
-            accept="image/*"
-            style="
-                width:100%;
-                background:#111;
-                color:#fff;
-                padding:10px;
-                border-radius:10px;
-            "
-        >
+  <button
+    type="button"
+    onclick="
+        document
+            .getElementById('adImageFile')
+            .click();
+    "
+    style="
+        width:100%;
+        padding:14px;
+        border-radius:12px;
+        background:#00aa88;
+        color:#fff;
+        font-size:18px;
+        border:none;
+    "
+>
+    사진 선택
+</button>
+
+<input
+    type="file"
+    id="adImageFile"
+    accept="image/*"
+    capture="environment"
+    style="display:none;"
+>
     </div>
 
     <div style="margin-top:15px;">
@@ -3832,9 +3847,33 @@ resolve(result);
             동영상 첨부
         </div>
 
-        <input
-            type="file"
-            id="adVideoFile"
+<button
+    type="button"
+    onclick="
+        document
+            .getElementById('adVideoFile')
+            .click();
+    "
+    style="
+        width:100%;
+        padding:14px;
+        border-radius:12px;
+        background:#aa0088;
+        color:#fff;
+        font-size:18px;
+        border:none;
+    "
+>
+    동영상 선택
+</button>
+
+<input
+    type="file"
+    id="adVideoFile"
+    accept="video/*"
+    capture="environment"
+    style="display:none;"
+>
             accept="video/*"
             style="
                 width:100%;
