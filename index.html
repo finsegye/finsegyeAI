@@ -3678,20 +3678,20 @@ async function saveAdEditor() {
         font-weight:bold;
         margin-bottom:6px;
     ">
-        사진 URL 입력
+        사진 첨부
     </div>
 
     <input
-        type="text"
-        id="adImageUrl"
-        placeholder="Google Drive 사진 URL 입력"
-        style="
-            width:100%;
-            background:#111;
-            color:#fff;
-            padding:10px;
-            border-radius:10px;
-        "
+type="file"
+id="adImageFile"
+accept="image/*"
+style="
+width:100%;
+background:#111;
+color:#fff;
+padding:10px;
+border-radius:10px;
+"
     >
 
 </div>
@@ -3708,19 +3708,16 @@ async function saveAdEditor() {
     </div>
 
 <input
-type="text"
-id="adVideoUrl"
-placeholder="Google Drive 동영상 URL 입력"
+type="file"
+id="adVideoFile"
+accept="video/*"
 style="
-    width:100%;
-    background:#111;
-    color:#fff;
-    padding:10px;
-    border-radius:10px;
+width:100%;
+background:#111;
+color:#fff;
+padding:10px;
+border-radius:10px;
 "
-
->
-
     >
 
 </div>
