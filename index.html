@@ -3509,34 +3509,45 @@ if (
         console.log(base64);
 
         const res =
-            await fetch(
-                UPLOAD_SCRIPT_URL,
-                {
-                    method: "POST",
+    await fetch(
+        UPLOAD_SCRIPT_URL,
+        {
+            method: "POST",
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
+            headers: {
+                "Content-Type":
+                    "application/json"
+            },
 
-                    body: JSON.stringify({
+            body: JSON.stringify({
 
-                        fileName:
-                            file.name,
+                fileName:
+                    file.name,
 
-                        mimeType:
-                            file.type,
+                mimeType:
+                    file.type,
 
-                        base64:
-                            base64
+                base64:
+                    base64
 
-                    })
-                }
-            );
+            })
+        }
+    );
 
-        const result =
-            await res.json();
+if (!res.ok) {
 
+    const text =
+        await res.text();
+
+    console.log(text);
+
+    throw new Error(
+        "업로드 서버 응답 실패"
+    );
+}
+
+const result =
+    await res.json();
         if (
             result.success &&
             result.url
@@ -3582,34 +3593,45 @@ console.log("동영상 변환 완료");
 console.log(base64);
 
 const res =
-await fetch(
+    await fetch(
+        UPLOAD_SCRIPT_URL,
+        {
+            method: "POST",
 
-                 UPLOAD_SCRIPT_URL,
-                {
-                    method: "POST",
+            headers: {
+                "Content-Type":
+                    "application/json"
+            },
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
+            body: JSON.stringify({
 
-                    body: JSON.stringify({
+                fileName:
+                    file.name,
 
-                        fileName:
-                            file.name,
+                mimeType:
+                    file.type,
 
-                        mimeType:
-                            file.type,
+                base64:
+                    base64
 
-                        base64:
-                            base64
+            })
+        }
+    );
 
-                    })
-                }
-            );
+if (!res.ok) {
 
-        const result =
-            await res.json();
+    const text =
+        await res.text();
+
+    console.log(text);
+
+    throw new Error(
+        "업로드 서버 응답 실패"
+    );
+}
+
+const result =
+    await res.json();
 
         if (
             result.success &&
