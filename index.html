@@ -3478,35 +3478,7 @@ function closeAdEditor(isSaved = false) {
 
 
 
-// 🔥 Base64 변환 함수
-function fileToBase64(file) {
 
-return new Promise(function(resolve, reject) {
-
-    const reader =
-        new FileReader();
-
-   reader.onload = function() {
-
-
-const result =
-    reader.result.split(",")[1];
-
-console.log(result);
-
-resolve(result);
-
-
-};
-
-
-    reader.onerror =
-        reject;
-
-    reader.readAsDataURL(file);
-});
-
-}
 
 
 async function saveAdEditor() {
