@@ -3624,134 +3624,120 @@ async function saveAdEditor() {
 
 </script>
 
-<!-- 🔥 여기 추가 -->
-<div
-    id="adEditorOverlay"
-    style="
-        display:none;
-        position:fixed;
-        top:42px;
-        bottom:65px;
-        left:0;
-        width:100%;
-        background:#000;
-        z-index:999999;
-        padding:12px;
-        box-sizing:border-box;
-        overflow-y:auto;
-    "
->
-
-    <div style="
-        color:gold;
-        font-weight:bold;
-        margin-bottom:10px;
-        text-align:center;
-        font-size:1.1em;
-    ">
-        행사 문구 입력
-    </div>
-
-    <textarea
-        id="bigAdText"
-        placeholder="행사 문구를 입력해 주세요"
-        style="
-            width:100%;
-            height:220px;
-            background:#111;
-            color:#fff;
-            border:1.5px solid gold;
-            border-radius:12px;
-            padding:12px;
-            box-sizing:border-box;
-            font-size:1.05em;
-            resize:none;
-        "
-    ></textarea>
-
-
 <!-- 🔥 사진 업로드 -->
+
 <div style="margin-top:15px;">
 
-    <div style="
-        color:#00ffcc;
-        font-weight:bold;
-        margin-bottom:6px;
-    ">
-        사진 첨부
-    </div>
 
-    <input
-type="file"
-id="adImageFile"
-accept="image/*"
-capture="environment"   
-style="
-width:100%;
-background:#111;
-color:#fff;
-padding:10px;
-border-radius:10px;
-"
-    >
+<div style="
+    color:#00ffcc;
+    font-weight:bold;
+    margin-bottom:6px;
+">
+    사진 첨부
+</div>
+
+<button
+    type="button"
+    onclick="
+        document
+            .getElementById('adImageFile')
+            .click();
+    "
+    style="
+        width:100%;
+        padding:14px;
+        border-radius:12px;
+        background:#00aa88;
+        color:#fff;
+        font-size:18px;
+        border:none;
+    "
+>
+    사진 선택
+</button>
+
+<input
+    type="file"
+    id="adImageFile"
+    accept="image/*"
+    capture="environment"
+    style="display:none;"
+>
+
 
 </div>
 
 <!-- 🔥 동영상 업로드 -->
+
 <div style="margin-top:15px;">
 
-    <div style="
-        color:#ff00ff;
-        font-weight:bold;
-        margin-bottom:6px;
-    ">
-        동영상 첨부
-    </div>
+
+<div style="
+    color:#ff00ff;
+    font-weight:bold;
+    margin-bottom:6px;
+">
+    동영상 첨부
+</div>
+
+<button
+    type="button"
+    onclick="
+        document
+            .getElementById('adVideoFile')
+            .click();
+    "
+    style="
+        width:100%;
+        padding:14px;
+        border-radius:12px;
+        background:#aa0088;
+        color:#fff;
+        font-size:18px;
+        border:none;
+    "
+>
+    동영상 선택
+</button>
 
 <input
-type="file"
-id="adVideoFile"
-accept="video/*"
-capture="environment"
-style="
-width:100%;
-background:#111;
-color:#fff;
-padding:10px;
-border-radius:10px;
-"
-    >
+    type="file"
+    id="adVideoFile"
+    accept="video/*"
+    capture="environment"
+    style="display:none;"
+>
+
 
 </div>
 
-  
+<div style="
+    display:flex;
+    gap:8px;
+    margin-top:20px;
+">
 
-    <div style="
-        display:flex;
-        gap:8px;
-        margin-top:20px;
-    ">
 
-        <button
-            onclick="saveAdEditor()"
-            class="submitBtn"
-            style="background:gold !important;"
-        >
-            저장
-        </button>
+<button
+    onclick="saveAdEditor()"
+    class="submitBtn"
+    style="background:gold !important;"
+>
+    저장
+</button>
 
-        <button
-            onclick="closeAdEditor()"
-            class="submitBtn"
-            style="
-                background:#222 !important;
-                color:#aaa !important;
-            "
-        >
-            취소
-        </button>
+<button
+    onclick="closeAdEditor()"
+    class="submitBtn"
+    style="
+        background:#222 !important;
+        color:#aaa !important;
+    "
+>
+    취소
+</button>
 
-    </div>
 
 </div>
 
