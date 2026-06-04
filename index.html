@@ -3508,11 +3508,13 @@ if (
         console.log("이미지 변환 완료");
         console.log(base64);
 
-        const res =
+const res =
     await fetch(
         UPLOAD_SCRIPT_URL,
         {
             method: "POST",
+
+            mode: "no-cors",
 
             headers: {
                 "Content-Type":
@@ -3534,24 +3536,13 @@ if (
         }
     );
 
-if (!res.ok) {
+// const result =
+//     await res.json();
 
-    const text =
-        await res.text();
+alert(
+    "업로드 요청 전송 완료"
+);
 
-    console.log(text);
-
-    throw new Error(
-        "업로드 서버 응답 실패"
-    );
-}
-
-const result =
-    await res.json();
-        if (
-            result.success &&
-            result.url
-        ) {
 
             document.getElementById(
                 "shopAdImage"
