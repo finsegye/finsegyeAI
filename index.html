@@ -3509,43 +3509,99 @@ resolve(result);
 }
 
 
-function saveAdEditor() {
+async function saveAdEditor() {
 
-const text =
-    document.getElementById("bigAdText").value;
+    speak("사진과 동영상을 업로드합니다.");
 
-const imageUrl =
-    document.getElementById("adImageUrl").value;
+    const text =
+        document.getElementById("bigAdText").value;
 
-const videoUrl =
-    document.getElementById("adVideoUrl").value;
+    const imageFile =
+        document.getElementById("adImageFile").files[0];
 
-// 🔥 문구 저장
-document.getElementById("shopAd").value =
-    text;
+    const videoFile =
+        document.getElementById("adVideoFile").files[0];
 
-// 🔥 URL 저장
-document.getElementById("shopAdImage").value =
-    imageUrl;
+    let imageUrl = "";
+    let videoUrl = "";
 
-document.getElementById("shopAdVideo").value =
-    videoUrl;
+    // =========================
+    // 🔥 사진 업로드
+    // =========================
+    if (imageFile) {
 
-// =========================
-// 🔥 미리보기 출력
-// =========================
-const preview =
-    document.getElementById(
-        "adPreviewBox"
-    );
+        const imageBase64 =
+            await fileToBase64(imageFile);
 
-if (preview) {
+        const res =
+            await fetch(
+                UPLOAD_SCRIPT_URL,
+                {
+                    method: "POST",
+                    body: JSON.stringify({
+                        type: "image",
+                        fileName: imageFile.name,
+                        mimeType: imageFile.type,
+                        base64: imageBase64
+                    })
+                }
+            );
+
+        const result =
+            await res.json();
+
+        imageUrl = result.url || "";
+    }
+
+    // =========================
+    // 🔥 동영상 업로드
+    // =========================
+    if (videoFile) {
+
+        const videoBase64 =
+            await fileToBase64(videoFile);
+
+        const res =
+            await fetch(
+                UPLOAD_SCRIPT_URL,
+                {
+                    method: "POST",
+                    body: JSON.stringify({
+                        type: "video",
+                        fileName: videoFile.name,
+                        mimeType: videoFile.type,
+                        base64: videoBase64
+                    })
+                }
+            );
+
+        const result =
+            await res.json();
+
+        videoUrl = result.url || "";
+    }
+
+    // =========================
+    // 🔥 저장
+    // =========================
+    document.getElementById("shopAd").value =
+        text;
+
+    document.getElementById("shopAdImage").value =
+        imageUrl;
+
+    document.getElementById("shopAdVideo").value =
+        videoUrl;
+
+    // =========================
+    // 🔥 미리보기
+    // =========================
+    const preview =
+        document.getElementById("adPreviewBox");
 
     let html =
-        text ||
-        "눌러서 큰 화면에서 행사 문구를 입력하세요";
+        text || "";
 
-    // 🔥 이미지 표시
     if (imageUrl) {
 
         html += `
@@ -3563,7 +3619,6 @@ if (preview) {
         `;
     }
 
-    // 🔥 동영상 표시
     if (videoUrl) {
 
         html += `
@@ -3571,7 +3626,6 @@ if (preview) {
                 <video
                     controls
                     playsinline
-                    preload="metadata"
                     style="
                         width:100%;
                         border-radius:12px;
@@ -3586,13 +3640,10 @@ if (preview) {
     }
 
     preview.innerHTML = html;
-}
 
-speak("행사 문구가 저장되었습니다.");
+    speak("업로드가 완료되었습니다.");
 
-closeAdEditor(true);
-
-
+    closeAdEditor(true);
 }
 
 
