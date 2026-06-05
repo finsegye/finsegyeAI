@@ -3548,8 +3548,10 @@ if (
             );
         }
 
-        const result =
-            await res.json();
+        const raw = await res.text(); console.log(raw); alert(raw); return;
+
+        // const result =
+            // await res.json();
 
         if (
             result.success &&
