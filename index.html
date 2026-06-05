@@ -3498,22 +3498,34 @@ if (
 
     try {
 
-        const file =
-            imageInput.files[0];
 
-        console.log("이미지 변환 시작");
+const file =
+    imageInput.files[0];
 
-        const base64 =
-            await fileToBase64(file);
-
-        console.log("이미지 변환 완료");
-
-        console.log(base64);
-
-
-        
 alert(
     "fetch 시작"
+);
+
+const formData =
+    new FormData();
+
+formData.append(
+    "file",
+    file
+);
+
+formData.append(
+    "fileName",
+    file.name
+);
+
+formData.append(
+    "mimeType",
+    file.type
+);
+
+alert(
+    "FormData 생성 완료"
 );
 
 const res =
@@ -3522,24 +3534,19 @@ const res =
         {
             method: "POST",
 
+            body:
+                formData
+        }
+    );
+
+alert(
+    "fetch 완료"
+);
 
 
- 
 
-                    body: JSON.stringify({
 
-                        fileName:
-                            file.name,
 
-                        mimeType:
-                            file.type,
-
-                        base64:
-                            base64
-
-                    })
-                }
-            );
 
         if (!res.ok) {
 
