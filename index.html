@@ -3486,6 +3486,7 @@ const videoInput =
 document.getElementById("shopAd").value =
     text;
 
+```javascript
 // =========================
 // 🔥 이미지 업로드
 // =========================
@@ -3506,52 +3507,73 @@ if (
             await fileToBase64(file);
 
         console.log("이미지 변환 완료");
+
         console.log(base64);
 
-const res =
-    await fetch(
-        UPLOAD_SCRIPT_URL,
-        {
-            method: "POST",
+        const res =
+            await fetch(
+                UPLOAD_SCRIPT_URL,
+                {
+                    method: "POST",
 
-            mode: "no-cors",
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-            headers: {
-                "Content-Type":
-                    "application/json"
-            },
+                    body: JSON.stringify({
 
-            body: JSON.stringify({
+                        fileName:
+                            file.name,
 
-                fileName:
-                    file.name,
+                        mimeType:
+                            file.type,
 
-                mimeType:
-                    file.type,
+                        base64:
+                            base64
 
-                base64:
-                    base64
+                    })
+                }
+            );
 
-            })
+        if (!res.ok) {
+
+            const text =
+                await res.text();
+
+            console.log(text);
+
+            throw new Error(
+                "업로드 서버 응답 실패"
+            );
         }
-    );
 
-// const result =
-//     await res.json();
+        const result =
+            await res.json();
 
-alert(
-    "업로드 요청 전송 완료"
-);
-        
+        if (
+            result.success &&
+            result.url
+        ) {
+
+            document.getElementById(
+                "shopAdImage"
+            ).value =
+                result.url;
+
+            alert(
+                "사진 업로드 완료"
+            );
+        }
 
     } catch(e) {
 
         console.log(e);
 
-alert(
-    "사진 업로드 실패: " +
-    String(e)
-);
+        alert(
+            "사진 업로드 실패: " +
+            String(e)
+        );
     }
 }
 
@@ -3567,57 +3589,57 @@ if (
     try {
 
         const file =
-        videoInput.files[0];
+            videoInput.files[0];
 
-console.log("동영상 변환 시작");
+        console.log("동영상 변환 시작");
 
-const base64 =
-await fileToBase64(file);
+        const base64 =
+            await fileToBase64(file);
 
-console.log("동영상 변환 완료");
+        console.log("동영상 변환 완료");
 
-console.log(base64);
+        console.log(base64);
 
-const res =
-    await fetch(
-        UPLOAD_SCRIPT_URL,
-        {
-            method: "POST",
+        const res =
+            await fetch(
+                UPLOAD_SCRIPT_URL,
+                {
+                    method: "POST",
 
-            headers: {
-                "Content-Type":
-                    "application/json"
-            },
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-            body: JSON.stringify({
+                    body: JSON.stringify({
 
-                fileName:
-                    file.name,
+                        fileName:
+                            file.name,
 
-                mimeType:
-                    file.type,
+                        mimeType:
+                            file.type,
 
-                base64:
-                    base64
+                        base64:
+                            base64
 
-            })
+                    })
+                }
+            );
+
+        if (!res.ok) {
+
+            const text =
+                await res.text();
+
+            console.log(text);
+
+            throw new Error(
+                "업로드 서버 응답 실패"
+            );
         }
-    );
 
-if (!res.ok) {
-
-    const text =
-        await res.text();
-
-    console.log(text);
-
-    throw new Error(
-        "업로드 서버 응답 실패"
-    );
-}
-        
-// const result =
-    // await res.json();
+        const result =
+            await res.json();
 
         if (
             result.success &&
@@ -3628,18 +3650,24 @@ if (!res.ok) {
                 "shopAdVideo"
             ).value =
                 result.url;
+
+            alert(
+                "동영상 업로드 완료"
+            );
         }
 
     } catch(e) {
 
         console.log(e);
 
-alert(
-    "동영상 업로드 실패: " +
-    String(e)
-);
+        alert(
+            "동영상 업로드 실패: " +
+            String(e)
+        );
     }
 }
+```
+
 
 // =========================
 // 🔥 미리보기 출력
