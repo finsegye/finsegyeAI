@@ -3486,7 +3486,6 @@ const videoInput =
 document.getElementById("shopAd").value =
     text;
 
-
 // =========================
 // 🔥 이미지 업로드
 // =========================
@@ -3498,87 +3497,44 @@ if (
 
     try {
 
+        const file =
+            imageInput.files[0];
 
-const file =
-    imageInput.files[0];
+        alert(
+            "Firebase 업로드 시작"
+        );
 
-alert(
-    "fetch 시작"
-);
-
-const formData =
-    new FormData();
-
-formData.append(
-    "file",
-    file
-);
-
-formData.append(
-    "fileName",
-    file.name
-);
-
-formData.append(
-    "mimeType",
-    file.type
-);
-
-alert(
-    "FormData 생성 완료"
-);
-
-const res =
-    await fetch(
-        UPLOAD_SCRIPT_URL,
-        {
-            method: "POST",
-
-            body:
-                formData
-        }
-    );
-
-alert(
-    "fetch 완료"
-);
-
-
-
-
-
-
-        if (!res.ok) {
-
-            const text =
-                await res.text();
-
-            console.log(text);
-
-            throw new Error(
-                "업로드 서버 응답 실패"
+        const imageStorageRef =
+            window.firebaseRef(
+                window.storage,
+                "images/" +
+                Date.now() +
+                "_" +
+                file.name
             );
-        }
 
-        const raw = await res.text(); console.log(raw); alert(raw); return;
+        await window.uploadBytes(
+            imageStorageRef,
+            file
+        );
 
-        // const result =
-            // await res.json();
-
-        if (
-            result.success &&
-            result.url
-        ) {
-
-            document.getElementById(
-                "shopAdImage"
-            ).value =
-                result.url;
-
-            alert(
-                "사진 업로드 완료"
+        const imageUrl =
+            await window.getDownloadURL(
+                imageStorageRef
             );
-        }
+
+        document.getElementById(
+            "shopAdImage"
+        ).value =
+            imageUrl;
+
+        console.log(
+            imageUrl
+        );
+
+        alert(
+            "사진 업로드 완료"
+        );
 
     } catch(e) {
 
@@ -3590,6 +3546,8 @@ alert(
         );
     }
 }
+
+
 
 // =========================
 // 🔥 동영상 업로드
@@ -3797,7 +3755,61 @@ resolve(result);
 }
 
 
-/* 🔥 추가 끝 */
+
+<!-- Firebase SDK -->
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+    getStorage,
+    ref,
+    uploadBytes,
+    getDownloadURL
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+const firebaseConfig = {
+
+  apiKey:
+    "AIzaSyDCsHw0ibb4pMytyPlVvoCzNKZXy3OSTOo",
+
+  authDomain:
+    "finsegye-upload.firebaseapp.com",
+
+  projectId:
+    "finsegye-upload",
+
+  storageBucket:
+    "finsegye-upload.firebasestorage.app",
+
+  messagingSenderId:
+    "361113771740",
+
+  appId:
+    "1:361113771740:web:9bbc4b6807535d37a65e19",
+
+  measurementId:
+    "G-XQ43DWJRBB"
+};
+
+const app =
+    initializeApp(firebaseConfig);
+
+window.storage =
+    getStorage(app);
+
+window.firebaseRef =
+    ref;
+
+window.uploadBytes =
+    uploadBytes;
+
+window.getDownloadURL =
+    getDownloadURL;
+
+
 
 </script>
 
@@ -3957,6 +3969,9 @@ resolve(result);
 
 <script src="js/ai_finance.js"></script>
 <script src="js/google_sync.js"></script>
+
+
+    
 
 </body>
 </html>
