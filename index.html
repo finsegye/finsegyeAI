@@ -3671,10 +3671,34 @@ if (
                 file.name
             );
 
-        await window.uploadBytes(
-            imageStorageRef,
-            file
+const uploadPromise =
+window.uploadBytes(
+imageStorageRef,
+file
+);
+
+const timeoutPromise =
+new Promise(function(_, reject) {
+
+```
+    setTimeout(function() {
+
+        reject(
+            new Error(
+                "업로드 시간 초과"
+            )
         );
+
+    }, 10000);
+
+});
+```
+
+await Promise.race([
+uploadPromise,
+timeoutPromise
+]);
+
 
         const imageUrl =
             await window.getDownloadURL(
@@ -3735,10 +3759,34 @@ if (
                 file.name
             );
 
-        await window.uploadBytes(
-            videoStorageRef,
-            file
+  const uploadPromise =
+window.uploadBytes(
+imageStorageRef,
+file
+);
+
+const timeoutPromise =
+new Promise(function(_, reject) {
+
+```
+    setTimeout(function() {
+
+        reject(
+            new Error(
+                "업로드 시간 초과"
+            )
         );
+
+    }, 10000);
+
+});
+```
+
+await Promise.race([
+uploadPromise,
+timeoutPromise
+]);
+
 
         const videoUrl =
             await window.getDownloadURL(
