@@ -3992,7 +3992,11 @@ const app =
     initializeApp(firebaseConfig);
 
 const storage =
-    getStorage(app);
+getStorage(
+app,
+"gs://finsegye-upload.firebasestorage.app"
+);
+
 
 window.storage = storage;
 window.firebaseRef = ref;
