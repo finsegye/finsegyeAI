@@ -2931,10 +2931,28 @@ function showGlobalTab(type) {
             typeof searchNearbyStores === "function"
         ) {
 
-            searchNearbyStores(
-                savedLat,
-                savedLng
-            );
+try {
+
+
+searchNearbyStores(
+    savedLat,
+    savedLng
+);
+
+
+} catch(e) {
+
+
+console.log(e);
+
+alert(
+    "주문탭 오류: " +
+    e
+);
+
+
+}
+
 
         } else if (typeof showJeonjuAdsFallback === "function") {
 
@@ -2968,7 +2986,25 @@ function checkCurrentLocation() {
 
         speak("현재 위치 기능을 사용할 수 없습니다.");
 
-        showJeonjuAdsFallback();
+        try {
+
+
+showJeonjuAdsFallback();
+
+
+} catch(e) {
+
+
+console.log(e);
+
+alert(
+    "전주 광고 오류: " +
+    e
+);
+
+
+}
+
 
         return;
     }
