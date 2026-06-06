@@ -3549,6 +3549,7 @@ if (
 
 
 
+```javascript id="firebase-video-full"
 // =========================
 // 🔥 동영상 업로드
 // =========================
@@ -3563,67 +3564,41 @@ if (
         const file =
             videoInput.files[0];
 
-        console.log("동영상 변환 시작");
+        alert(
+            "Firebase 동영상 업로드 시작"
+        );
 
-        const base64 =
-            await fileToBase64(file);
-
-        console.log("동영상 변환 완료");
-
-        console.log(base64);
-
-        const res =
-            await fetch(
-                UPLOAD_SCRIPT_URL,
-                {
-                    method: "POST",
-
-     
-
-                    body: JSON.stringify({
-
-                        fileName:
-                            file.name,
-
-                        mimeType:
-                            file.type,
-
-                        base64:
-                            base64
-
-                    })
-                }
+        const videoStorageRef =
+            window.firebaseRef(
+                window.storage,
+                "videos/" +
+                Date.now() +
+                "_" +
+                file.name
             );
 
-        if (!res.ok) {
+        await window.uploadBytes(
+            videoStorageRef,
+            file
+        );
 
-            const text =
-                await res.text();
-
-            console.log(text);
-
-            throw new Error(
-                "업로드 서버 응답 실패"
+        const videoUrl =
+            await window.getDownloadURL(
+                videoStorageRef
             );
-        }
 
-        const result =
-            await res.json();
+        document.getElementById(
+            "shopAdVideo"
+        ).value =
+            videoUrl;
 
-        if (
-            result.success &&
-            result.url
-        ) {
+        console.log(
+            videoUrl
+        );
 
-            document.getElementById(
-                "shopAdVideo"
-            ).value =
-                result.url;
-
-            alert(
-                "동영상 업로드 완료"
-            );
-        }
+        alert(
+            "동영상 업로드 완료"
+        );
 
     } catch(e) {
 
@@ -3635,6 +3610,7 @@ if (
         );
     }
 }
+```
 
 
 
