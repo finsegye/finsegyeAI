@@ -3680,7 +3680,7 @@ file
 const timeoutPromise =
 new Promise(function(_, reject) {
 
-```
+
     setTimeout(function() {
 
         reject(
@@ -3692,7 +3692,7 @@ new Promise(function(_, reject) {
     }, 10000);
 
 });
-```
+
 
 await Promise.race([
 uploadPromise,
@@ -3759,16 +3759,17 @@ if (
                 file.name
             );
 
-  const uploadPromise =
+const uploadPromise =
 window.uploadBytes(
-imageStorageRef,
+videoStorageRef,
 file
 );
+
 
 const timeoutPromise =
 new Promise(function(_, reject) {
 
-```
+
     setTimeout(function() {
 
         reject(
@@ -3780,7 +3781,7 @@ new Promise(function(_, reject) {
     }, 10000);
 
 });
-```
+
 
 await Promise.race([
 uploadPromise,
