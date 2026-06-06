@@ -3698,6 +3698,7 @@ closeAdEditor(true);
 
 }
 
+
 // 🔥 Base64 변환 함수
 function fileToBase64(file) {
 
@@ -3706,19 +3707,16 @@ return new Promise(function(resolve, reject) {
     const reader =
         new FileReader();
 
-   reader.onload = function() {
+    reader.onload = function() {
 
+        const result =
+            reader.result.split(",")[1];
 
-const result =
-    reader.result.split(",")[1];
+        console.log(result);
 
-console.log(result);
+        resolve(result);
 
-resolve(result);
-
-
-};
-
+    };
 
     reader.onerror =
         reject;
@@ -3728,64 +3726,6 @@ resolve(result);
 
 }
 
-
-
-<!-- Firebase SDK -->
-<script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-    getStorage,
-    ref,
-    uploadBytes,
-    getDownloadURL
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-
-const firebaseConfig = {
-
-  apiKey:
-    "AIzaSyDCsHw0ibb4pMytyPlVvoCzNKZXy3OSTOo",
-
-  authDomain:
-    "finsegye-upload.firebaseapp.com",
-
-  projectId:
-    "finsegye-upload",
-
-  storageBucket:
-    "finsegye-upload.firebasestorage.app",
-
-  messagingSenderId:
-    "361113771740",
-
-  appId:
-    "1:361113771740:web:9bbc4b6807535d37a65e19",
-
-  measurementId:
-    "G-XQ43DWJRBB"
-};
-
-const app =
-    initializeApp(firebaseConfig);
-
-window.storage =
-    getStorage(app);
-
-window.firebaseRef =
-    ref;
-
-window.uploadBytes =
-    uploadBytes;
-
-window.getDownloadURL =
-    getDownloadURL;
-
-
-
-</script>
 
 <!-- 🔥 여기 추가 -->
 <div
@@ -3832,12 +3772,9 @@ window.getDownloadURL =
         "
     ></textarea>
 
- 
 
 <!-- 🔥 사진 업로드 -->
-
 <div style="margin-top:15px;">
-
 
 <div style="
     color:#00ffcc;
@@ -3870,13 +3807,11 @@ window.getDownloadURL =
 
 </label>
 
-
 </div>
 
+
 <!-- 🔥 동영상 업로드 -->
-
 <div style="margin-top:15px;">
-
 
 <div style="
     color:#ff00ff;
@@ -3909,15 +3844,14 @@ window.getDownloadURL =
 
 </label>
 
-
 </div>
+
 
 <div style="
     display:flex;
     gap:8px;
     margin-top:20px;
 ">
-
 
 <button
     onclick="saveAdEditor()"
@@ -3938,14 +3872,69 @@ window.getDownloadURL =
     취소
 </button>
 
-
 </div>
+
+
+<!-- Firebase SDK -->
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+    getStorage,
+    ref,
+    uploadBytes,
+    getDownloadURL
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+const firebaseConfig = {
+
+  apiKey:
+    "AIzaSyDCsHw0ibb4pMytyPlVvoCzNKZXy3OSTOo",
+
+  authDomain:
+    "finsegye-upload.firebaseapp.com",
+
+  projectId:
+    "finsegye-upload",
+
+  storageBucket:
+    "finsegye-upload.appspot.com",
+
+  messagingSenderId:
+    "361113771740",
+
+  appId:
+    "1:361113771740:web:9bbc4b6807535d37a65e19",
+
+  measurementId:
+    "G-XQ43DWJRBB"
+};
+
+const app =
+    initializeApp(firebaseConfig);
+
+window.storage =
+    getStorage(app);
+
+window.firebaseRef =
+    ref;
+
+window.uploadBytes =
+    uploadBytes;
+
+window.getDownloadURL =
+    getDownloadURL;
+
+</script>
 
 <script src="js/ai_finance.js"></script>
 <script src="js/google_sync.js"></script>
 
-
-    
-
 </body>
 </html>
+
+
+
