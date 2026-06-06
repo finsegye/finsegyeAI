@@ -3914,18 +3914,19 @@ document.getElementById(
 
 if (overlay) {
 
+```
+overlay.style.display =
+    "none";
 
 overlay.style.pointerEvents =
     "none";
 
-setTimeout(function() {
-
-    overlay.style.pointerEvents =
-        "auto";
-
-}, 300);
+overlay.style.visibility =
+    "hidden";
+```
 
 }
+
 }
 
 
