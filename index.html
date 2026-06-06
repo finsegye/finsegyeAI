@@ -3843,20 +3843,41 @@ speak("행사 문구가 저장되었습니다.");
 
 // 🔥 입력 초기화
 document.getElementById(
-    "bigAdText"
+"bigAdText"
 ).value = "";
 
 if (imageInput) {
-    imageInput.value = "";
+imageInput.value = "";
 }
 
 if (videoInput) {
-    videoInput.value = "";
+videoInput.value = "";
 }
 
 closeAdEditor(true);
 
+document.body.style.overflow = "auto";
+
+const overlay =
+document.getElementById(
+"adEditorOverlay"
+);
+
+if (overlay) {
+
+
+overlay.style.pointerEvents =
+    "none";
+
+setTimeout(function() {
+
+    overlay.style.pointerEvents =
+        "auto";
+
+}, 300);
+
 }
+
 
 
 // 🔥 Base64 변환 함수
