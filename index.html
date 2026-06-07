@@ -4428,8 +4428,6 @@ return new Promise(function(resolve, reject) {
 
 }
 
-    
-
 function updateHistoryItem(id, key, value) {
 
     const all =
@@ -4454,10 +4452,14 @@ function updateHistoryItem(id, key, value) {
         JSON.stringify(all)
     );
 
-    renderMyHistory();
+    // 🔥 화면 즉시 새로고침
+    loadHistory();
+
+    speak("수정이 완료되었습니다.");
 
     alert("수정 완료");
 }
+
 
 
 function replaceHistoryImage(event) {
