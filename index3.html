@@ -2938,51 +2938,45 @@ function showGlobalTab(type) {
         const savedLng =
             Number(localStorage.getItem("fin_current_lng"));
 
-        if (
-            savedLat &&
-            savedLng &&
-            typeof searchNearbyStores === "function"
-        ) {
+if (
+    savedLat &&
+    savedLng &&
+    typeof searchNearbyStores === "function"
+) {
 
+    try {
 
-try {
+        searchNearbyStores(
+            savedLat,
+            savedLng
+        );
 
-searchNearbyStores(
-    savedLat,
-    savedLng
-);
+    } catch(e) {
 
+        console.log(e);
 
-} catch(e) {
+        alert(
+            "주문탭 오류: " + e
+        );
+    }
 
+} else if (
+    typeof showJeonjuAdsFallback === "function"
+) {
 
-console.log(e);
+    try {
 
-alert(
-    "주문탭 오류: " +
-    e
-);
+        showJeonjuAdsFallback();
 
+    } catch(e) {
 
+        console.log(e);
+
+        alert(
+            "전주 광고 오류: " + e
+        );
+    }
 }
-
-
-
-} catch(e) {
-
-
-console.log(e);
-
-alert(
-    "주문탭 오류: " +
-    e
-);
-
-
-}
-
-
-       } else if (typeof showJeonjuAdsFallback === "function") {
 
     try {
 
