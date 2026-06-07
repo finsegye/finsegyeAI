@@ -3919,10 +3919,10 @@ if (preview) {
                     style="
                         width:100%;
                         border-radius:12px;
-                        max-height:260px;
+                        height:auto;
+                        display:block;
                         object-fit:cover;
                         border:1px solid #00ffcc;
-                        display:block;
                     "
                 >
             </div>
@@ -3944,10 +3944,10 @@ if (preview) {
                     style="
                         width:100%;
                         border-radius:12px;
-                        max-height:320px;
+                       height:auto;
+                        display:block;
                         background:#000;
                         border:1px solid #ff00ff;
-                        display:block;
                     "
                 >
                     <source src="${videoUrl}">
@@ -3956,6 +3956,7 @@ if (preview) {
         `;
     }
 
+    preview.style.display = "block";
     preview.innerHTML = html;
 }
 
