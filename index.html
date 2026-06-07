@@ -2183,13 +2183,18 @@ ${item.imageUrl ? `
 
         <button
             type="button"
-            onclick="
-                window.currentEditId='${item.id}';
 
-                document
-                    .getElementById('replaceImageFile')
-                    .click();
-            "
+onclick="
+    event.stopPropagation();
+
+    window.currentEditId='${item.id}';
+
+    document
+        .getElementById('replaceImageFile')
+        .click();
+"
+
+
             style="
                 width:100%;
                 margin-top:8px;
@@ -2232,13 +2237,18 @@ ${item.videoUrl ? `
 
         <button
             type="button"
-            onclick="
-                window.currentEditId='${item.id}';
 
-                document
-                    .getElementById('replaceVideoFile')
-                    .click();
-            "
+onclick="
+    event.stopPropagation();
+
+    window.currentEditId='${item.id}';
+
+    document
+        .getElementById('replaceVideoFile')
+        .click();
+"
+
+
             style="
                 width:100%;
                 margin-top:8px;
