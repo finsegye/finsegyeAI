@@ -225,16 +225,16 @@
 
 <div class="input-group">
 
-    <!-- 🔥 행사 문구 박스 -->
+    <!-- 🔥 행사 문구 전용 박스 -->
     <div
         id="adTextPreview"
         onclick="openAdEditor()"
         style="
             width:100%;
             height:180px;
-            overflow-y:auto;
+            overflow-y:scroll;
             background:#111;
-            border:1.5px solid gold;
+            border:4px solid red;
             border-radius:12px;
             padding:12px;
             box-sizing:border-box;
@@ -242,23 +242,26 @@
             line-height:1.6;
             white-space:pre-wrap;
             word-break:break-word;
-            margin-bottom:12px;
         "
     >
         눌러서 큰 화면에서 행사 문구를 입력하세요
     </div>
 
-    <!-- 🔥 사진/동영상 박스 -->
+    <!-- 🔥 박스 간격 -->
+    <div style="height:15px;"></div>
+
+    <!-- 🔥 사진/동영상 전용 박스 -->
     <div
         id="adMediaPreview"
         style="
             width:100%;
-            min-height:120px;
+            min-height:260px;
             background:#000;
-            border:1.5px solid #333;
+            border:4px solid #00ffcc;
             border-radius:12px;
             padding:12px;
             box-sizing:border-box;
+            overflow-y:auto;
         "
     >
     </div>
