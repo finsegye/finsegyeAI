@@ -3327,18 +3327,24 @@ function getFinsegyeAdStores() {
         .filter(x => x.type === "ads" || x.type === "routines")
         .map(function(x) {
 
-            return {
-                name:
-                    x.name || x.user || "등록 매장",
+ return {
+    name:
+        x.name || x.user || "등록 매장",
 
-               category:
-                x.category || x.msg || x.text || x.purpose || "행사 광고",
-               
-                msg:
-                    x.msg || x.text || x.purpose || "",
-               
-                region:
-                    x.loc || x.addr || "전주",
+   category:
+    x.category || x.msg || x.text || x.purpose || "행사 광고",
+   
+    msg:
+        x.msg || x.text || x.purpose || "",
+
+    imageUrl:
+        x.imageUrl || "",
+
+    videoUrl:
+        x.videoUrl || "",
+   
+    region:
+        x.loc || x.addr || "전주",
 
                 adRange:
     x.adRange || "1km",
