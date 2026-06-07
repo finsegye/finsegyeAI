@@ -3889,7 +3889,28 @@ timeoutPromise
 
 
 
-if (preview) {
+const textPreview =
+    document.getElementById(
+        "adTextPreview"
+    );
+
+const mediaPreview =
+    document.getElementById(
+        "adMediaPreview"
+    );
+
+// 🔥 행사 문구 출력
+if (textPreview) {
+
+    textPreview.innerHTML =
+        text ||
+        "눌러서 큰 화면에서 행사 문구를 입력하세요";
+}
+
+// 🔥 사진/동영상 출력
+if (mediaPreview) {
+
+    mediaPreview.innerHTML = "";
 
     const imageUrl =
         document.getElementById(
@@ -3901,86 +3922,43 @@ if (preview) {
             "shopAdVideo"
         ).value;
 
-    let html = "";
-
-    // =========================
-    // 🔥 행사 문구
-    // =========================
-    html += `
-        <div style="
-            width:100%;
-            height:180px;
-            overflow-y:auto;
-            background:#111;
-            border:1px solid #333;
-            border-radius:12px;
-            padding:12px;
-            box-sizing:border-box;
-            color:#fff;
-            line-height:1.6;
-            white-space:pre-wrap;
-            word-break:break-word;
-        ">
-            ${text || "눌러서 큰 화면에서 행사 문구를 입력하세요"}
-        </div>
-    `;
-
-    // =========================
     // 🔥 사진
-    // =========================
     if (imageUrl) {
 
-        html += `
-            <div style="
-                width:100%;
-                margin-top:15px;
-            ">
-                <img
-                    src="${imageUrl}"
-                    style="
-                        width:100%;
-                        height:auto;
-                        border-radius:12px;
-                        display:block;
-                        border:2px solid #00ffcc;
-                    "
-                >
-            </div>
+        mediaPreview.innerHTML += `
+            <img
+                src="${imageUrl}"
+                style="
+                    width:100%;
+                    border-radius:12px;
+                    margin-bottom:12px;
+                    display:block;
+                    border:2px solid #00ffcc;
+                "
+            >
         `;
     }
 
-    // =========================
     // 🔥 동영상
-    // =========================
     if (videoUrl) {
 
-        html += `
-            <div style="
-                width:100%;
-                margin-top:15px;
-            ">
-                <video
-                    controls
-                    playsinline
-                    preload="metadata"
-                    style="
-                        width:100%;
-                        height:auto;
-                        border-radius:12px;
-                        display:block;
-                        background:#000;
-                        border:2px solid #ff00ff;
-                    "
-                >
-                    <source src="${videoUrl}">
-                </video>
-            </div>
+        mediaPreview.innerHTML += `
+            <video
+                controls
+                playsinline
+                preload="metadata"
+                style="
+                    width:100%;
+                    border-radius:12px;
+                    display:block;
+                    background:#000;
+                    border:2px solid #ff00ff;
+                "
+            >
+                <source src="${videoUrl}">
+            </video>
         `;
     }
-
-    preview.style.display = "block";
-
-    preview.innerHTML = html;
 }
 
 speak("행사 문구가 저장되었습니다.");
