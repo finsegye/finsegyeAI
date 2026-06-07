@@ -3821,6 +3821,12 @@ function openAdEditor() {
 
     overlay.style.display = "block";
 
+overlay.style.pointerEvents = "auto";
+
+overlay.style.visibility = "visible";
+
+document.body.style.overflow = "hidden";
+
     const oldText =
         document.getElementById("shopAd").value || "";
 
