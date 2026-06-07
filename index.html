@@ -1437,6 +1437,69 @@ function resetSectionFields(sectionId) {
         h.unshift({name: val, time: new Date().toLocaleString(), rawTime: new Date().getTime()});
         localStorage.setItem('fin_'+type, JSON.stringify(h));
         speak(msg); alert(msg);
+
+
+        // 🔥 행사 문구 강제 초기화
+const preview =
+    document.getElementById("adTextPreview");
+
+if (preview) {
+
+    preview.innerText =
+        "눌러서 큰 화면에서 행사 문구를 입력하세요";
+}
+
+const media =
+    document.getElementById("adMediaPreview");
+
+if (media) {
+
+    media.innerHTML = "";
+}
+
+const adText =
+    document.getElementById("shopAd");
+
+if (adText) {
+    adText.value = "";
+}
+
+const adImage =
+    document.getElementById("shopAdImage");
+
+if (adImage) {
+    adImage.value = "";
+}
+
+const adVideo =
+    document.getElementById("shopAdVideo");
+
+if (adVideo) {
+    adVideo.value = "";
+}
+
+const imageFile =
+    document.getElementById("adImageFile");
+
+if (imageFile) {
+    imageFile.value = "";
+}
+
+const videoFile =
+    document.getElementById("adVideoFile");
+
+if (videoFile) {
+    videoFile.value = "";
+}
+
+const bigText =
+    document.getElementById("bigAdText");
+
+if (bigText) {
+    bigText.value = "";
+}
+
+         
         resetAllForms(); showSection('dashboard', document.querySelectorAll('.nav button')[0]);
     }
 
