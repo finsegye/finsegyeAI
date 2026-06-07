@@ -1348,7 +1348,47 @@ function resetSectionFields(sectionId) {
     });
 }
 
+// 🔥 행사 문구 초기화
+if (sectionId === "adApplyForm") {
 
+    const preview =
+        document.getElementById("adTextPreview");
+
+    if (preview) {
+
+        preview.innerText =
+            "눌러서 큰 화면에서 행사 문구를 입력하세요";
+    }
+
+    const media =
+        document.getElementById("adMediaPreview");
+
+    if (media) {
+
+        media.innerHTML = "";
+    }
+
+    const hiddenText =
+        document.getElementById("shopAd");
+
+    if (hiddenText) {
+        hiddenText.value = "";
+    }
+
+    const hiddenImage =
+        document.getElementById("shopAdImage");
+
+    if (hiddenImage) {
+        hiddenImage.value = "";
+    }
+
+    const hiddenVideo =
+        document.getElementById("shopAdVideo");
+
+    if (hiddenVideo) {
+        hiddenVideo.value = "";
+    }
+}
 
 
 
