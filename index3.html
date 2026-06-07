@@ -222,12 +222,13 @@
 <div class="input-group">
 
     <!-- 🔥 행사 문구 박스 -->
- <div
+<div
     id="adTextPreview"
     onclick="openAdEditor()"
     style="
         width:100%;
         height:220px;
+        overflow-x:hidden;
         overflow-y:auto;
         background:#111;
         border:5px solid red;
@@ -237,7 +238,8 @@
         color:#fff;
         line-height:1.7;
         white-space:pre-wrap;
-        word-break:break-word;
+        word-break:break-all;
+        overflow-wrap:anywhere;
         margin-bottom:25px;
         display:block;
     "
