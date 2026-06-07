@@ -219,38 +219,71 @@
        
 
 
+<div
+    class="input-group"
+    style="
+        display:flex;
+        flex-direction:column;
+        gap:25px;
+        align-items:stretch;
+    "
+>
 
+    <!-- 🔥 행사 문구 박스 -->
+<div
+    id="adTextPreview"
+    onclick="openAdEditor()"
+    style="
+        width:100%;
+        min-height:220px;
+        max-height:220px;
+        overflow-x:hidden;
+        overflow-y:auto;
+        background:#111;
+        border:5px solid red;
+        border-radius:12px;
+        padding:12px;
+        box-sizing:border-box;
+        color:#fff;
+        line-height:1.7;
+        white-space:pre-wrap;
+        word-break:break-all;
+        overflow-wrap:anywhere;
+        margin-bottom:25px;
+        display:block;
+    "
+>
+    눌러서 큰 화면에서 행사 문구를 입력하세요
+</div>
 
-       
+    <!-- 🔥 사진/동영상 박스 -->
+<div
+    id="adMediaPreview"
+    style="
+        width:100%;
+        min-height:300px;
+        background:#000;
+        border:5px solid #00ffcc;
+        border-radius:12px;
+        padding:12px;
+        box-sizing:border-box;
+        overflow-y:auto;
 
-<div class="input-group">
+        display:flex;
+        flex-direction:column;
 
-    <!-- 🔥 토글 오픈 버튼 -->
-    <div
-        id="adPreviewBox"
-        onclick="openAdEditor()"
-        style="
-            width:100%;
-            min-height:120px;
-            background:#000;
-            border:1.5px solid gold;
-            border-radius:12px;
-            padding:12px;
-            box-sizing:border-box;
-            color:#888;
-            font-size:1em;
-            line-height:1.5;
-            cursor:pointer;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            text-align:center;
-        "
-    >
-        눌러서 큰 화면에서 행사 문구를 입력하세요
-    </div>
+        position:relative;
 
-    <!-- 🔥 실제 저장용 hidden -->
+        margin-top:0;
+
+        flex-shrink:0;
+
+        overflow:hidden;
+    "
+>
+</div>
+
+    <!-- 🔥 hidden -->
     <input type="hidden" id="shopAd">
 
     <input type="hidden" id="shopAdImage">
@@ -258,6 +291,9 @@
     <input type="hidden" id="shopAdVideo">
 
 </div>
+
+       
+
 
         <button class="submitBtn" onclick="sendEventToGoogle(); validateEvent();">
             행사 신청하기
@@ -2925,29 +2961,66 @@ function showGlobalTab(type) {
         const savedLng =
             Number(localStorage.getItem("fin_current_lng"));
 
-        if (
-            savedLat &&
-            savedLng &&
-            typeof searchNearbyStores === "function"
-        ) {
+if (
+    savedLat &&
+    savedLng &&
+    typeof searchNearbyStores === "function"
+) {
 
-            searchNearbyStores(
-                savedLat,
-                savedLng
-            );
+    try {
 
-        } else if (typeof showJeonjuAdsFallback === "function") {
+        searchNearbyStores(
+            savedLat,
+            savedLng
+        );
 
-            showJeonjuAdsFallback();
-        }
+    } catch(e) {
 
-        speak("주문 메뉴를 엽니다.");
+        console.log(e);
 
-        return;
+        alert(
+            "주문탭 오류: " + e
+        );
+    }
+
+} else if (
+    typeof showJeonjuAdsFallback === "function"
+) {
+
+    try {
+
+        showJeonjuAdsFallback();
+
+    } catch(e) {
+
+        console.log(e);
+
+        alert(
+            "전주 광고 오류: " + e
+        );
     }
 }
 
+speak(
+    "주문 메뉴를 엽니다. 반경 1킬로미터, 2킬로미터, 전주 지역 광고를 표시합니다."
+);
 
+return;
+}
+    try {
+
+        showJeonjuAdsFallback();
+
+    } catch(e) {
+
+        console.log(e);
+
+        alert(
+            "전주 광고 오류: " +
+            e
+        );
+    }
+}
 
 function checkCurrentLocation() {
 
@@ -2968,7 +3041,25 @@ function checkCurrentLocation() {
 
         speak("현재 위치 기능을 사용할 수 없습니다.");
 
-        showJeonjuAdsFallback();
+        try {
+
+
+showJeonjuAdsFallback();
+
+
+} catch(e) {
+
+
+console.log(e);
+
+alert(
+    "전주 광고 오류: " +
+    e
+);
+
+
+}
+
 
         return;
     }
@@ -3821,71 +3912,85 @@ timeoutPromise
 
 
 
-// =========================
-// 🔥 미리보기 출력
-// =========================
-const preview =
+const textPreview =
     document.getElementById(
-        "adPreviewBox"
+        "adTextPreview"
     );
 
-if (preview) {
+const mediaPreview =
+    document.getElementById(
+        "adMediaPreview"
+    );
 
-    let html =
+// 🔥 행사 문구 출력
+if (textPreview) {
+
+    textPreview.textContent =
         text ||
         "눌러서 큰 화면에서 행사 문구를 입력하세요";
+}
 
-    // 🔥 이미지 표시
+// 🔥 미디어 초기화
+if (mediaPreview) {
+
+    mediaPreview.innerHTML = "";
+
     const imageUrl =
         document.getElementById(
             "shopAdImage"
         ).value;
 
-    if (imageUrl) {
-
-        html += `
-            <div style="margin-top:10px;">
-                <img
-                    src="${imageUrl}"
-                    style="
-                        width:100%;
-                        border-radius:12px;
-                        max-height:220px;
-                        object-fit:cover;
-                    "
-                >
-            </div>
-        `;
-    }
-
-    // 🔥 동영상 표시
     const videoUrl =
         document.getElementById(
             "shopAdVideo"
         ).value;
 
-    if (videoUrl) {
+    // 🔥 사진 추가
+    if (imageUrl) {
 
-        html += `
-            <div style="margin-top:10px;">
-                <video
-                    controls
-                    playsinline
-                    preload="metadata"
-                    style="
-                        width:100%;
-                        border-radius:12px;
-                        max-height:260px;
-                        background:#000;
-                    "
-                >
-                    <source src="${videoUrl}">
-                </video>
-            </div>
-        `;
+        const img =
+            document.createElement("img");
+
+        img.src = imageUrl;
+
+        img.style.width = "100%";
+        img.style.display = "block";
+        img.style.borderRadius = "12px";
+        img.style.marginBottom = "12px";
+        img.style.border =
+            "3px solid #00ffcc";
+
+        mediaPreview.appendChild(img);
     }
 
-    preview.innerHTML = html;
+    // 🔥 동영상 추가
+    if (videoUrl) {
+
+        const video =
+            document.createElement("video");
+
+        video.controls = true;
+        video.playsInline = true;
+        video.preload = "metadata";
+
+        video.style.width = "100%";
+        video.style.display = "block";
+        video.style.borderRadius = "12px";
+        video.style.background = "#000";
+        video.style.border =
+            "3px solid #ff00ff";
+
+        const source =
+            document.createElement(
+                "source"
+            );
+
+        source.src = videoUrl;
+
+        video.appendChild(source);
+
+        mediaPreview.appendChild(video);
+    }
 }
 
 speak("행사 문구가 저장되었습니다.");
@@ -3915,17 +4020,18 @@ document.getElementById(
 if (overlay) {
 
 
+overlay.style.display =
+    "none";
+
 overlay.style.pointerEvents =
     "none";
 
-setTimeout(function() {
+overlay.style.visibility =
+    "hidden";
 
-    overlay.style.pointerEvents =
-        "auto";
-
-}, 300);
 
 }
+
 }
 
 
@@ -4013,7 +4119,3 @@ console.log("🔥 Firebase 연결 완료");
 
 </body>
 </html>
-
-
-
-
