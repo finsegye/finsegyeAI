@@ -2042,12 +2042,17 @@ detail =
         item.loc
     ) +
 
-    editableLine(
-        item.id,
-        "msg",
-        "문구",
-        item.msg
-    );
+editableLine(
+    item.id,
+    "msg",
+    "문구",
+    (
+        item.msg || ""
+    ).replace(
+        /https?:\/\/\S+/g,
+        ""
+    )
+);
     }
 
             // =========================
