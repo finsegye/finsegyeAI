@@ -2167,16 +2167,13 @@ editableLine(
     <img
 
 <button
+    type="button"
     onclick="
-        const url = prompt('새 사진 URL 입력');
+        window.currentEditId='${item.id}';
 
-        if (!url) return;
-
-        updateHistoryItem(
-            '${item.id}',
-            'imageUrl',
-            url
-        );
+        document
+            .getElementById('replaceImageFile')
+            .click();
     "
     style="
         width:100%;
@@ -2192,17 +2189,22 @@ editableLine(
     사진 교체
 </button>
 
+<input
+    type="file"
+    id="replaceImageFile"
+    accept="image/*"
+    style="display:none;"
+    onchange="replaceHistoryImage(event)"
+>
+
 <button
+    type="button"
     onclick="
-        const url = prompt('새 동영상 URL 입력');
+        window.currentEditId='${item.id}';
 
-        if (!url) return;
-
-        updateHistoryItem(
-            '${item.id}',
-            'videoUrl',
-            url
-        );
+        document
+            .getElementById('replaceVideoFile')
+            .click();
     "
     style="
         width:100%;
@@ -2217,6 +2219,15 @@ editableLine(
 >
     동영상 교체
 </button>
+
+<input
+    type="file"
+    id="replaceVideoFile"
+    accept="video/*"
+    style="display:none;"
+    onchange="replaceHistoryVideo(event)"
+>
+
 
         src="${item.imageUrl}"
         style="
@@ -4422,6 +4433,43 @@ function updateHistoryItem(id, key, value) {
 
     alert("수정 완료");
 }
+
+
+function replaceHistoryImage(event) {
+
+    const file =
+        event.target.files[0];
+
+    if (!file) return;
+
+    const url =
+        URL.createObjectURL(file);
+
+    updateHistoryItem(
+        window.currentEditId,
+        "imageUrl",
+        url
+    );
+}
+
+function replaceHistoryVideo(event) {
+
+    const file =
+        event.target.files[0];
+
+    if (!file) return;
+
+    const url =
+        URL.createObjectURL(file);
+
+    updateHistoryItem(
+        window.currentEditId,
+        "videoUrl",
+        url
+    );
+}
+
+
 
 
 
