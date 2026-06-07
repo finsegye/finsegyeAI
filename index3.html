@@ -222,27 +222,28 @@
 <div class="input-group">
 
     <!-- 🔥 행사 문구 박스 -->
-    <div
-        id="adTextPreview"
-        onclick="openAdEditor()"
-        style="
-            width:100%;
-            height:220px;
-            overflow-y:auto;
-            background:#111;
-            border:5px solid red;
-            border-radius:12px;
-            padding:12px;
-            box-sizing:border-box;
-            color:#fff;
-            line-height:1.7;
-            white-space:pre-wrap;
-            word-break:break-word;
-            margin-bottom:20px;
-        "
-    >
-        눌러서 큰 화면에서 행사 문구를 입력하세요
-    </div>
+ <div
+    id="adTextPreview"
+    onclick="openAdEditor()"
+    style="
+        width:100%;
+        height:220px;
+        overflow-y:auto;
+        background:#111;
+        border:5px solid red;
+        border-radius:12px;
+        padding:12px;
+        box-sizing:border-box;
+        color:#fff;
+        line-height:1.7;
+        white-space:pre-wrap;
+        word-break:break-word;
+        margin-bottom:25px;
+        display:block;
+    "
+>
+    눌러서 큰 화면에서 행사 문구를 입력하세요
+</div>
 
     <!-- 🔥 사진/동영상 박스 -->
 <div
@@ -3899,20 +3900,9 @@ const mediaPreview =
 // 🔥 행사 문구 출력
 if (textPreview) {
 
-    textPreview.innerHTML = `
-        <div style="
-            width:100%;
-            height:100%;
-            overflow-y:auto;
-            background:#111;
-            color:#fff;
-            line-height:1.7;
-            white-space:pre-wrap;
-            word-break:break-word;
-        ">
-            ${text || "눌러서 큰 화면에서 행사 문구를 입력하세요"}
-        </div>
-    `;
+    textPreview.textContent =
+        text ||
+        "눌러서 큰 화면에서 행사 문구를 입력하세요";
 }
 
 // 🔥 미디어 초기화
