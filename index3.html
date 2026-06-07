@@ -3899,66 +3899,90 @@ const mediaPreview =
         "adMediaPreview"
     );
 
-// 🔥 행사 문구 출력
+const imageUrl =
+    document.getElementById(
+        "shopAdImage"
+    ).value;
+
+const videoUrl =
+    document.getElementById(
+        "shopAdVideo"
+    ).value;
+
+// =========================
+// 🔥 행사 문구 박스
+// =========================
 if (textPreview) {
 
-    textPreview.innerHTML =
-        text ||
-        "눌러서 큰 화면에서 행사 문구를 입력하세요";
+    textPreview.innerHTML = `
+        <div style="
+            width:100%;
+            height:100%;
+            overflow-y:auto;
+            color:#fff;
+            line-height:1.6;
+            white-space:pre-wrap;
+            word-break:break-word;
+        ">
+            ${text || "눌러서 큰 화면에서 행사 문구를 입력하세요"}
+        </div>
+    `;
 }
 
-// 🔥 사진/동영상 출력
+// =========================
+// 🔥 미디어 박스
+// =========================
 if (mediaPreview) {
 
-    mediaPreview.innerHTML = "";
-
-    const imageUrl =
-        document.getElementById(
-            "shopAdImage"
-        ).value;
-
-    const videoUrl =
-        document.getElementById(
-            "shopAdVideo"
-        ).value;
+    let mediaHtml = "";
 
     // 🔥 사진
     if (imageUrl) {
 
-        mediaPreview.innerHTML += `
-            <img
-                src="${imageUrl}"
-                style="
-                    width:100%;
-                    border-radius:12px;
-                    margin-bottom:12px;
-                    display:block;
-                    border:2px solid #00ffcc;
-                "
-            >
+        mediaHtml += `
+            <div style="
+                width:100%;
+                margin-bottom:12px;
+            ">
+                <img
+                    src="${imageUrl}"
+                    style="
+                        width:100%;
+                        display:block;
+                        border-radius:12px;
+                        border:2px solid #00ffcc;
+                    "
+                >
+            </div>
         `;
     }
 
     // 🔥 동영상
     if (videoUrl) {
 
-        mediaPreview.innerHTML += `
-            <video
-                controls
-                playsinline
-                preload="metadata"
-                style="
-                    width:100%;
-                    border-radius:12px;
-                    display:block;
-                    background:#000;
-                    border:2px solid #ff00ff;
-                "
-            >
-                <source src="${videoUrl}">
-            </video>
+        mediaHtml += `
+            <div style="
+                width:100%;
+            ">
+                <video
+                    controls
+                    playsinline
+                    preload="metadata"
+                    style="
+                        width:100%;
+                        display:block;
+                        border-radius:12px;
+                        background:#000;
+                        border:2px solid #ff00ff;
+                    "
+                >
+                    <source src="${videoUrl}">
+                </video>
+            </div>
         `;
     }
+
+    mediaPreview.innerHTML = mediaHtml;
 }
 
 speak("행사 문구가 저장되었습니다.");
