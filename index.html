@@ -2165,6 +2165,59 @@ editableLine(
 
         ${item.imageUrl ? `
     <img
+
+<button
+    onclick="
+        const url = prompt('새 사진 URL 입력');
+
+        if (!url) return;
+
+        updateHistoryItem(
+            '${item.id}',
+            'imageUrl',
+            url
+        );
+    "
+    style="
+        width:100%;
+        margin-top:8px;
+        padding:10px;
+        border:none;
+        border-radius:10px;
+        background:#00cc88;
+        color:#fff;
+        font-weight:bold;
+    "
+>
+    사진 교체
+</button>
+
+<button
+    onclick="
+        const url = prompt('새 동영상 URL 입력');
+
+        if (!url) return;
+
+        updateHistoryItem(
+            '${item.id}',
+            'videoUrl',
+            url
+        );
+    "
+    style="
+        width:100%;
+        margin-top:8px;
+        padding:10px;
+        border:none;
+        border-radius:10px;
+        background:#aa00cc;
+        color:#fff;
+        font-weight:bold;
+    "
+>
+    동영상 교체
+</button>
+
         src="${item.imageUrl}"
         style="
             width:100%;
@@ -4352,6 +4405,38 @@ return new Promise(function(resolve, reject) {
 });
 
 }
+
+    
+
+function updateHistoryItem(id, key, value) {
+
+    const all =
+        JSON.parse(
+            localStorage.getItem("fin_all")
+        ) || [];
+
+    const target =
+        all.find(x => x.id === id);
+
+    if (!target) return;
+
+    target[key] = value;
+
+    target.editTime =
+        new Date().toLocaleString();
+
+    target.status = "수정";
+
+    localStorage.setItem(
+        "fin_all",
+        JSON.stringify(all)
+    );
+
+    renderMyHistory();
+
+    alert("수정 완료");
+}
+
 
 
 </script>
