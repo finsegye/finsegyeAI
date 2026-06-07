@@ -3876,53 +3876,70 @@ timeoutPromise
 
 
 
-// =========================
-// 🔥 미리보기 출력
-// =========================
-const preview =
-    document.getElementById(
-        "adPreviewBox"
-    );
-
 if (preview) {
 
-    let html =
-        text ||
-        "눌러서 큰 화면에서 행사 문구를 입력하세요";
-
-    // 🔥 이미지 표시
     const imageUrl =
         document.getElementById(
             "shopAdImage"
         ).value;
 
+    const videoUrl =
+        document.getElementById(
+            "shopAdVideo"
+        ).value;
+
+    let html = `
+
+        <!-- 🔥 행사 문구 스크롤 영역 -->
+        <div style="
+            max-height:180px;
+            overflow-y:auto;
+            white-space:pre-wrap;
+            word-break:break-word;
+            line-height:1.6;
+            padding:12px;
+            background:#111;
+            border-radius:12px;
+            margin-bottom:12px;
+            color:#fff;
+            text-align:left;
+        ">
+            ${text || "눌러서 큰 화면에서 행사 문구를 입력하세요"}
+        </div>
+
+    `;
+
+    // 🔥 사진 고정 표시
     if (imageUrl) {
 
         html += `
-            <div style="margin-top:10px;">
+            <div style="
+                margin-top:10px;
+                flex-shrink:0;
+            ">
                 <img
                     src="${imageUrl}"
                     style="
                         width:100%;
                         border-radius:12px;
-                        max-height:220px;
+                        max-height:260px;
                         object-fit:cover;
+                        border:1px solid #00ffcc;
+                        display:block;
                     "
                 >
             </div>
         `;
     }
 
-    // 🔥 동영상 표시
-    const videoUrl =
-        document.getElementById(
-            "shopAdVideo"
-        ).value;
-
+    // 🔥 동영상 고정 표시
     if (videoUrl) {
 
         html += `
-            <div style="margin-top:10px;">
+            <div style="
+                margin-top:10px;
+                flex-shrink:0;
+            ">
                 <video
                     controls
                     playsinline
@@ -3930,8 +3947,10 @@ if (preview) {
                     style="
                         width:100%;
                         border-radius:12px;
-                        max-height:260px;
+                        max-height:320px;
                         background:#000;
+                        border:1px solid #ff00ff;
+                        display:block;
                     "
                 >
                     <source src="${videoUrl}">
@@ -3969,7 +3988,7 @@ document.getElementById(
 
 if (overlay) {
 
-```
+
 overlay.style.display =
     "none";
 
@@ -3978,7 +3997,7 @@ overlay.style.pointerEvents =
 
 overlay.style.visibility =
     "hidden";
-```
+
 
 }
 
