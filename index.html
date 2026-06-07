@@ -2089,7 +2089,6 @@ detail =
                         item.purpose
                     );
             }
-
             // =========================
             // 루틴
             // =========================
@@ -2173,6 +2172,32 @@ detail =
             ${detail}
         </div>
 
+        ${item.imageUrl ? `
+    <img
+        src="${item.imageUrl}"
+        style="
+            width:100%;
+            border-radius:12px;
+            margin-top:12px;
+        "
+    >
+` : ""}
+
+${item.videoUrl ? `
+    <video
+        controls
+        playsinline
+        style="
+            width:100%;
+            border-radius:12px;
+            margin-top:12px;
+            background:#000;
+        "
+    >
+        <source src="${item.videoUrl}">
+    </video>
+` : ""}
+
         <div style="
             color:#00ffcc;
             font-size:0.72em;
@@ -2203,15 +2228,10 @@ detail =
     </div>
 
 `;
-
         }).join('') || "내역 없음";
     }
 }
-
-
-
-
-
+    
 function toggleHistoryCard(card, title) {
 
     const grid =
