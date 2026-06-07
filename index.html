@@ -2195,9 +2195,6 @@ ${item.videoUrl ? `
             margin-top:6px;
             font-weight:bold;
         ">
-
-
-        
         <button
     onclick="openHistoryEdit('${item.id}', 'ads')"
     style="
@@ -2213,9 +2210,6 @@ ${item.videoUrl ? `
 >
     행사 수정하기
 </button>
-
-
-        
             상태: ${item.status || "신규"}
         </div>
 
@@ -3056,6 +3050,7 @@ function getUnifiedDataByUser(user) {
             document.querySelectorAll('.nav button')[1]
         );
 
+        
         return;
     }
 
@@ -3074,10 +3069,105 @@ function getUnifiedDataByUser(user) {
 }
 
 
+function openHistoryEdit(id, type) {
+
+    const all =
+        JSON.parse(
+            localStorage.getItem("fin_all")
+        ) || [];
+
+    const item =
+        all.find(x => x.id === id);
+
+    if (!item) {
+
+        alert("데이터를 찾을 수 없습니다.");
+
+        return;
+    }
+
+    // 🔥 행사 수정
+    if (type === "ads") {
+
+        speak("행사 수정 화면으로 이동합니다.");
+
+        showSection(
+            'adApplyForm',
+            document.querySelectorAll('.nav button')[1]
+        );
+
+        document.getElementById("shopName").value =
+            item.name || "";
+
+        document.getElementById("shopLoc").value =
+            item.loc || "";
+
+        document.getElementById("shopAd").value =
+            item.msg || "";
+
+        const preview =
+            document.getElementById("adTextPreview");
+
+        if (preview) {
+
+            preview.innerText =
+                item.msg || "";
+        }
+
+        document.getElementById("shopAdImage").value =
+            item.imageUrl || "";
+
+        document.getElementById("shopAdVideo").value =
+            item.videoUrl || "";
+
+        const media =
+            document.getElementById("adMediaPreview");
+
+        if (media) {
+
+            media.innerHTML = "";
+
+            if (item.imageUrl) {
+
+                media.innerHTML += `
+                    <img
+                        src="${item.imageUrl}"
+                        style="
+                            width:100%;
+                            border-radius:12px;
+                            margin-bottom:12px;
+                        "
+                    >
+                `;
+            }
+
+            if (item.videoUrl) {
+
+                media.innerHTML += `
+                    <video
+                        controls
+                        playsinline
+                        style="
+                            width:100%;
+                            border-radius:12px;
+                            background:#000;
+                        "
+                    >
+                        <source src="${item.videoUrl}">
+                    </video>
+                `;
+            }
+        }
+
+        return;
+    }
+}
 
 
 
 
+
+    
 function showGlobalTab(type) {
 
     const registerBox =
