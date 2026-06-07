@@ -2027,25 +2027,41 @@ function loadHistory() {
             // =========================
             if (type === "ads") {
 
-                detail =
-                    editableLine(
-                        item.id,
-                        "name",
-                        "상호명",
-                        item.name
-                    ) +
-                    editableLine(
-                        item.id,
-                        "loc",
-                        "지역",
-                        item.loc
-                    ) +
-                    editableLine(
-                        item.id,
-                        "msg",
-                        "문구",
-                        item.msg
-                    );
+detail =
+    editableLine(
+        item.id,
+        "name",
+        "상호명",
+        item.name
+    ) +
+
+    editableLine(
+        item.id,
+        "loc",
+        "지역",
+        item.loc
+    ) +
+
+    editableLine(
+        item.id,
+        "msg",
+        "문구",
+        item.msg
+    ) +
+
+    editableLine(
+        item.id,
+        "imageUrl",
+        "사진URL",
+        item.imageUrl
+    ) +
+
+    editableLine(
+        item.id,
+        "videoUrl",
+        "동영상URL",
+        item.videoUrl
+    );
             }
 
             // =========================
