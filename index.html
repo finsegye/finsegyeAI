@@ -4451,14 +4451,19 @@ function replaceHistoryImage(event) {
 
     if (!file) return;
 
-    const url =
-        URL.createObjectURL(file);
+    const reader =
+        new FileReader();
 
-    updateHistoryItem(
-        window.currentEditId,
-        "imageUrl",
-        url
-    );
+    reader.onload = function(e) {
+
+        updateHistoryItem(
+            window.currentEditId,
+            "imageUrl",
+            e.target.result
+        );
+    };
+
+    reader.readAsDataURL(file);
 }
 
 function replaceHistoryVideo(event) {
@@ -4468,15 +4473,22 @@ function replaceHistoryVideo(event) {
 
     if (!file) return;
 
-    const url =
-        URL.createObjectURL(file);
+    const reader =
+        new FileReader();
 
-    updateHistoryItem(
-        window.currentEditId,
-        "videoUrl",
-        url
-    );
+    reader.onload = function(e) {
+
+        updateHistoryItem(
+            window.currentEditId,
+            "videoUrl",
+            e.target.result
+        );
+    };
+
+    reader.readAsDataURL(file);
 }
+
+
 
 
 
