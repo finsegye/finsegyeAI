@@ -1328,65 +1328,102 @@ function resetAllForms() {
 // 🔥🔥🔥 바로 여기 아래 추가 🔥🔥🔥
 function resetSectionFields(sectionId) {
 
-    const section = document.getElementById(sectionId);
+    const section =
+        document.getElementById(sectionId);
+
     if (!section) return;
 
+    // 🔥 일반 input 초기화
     section.querySelectorAll('input').forEach(i => {
+
         if (i.type === "checkbox") {
+
             i.checked = false;
+
         } else {
+
             i.value = "";
         }
     });
 
+    // 🔥 select 초기화
     section.querySelectorAll('select').forEach(s => {
+
         s.selectedIndex = 0;
     });
 
+    // 🔥 textarea 초기화
     section.querySelectorAll('textarea').forEach(t => {
+
         t.value = "";
     });
-}
 
-// 🔥 행사 문구 초기화
-if (sectionId === "adApplyForm") {
+    // 🔥 행사 신청 전체 초기화
+    if (sectionId === "adApplyForm") {
 
-    const preview =
-        document.getElementById("adTextPreview");
+        // 🔥 행사 문구 표시 초기화
+        const preview =
+            document.getElementById("adTextPreview");
 
-    if (preview) {
+        if (preview) {
 
-        preview.innerText =
-            "눌러서 큰 화면에서 행사 문구를 입력하세요";
-    }
+            preview.innerText =
+                "눌러서 큰 화면에서 행사 문구를 입력하세요";
+        }
 
-    const media =
-        document.getElementById("adMediaPreview");
+        // 🔥 사진/동영상 미리보기 초기화
+        const media =
+            document.getElementById("adMediaPreview");
 
-    if (media) {
+        if (media) {
 
-        media.innerHTML = "";
-    }
+            media.innerHTML = "";
+        }
 
-    const hiddenText =
-        document.getElementById("shopAd");
+        // 🔥 hidden 값 초기화
+        const adText =
+            document.getElementById("shopAd");
 
-    if (hiddenText) {
-        hiddenText.value = "";
-    }
+        if (adText) {
+            adText.value = "";
+        }
 
-    const hiddenImage =
-        document.getElementById("shopAdImage");
+        const adImage =
+            document.getElementById("shopAdImage");
 
-    if (hiddenImage) {
-        hiddenImage.value = "";
-    }
+        if (adImage) {
+            adImage.value = "";
+        }
 
-    const hiddenVideo =
-        document.getElementById("shopAdVideo");
+        const adVideo =
+            document.getElementById("shopAdVideo");
 
-    if (hiddenVideo) {
-        hiddenVideo.value = "";
+        if (adVideo) {
+            adVideo.value = "";
+        }
+
+        // 🔥 파일 input 초기화
+        const imageFile =
+            document.getElementById("adImageFile");
+
+        if (imageFile) {
+            imageFile.value = "";
+        }
+
+        const videoFile =
+            document.getElementById("adVideoFile");
+
+        if (videoFile) {
+            videoFile.value = "";
+        }
+
+        // 🔥 큰 입력창 초기화
+        const bigText =
+            document.getElementById("bigAdText");
+
+        if (bigText) {
+            bigText.value = "";
+        }
     }
 }
 
