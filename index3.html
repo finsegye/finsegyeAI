@@ -3886,9 +3886,22 @@ const preview =
 
 if (preview) {
 
-    let html =
-        text ||
-        "눌러서 큰 화면에서 행사 문구를 입력하세요";
+ let html = `    <div style="
+        max-height:220px;
+        overflow-y:auto;
+        white-space:pre-wrap;
+        word-break:break-word;
+        line-height:1.5;
+        padding:10px;
+        background:#111;
+        border-radius:12px;
+        margin-bottom:12px;
+    ">
+        ${
+            text ||
+            "눌러서 큰 화면에서 행사 문구를 입력하세요"
+        }     </div>`;
+
 
     // 🔥 이미지 표시
     const imageUrl =
