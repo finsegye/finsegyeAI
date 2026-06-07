@@ -3853,7 +3853,13 @@ function closeAdEditor(isSaved = false) {
 
     overlay.style.display = "none";
 
-    // 🔥 저장이 아닐 때만 닫기 음성
+    overlay.style.pointerEvents = "auto";
+
+    overlay.style.visibility = "visible";
+
+    document.body.style.overflow = "auto";
+
+    // 🔥 저장 아닐 때만 음성
     if (!isSaved) {
 
         speak("행사 문구 입력창을 닫습니다.");
