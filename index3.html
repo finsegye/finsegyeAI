@@ -234,7 +234,7 @@
             height:180px;
             overflow-y:scroll;
             background:#111;
-            border:4px solid red;
+            border:5px solid red;
             border-radius:12px;
             padding:12px;
             box-sizing:border-box;
@@ -244,26 +244,26 @@
             word-break:break-word;
         "
     >
-        눌러서 큰 화면에서 행사 문구를 입력하세요
+        행사 문구 영역
     </div>
 
-    <!-- 🔥 박스 간격 -->
-    <div style="height:15px;"></div>
+    <div style="height:20px;"></div>
 
     <!-- 🔥 사진/동영상 전용 박스 -->
     <div
         id="adMediaPreview"
         style="
             width:100%;
-            min-height:260px;
+            height:320px;
+            overflow-y:auto;
             background:#000;
-            border:4px solid #00ffcc;
+            border:5px solid #00ffcc;
             border-radius:12px;
             padding:12px;
             box-sizing:border-box;
-            overflow-y:auto;
         "
     >
+        사진/동영상 영역
     </div>
 
     <!-- 🔥 실제 저장용 hidden -->
@@ -3902,90 +3902,75 @@ const mediaPreview =
         "adMediaPreview"
     );
 
-const imageUrl =
-    document.getElementById(
-        "shopAdImage"
-    ).value;
-
-const videoUrl =
-    document.getElementById(
-        "shopAdVideo"
-    ).value;
-
-// =========================
-// 🔥 행사 문구 박스
-// =========================
+// 🔥 행사 문구 출력
 if (textPreview) {
 
-    textPreview.innerHTML = `
-        <div style="
-            width:100%;
-            height:100%;
-            overflow-y:auto;
-            color:#fff;
-            line-height:1.6;
-            white-space:pre-wrap;
-            word-break:break-word;
-        ">
-            ${text || "눌러서 큰 화면에서 행사 문구를 입력하세요"}
-        </div>
-    `;
+    textPreview.innerText =
+        text ||
+        "눌러서 큰 화면에서 행사 문구를 입력하세요";
 }
 
-// =========================
-// 🔥 미디어 박스
-// =========================
+// 🔥 미디어 초기화
 if (mediaPreview) {
 
-    let mediaHtml = "";
+    mediaPreview.innerHTML = "";
 
-    // 🔥 사진
+    const imageUrl =
+        document.getElementById(
+            "shopAdImage"
+        ).value;
+
+    const videoUrl =
+        document.getElementById(
+            "shopAdVideo"
+        ).value;
+
+    // 🔥 사진 추가
     if (imageUrl) {
 
-        mediaHtml += `
-            <div style="
-                width:100%;
-                margin-bottom:12px;
-            ">
-                <img
-                    src="${imageUrl}"
-                    style="
-                        width:100%;
-                        display:block;
-                        border-radius:12px;
-                        border:2px solid #00ffcc;
-                    "
-                >
-            </div>
-        `;
+        const img =
+            document.createElement("img");
+
+        img.src = imageUrl;
+
+        img.style.width = "100%";
+        img.style.display = "block";
+        img.style.borderRadius = "12px";
+        img.style.marginBottom = "12px";
+        img.style.border =
+            "3px solid #00ffcc";
+
+        mediaPreview.appendChild(img);
     }
 
-    // 🔥 동영상
+    // 🔥 동영상 추가
     if (videoUrl) {
 
-        mediaHtml += `
-            <div style="
-                width:100%;
-            ">
-                <video
-                    controls
-                    playsinline
-                    preload="metadata"
-                    style="
-                        width:100%;
-                        display:block;
-                        border-radius:12px;
-                        background:#000;
-                        border:2px solid #ff00ff;
-                    "
-                >
-                    <source src="${videoUrl}">
-                </video>
-            </div>
-        `;
-    }
+        const video =
+            document.createElement("video");
 
-    mediaPreview.innerHTML = mediaHtml;
+        video.controls = true;
+        video.playsInline = true;
+        video.preload = "metadata";
+
+        video.style.width = "100%";
+        video.style.display = "block";
+        video.style.borderRadius = "12px";
+        video.style.background = "#000";
+        video.style.border =
+            "3px solid #ff00ff";
+
+        const source =
+            document.createElement(
+                "source"
+            );
+
+        source.src = videoUrl;
+
+        video.appendChild(source);
+
+        mediaPreview.appendChild(video);
+    }
 }
 
 speak("행사 문구가 저장되었습니다.");
