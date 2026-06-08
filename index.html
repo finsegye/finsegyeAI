@@ -64,76 +64,10 @@
         .agree-check-row input { width: 18px; height: 18px; margin: 0; }
         .submitBtn { width: 100%; padding: 14px; background: gold !important; color: #000 !important; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1em; margin-top: 2px; cursor: pointer; }
 
-      .history-grid {
-
-    display:grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap:14px;
-
-    width:100%;
-
-    margin-top:10px;
-
-    align-items:start;
-}
-
-.history-card {
-
-    background:#111;
-
-    border:2px solid gold;
-
-    border-radius:16px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    min-height:240px;
-
-    overflow:hidden;
-
-    padding:12px;
-
-    box-sizing:border-box;
-
-    transition:0.25s;
-}
-
-.history-card h3 {
-
-    font-size:1em;
-
-    color:gold;
-
-    margin:0 0 10px 0;
-
-    border-bottom:1px solid #444;
-
-    padding-bottom:8px;
-
-    text-align:center;
-}
-
-.scroll-area {
-
-    flex:1;
-
-    overflow-y:auto;
-
-    overflow-x:hidden;
-
-    font-size:0.82em;
-
-    text-align:left;
-
-    padding:6px;
-
-    color:#ccc;
-}
+        .history-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap: 8px; height: auto; margin-top: 5px; }
+        .history-card { background: rgba(15, 15, 15, 0.98) !important; border: 1.5px solid gold; border-radius: 10px; display: flex; flex-direction: column; height: 210px; overflow: hidden; padding: 5px; }
+        .history-card h3 { font-size: 0.82em; color: gold; margin: 4px 0; border-bottom: 1px solid #333; padding-bottom: 3px; text-align: center; }
+        .scroll-area { flex: 1; overflow-y: auto; font-size: 0.72em; text-align: left; padding: 4px; color: #ccc; }
 
 
         .history-card {
@@ -850,60 +784,31 @@
 </div>
 
 <section id="mypage">
-
     <div class="history-grid">
 
-        <div class="history-card"
-             onclick="toggleHistoryCard(this, '행사')">
-
+        <div class="history-card" onclick="toggleHistoryCard(this, '행사')">
             <h3>행사</h3>
-
-            <div
-                id="list_ads"
-                class="scroll-area"
-            ></div>
-
+            <div id="list_ads" class="scroll-area"></div>
         </div>
 
-        <div class="history-card"
-             onclick="toggleHistoryCard(this, '공유')">
-
+        <div class="history-card" onclick="toggleHistoryCard(this, '공유')">
             <h3>공유</h3>
-
-            <div
-                id="list_shares"
-                class="scroll-area"
-            ></div>
-
+            <div id="list_shares" class="scroll-area"></div>
         </div>
 
-        <div class="history-card"
-             onclick="toggleHistoryCard(this, '루틴')">
-
+        <div class="history-card" onclick="toggleHistoryCard(this, '루틴')">
             <h3>루틴</h3>
-
-            <div
-                id="list_routines"
-                class="scroll-area"
-            ></div>
-
+            <div id="list_routines" class="scroll-area"></div>
         </div>
 
-        <div class="history-card"
-             onclick="toggleHistoryCard(this, '지갑')">
-
+        <div class="history-card" onclick="toggleHistoryCard(this, '지갑')">
             <h3>지갑</h3>
-
-            <div
-                id="list_wallets"
-                class="scroll-area"
-            ></div>
-
+            <div id="list_wallets" class="scroll-area"></div>
         </div>
 
     </div>
-
 </section>
+
 
 <div class="nav">
     <button onclick="showSection('dashboard', this)" class="active">자산현황</button>
@@ -2313,18 +2218,15 @@ ${type === "ads" ? `
 
     <button
         type="button"
-       onclick="
-    event.preventDefault();
-    event.stopPropagation();
+        onclick="
+            event.stopPropagation();
 
-    window.currentEditId='${item.id}';
+            window.currentEditId='${item.id}';
 
-    document
-        .getElementById('replaceImageFile')
-        .click();
-
-    return false;
-"
+            document
+                .getElementById('replaceImageFile')
+                .click();
+        "
         style="
             width:100%;
             margin-top:8px;
@@ -2402,18 +2304,15 @@ ${type === "ads" ? `
 
     <button
         type="button"
- onclick="
-    event.preventDefault();
-    event.stopPropagation();
+        onclick="
+            event.stopPropagation();
 
-    window.currentEditId='${item.id}';
+            window.currentEditId='${item.id}';
 
-    document
-        .getElementById('replaceVideoFile')
-        .click();
-
-    return false;
-"
+            document
+                .getElementById('replaceVideoFile')
+                .click();
+        "
         style="
             width:100%;
             margin-top:8px;
@@ -2531,9 +2430,10 @@ function toggleHistoryCard(card, title) {
 
     grid.classList.remove("expanded-mode");
 
-if (isOpen) {
-    return;
-}
+    if (isOpen) {
+        speak(title + " 목록을 접습니다.");
+        return;
+    }
 
     grid.classList.add("expanded-mode");
     card.classList.add("expanded");
@@ -2546,6 +2446,7 @@ if (isOpen) {
             }
         });
 
+    speak(title + " 목록을 크게 봅니다.");
 }
 
     const aiProducts = [
