@@ -784,38 +784,60 @@
 </div>
 
 <section id="mypage">
+
     <div class="history-grid">
 
-<div class="history-card" onclick="toggleHistoryCard(this, '행사')">
-    <h3>행사</h3>
-    <div id="list_ads" class="scroll-area"></div>
-</div>
+        <div class="history-card"
+             onclick="toggleHistoryCard(this, '행사')">
 
-    <div
-        id="list_ads"
-        class="scroll-area"
-    ></div>
+            <h3>행사</h3>
 
-</div>
+            <div
+                id="list_ads"
+                class="scroll-area"
+            ></div>
 
-     <div class="history-card" onclick="toggleHistoryCard(this, '공유')">
-    <h3>공유</h3>
-    <div id="list_share" class="scroll-area"></div>
-</div>
+        </div>
 
-   <div class="history-card" onclick="toggleHistoryCard(this, '루틴')">
-    <h3>루틴</h3>
-    <div id="list_routine" class="scroll-area"></div>
-</div>
-    
-<div class="history-card" onclick="toggleHistoryCard(this, '지갑')">
-    <h3>지갑</h3>
-    <div id="list_wallet" class="scroll-area"></div>
-</div>
+        <div class="history-card"
+             onclick="toggleHistoryCard(this, '공유')">
+
+            <h3>공유</h3>
+
+            <div
+                id="list_shares"
+                class="scroll-area"
+            ></div>
+
+        </div>
+
+        <div class="history-card"
+             onclick="toggleHistoryCard(this, '루틴')">
+
+            <h3>루틴</h3>
+
+            <div
+                id="list_routines"
+                class="scroll-area"
+            ></div>
+
+        </div>
+
+        <div class="history-card"
+             onclick="toggleHistoryCard(this, '지갑')">
+
+            <h3>지갑</h3>
+
+            <div
+                id="list_wallets"
+                class="scroll-area"
+            ></div>
+
+        </div>
 
     </div>
-</section>
 
+</section>
 
 <div class="nav">
     <button onclick="showSection('dashboard', this)" class="active">자산현황</button>
