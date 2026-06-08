@@ -527,6 +527,20 @@
 <div id="globalRegisterBox" style="display:none;">
 
     <div style="
+    background:#111;
+    border:3px solid #00ccff;
+    border-radius:18px;
+
+    padding:18px;
+    margin-top:14px;
+    margin-bottom:20px;
+
+    box-shadow:
+        0 0 12px rgba(0,204,255,0.25);
+">
+ 
+
+    <div style="
         background:#111;
         border:1px solid gold;
         border-radius:10px;
@@ -582,6 +596,7 @@
             </div>
 
         </div>
+    </div>
 
 
 
@@ -2132,11 +2147,19 @@ editableLine(
                     );
             }
 
-            return `
+       return `
 
 <div style="
-        border-bottom:1px solid #333;
-        padding:10px 0;
+        background:#111;
+        border:3px solid #00ffcc;
+        border-radius:18px;
+
+        padding:18px;
+        margin-bottom:28px;
+
+        box-shadow:
+            0 0 12px rgba(0,255,204,0.25);
+
         line-height:1.6;
 
         height:auto;
@@ -2144,9 +2167,7 @@ editableLine(
         overflow:visible;
 
         word-break:break-all;
-        padding-bottom:15px;
     ">
-
         <div style="
             color:gold;
             font-weight:bold;
@@ -2163,64 +2184,98 @@ editableLine(
             ${detail}
         </div>
 
-${item.imageUrl ? `
+<!-- 🔥 사진 영역 -->
 
-    <div style="
-        width:100%;
-        margin-top:12px;
-    ">
+${type === "ads" ? `
+<div style="
+    width:100%;
+    margin-top:12px;
+">
 
+    ${item.imageUrl ? `
         <img
             src="${item.imageUrl}"
             style="
                 width:100%;
-                display:block;
                 border-radius:12px;
                 border:2px solid #00ffcc;
+                display:block;
                 background:#111;
             "
         >
+    ` : `
+        <div style="
+            width:100%;
+            padding:30px;
+            text-align:center;
+            background:#111;
+            color:#777;
+            border-radius:12px;
+        ">
+            등록된 사진 없음
+        </div>
+    `}
 
-        <button
-            type="button"
+    <button
+        type="button"
+        onclick="
+            event.stopPropagation();
 
-onclick="
-    event.stopPropagation();
+            window.currentEditId='${item.id}';
 
-    window.currentEditId='${item.id}';
+            document
+                .getElementById('replaceImageFile')
+                .click();
+        "
+        style="
+            width:100%;
+            margin-top:8px;
+            padding:12px;
+            border:none;
+            border-radius:10px;
+            background:#00cc88;
+            color:#fff;
+            font-size:16px;
+            font-weight:bold;
+        "
+    >
+        사진 교체
+    </button>
 
-    document
-        .getElementById('replaceImageFile')
-        .click();
-"
+    <button
+        type="button"
+        onclick="
+            event.stopPropagation();
 
+            updateHistoryItem(
+                '${item.id}',
+                'imageUrl',
+                ''
+            );
+        "
+        style="
+            width:100%;
+            margin-top:6px;
+            padding:10px;
+            border:none;
+            border-radius:10px;
+            background:#444;
+            color:#fff;
+            font-weight:bold;
+        "
+    >
+        사진 삭제
+    </button>
 
-            style="
-                width:100%;
-                margin-top:8px;
-                padding:12px;
-                border:none;
-                border-radius:10px;
-                background:#00cc88;
-                color:#fff;
-                font-weight:bold;
-                font-size:16px;
-            "
-        >
-            사진 교체
-        </button>
+</div>
 
-    </div>
+<!-- 🔥 동영상 영역 -->
+<div style="
+    width:100%;
+    margin-top:16px;
+">
 
-` : ""}
-
-${item.videoUrl ? `
-
-    <div style="
-        width:100%;
-        margin-top:16px;
-    ">
-
+    ${item.videoUrl ? `
         <video
             controls
             playsinline
@@ -2234,39 +2289,71 @@ ${item.videoUrl ? `
         >
             <source src="${item.videoUrl}">
         </video>
+    ` : `
+        <div style="
+            width:100%;
+            padding:30px;
+            text-align:center;
+            background:#111;
+            color:#777;
+            border-radius:12px;
+        ">
+            등록된 동영상 없음
+        </div>
+    `}
 
-        <button
-            type="button"
+    <button
+        type="button"
+        onclick="
+            event.stopPropagation();
 
-onclick="
-    event.stopPropagation();
+            window.currentEditId='${item.id}';
 
-    window.currentEditId='${item.id}';
+            document
+                .getElementById('replaceVideoFile')
+                .click();
+        "
+        style="
+            width:100%;
+            margin-top:8px;
+            padding:12px;
+            border:none;
+            border-radius:10px;
+            background:#aa00cc;
+            color:#fff;
+            font-weight:bold;
+            font-size:16px;
+        "
+    >
+        동영상 교체
+    </button>
 
-    document
-        .getElementById('replaceVideoFile')
-        .click();
-"
+    <button
+        type="button"
+        onclick="
+            event.stopPropagation();
 
+            updateHistoryItem(
+                '${item.id}',
+                'videoUrl',
+                ''
+            );
+        "
+        style="
+            width:100%;
+            margin-top:6px;
+            padding:10px;
+            border:none;
+            border-radius:10px;
+            background:#333;
+            color:#fff;
+            font-weight:bold;
+        "
+    >
+        동영상 삭제
+    </button>
 
-            style="
-                width:100%;
-                margin-top:8px;
-                padding:12px;
-                border:none;
-                border-radius:10px;
-                background:#aa00cc;
-                color:#fff;
-                font-weight:bold;
-                font-size:16px;
-            "
-        >
-            동영상 교체
-        </button>
-
-    </div>
-
-` : ""}
+</div>
 
 
 
@@ -2285,6 +2372,7 @@ onclick="
     style="display:none;"
     onchange="replaceHistoryVideo(event)"
 >
+` : ""}
 
 
        
@@ -3833,11 +3921,20 @@ function renderStoreGroup(title, list) {
                     : "";
 
                 return `
-                    <div style="
-                        border-bottom:1px solid #333;
-                        padding:8px 0;
-                        line-height:1.5;
-                    ">
+                   <div style="
+    background:#111;
+
+    border:3px solid #ff8800;
+    border-radius:18px;
+
+    padding:18px;
+    margin-bottom:24px;
+
+    box-shadow:
+        0 0 12px rgba(255,136,0,0.25);
+
+    line-height:1.7;
+">
                         <div style="color:#00ffcc; font-weight:bold;">
                             ${x.name}
                         </div>
@@ -4465,9 +4562,9 @@ function updateHistoryItem(id, key, value) {
     // 🔥 화면 즉시 새로고침
     loadHistory();
 
-    speak("수정이 완료되었습니다.");
+    speak("완료되었습니다.");
 
-    alert("수정 완료");
+    alert("완료되었습니다.");
 }
 
 
@@ -4571,55 +4668,7 @@ async function replaceHistoryVideo(event) {
     }
 }
 
-async function replaceHistoryVideo(event) {
 
-    const file =
-        event.target.files[0];
-
-    if (!file) return;
-
-    try {
-
-        speak("동영상 교체 업로드 중입니다.");
-
-        const videoStorageRef =
-            window.firebaseRef(
-                window.storage,
-                "history_videos/" +
-                Date.now() +
-                "_" +
-                file.name
-            );
-
-        await window.uploadBytes(
-            videoStorageRef,
-            file
-        );
-
-        const videoUrl =
-            await window.getDownloadURL(
-                videoStorageRef
-            );
-
-        updateHistoryItem(
-            window.currentEditId,
-            "videoUrl",
-            videoUrl
-        );
-
-        loadHistory();
-
-        speak("동영상 교체가 완료되었습니다.");
-
-    } catch(e) {
-
-        console.log(e);
-
-        alert(
-            "동영상 교체 실패: " + e
-        );
-    }
-}
 
 </script>
 
