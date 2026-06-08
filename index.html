@@ -2132,11 +2132,19 @@ editableLine(
                     );
             }
 
-            return `
+       return `
 
 <div style="
-        border-bottom:1px solid #333;
-        padding:10px 0;
+        background:#111;
+        border:3px solid #00ffcc;
+        border-radius:18px;
+
+        padding:18px;
+        margin-bottom:28px;
+
+        box-shadow:
+            0 0 12px rgba(0,255,204,0.25);
+
         line-height:1.6;
 
         height:auto;
@@ -2144,9 +2152,7 @@ editableLine(
         overflow:visible;
 
         word-break:break-all;
-        padding-bottom:15px;
     ">
-
         <div style="
             color:gold;
             font-weight:bold;
