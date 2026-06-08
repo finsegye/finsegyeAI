@@ -2210,6 +2210,33 @@ onclick="
             사진 교체
         </button>
 
+<button
+    type="button"
+    onclick="
+        event.stopPropagation();
+
+        updateHistoryItem(
+            '${item.id}',
+            'imageUrl',
+            ''
+        );
+    "
+    style="
+        width:100%;
+        margin-top:6px;
+        padding:10px;
+        border:none;
+        border-radius:10px;
+        background:#444;
+        color:#fff;
+        font-weight:bold;
+    "
+>
+    사진 삭제
+</button>
+
+
+
     </div>
 
 ` : ""}
@@ -2263,6 +2290,33 @@ onclick="
         >
             동영상 교체
         </button>
+
+<button
+    type="button"
+    onclick="
+        event.stopPropagation();
+
+        updateHistoryItem(
+            '${item.id}',
+            'videoUrl',
+            ''
+        );
+    "
+    style="
+        width:100%;
+        margin-top:6px;
+        padding:10px;
+        border:none;
+        border-radius:10px;
+        background:#333;
+        color:#fff;
+        font-weight:bold;
+    "
+>
+    동영상 삭제
+</button>
+
+        
 
     </div>
 
