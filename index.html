@@ -786,10 +786,24 @@
 <section id="mypage">
     <div class="history-grid">
 
-        <div class="history-card" onclick="toggleHistoryCard(this, '행사')">
-            <h3>행사</h3>
-            <div id="list_ads" class="scroll-area"></div>
-        </div>
+<div class="history-card">
+
+    <h3
+        onclick="toggleHistoryCard(
+            this.parentElement,
+            '행사'
+        )"
+        style="cursor:pointer;"
+    >
+        행사
+    </h3>
+
+    <div
+        id="list_ads"
+        class="scroll-area"
+    ></div>
+
+</div>
 
         <div class="history-card" onclick="toggleHistoryCard(this, '공유')">
             <h3>공유</h3>
