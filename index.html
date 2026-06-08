@@ -2163,83 +2163,89 @@ editableLine(
             ${detail}
         </div>
 
-${item.imageUrl ? `
 
-    <div style="
-        width:100%;
-        margin-top:12px;
-    ">
+<div style="
+    width:100%;
+    margin-top:12px;
+">
 
+    ${item.imageUrl ? `
         <img
             src="${item.imageUrl}"
             style="
                 width:100%;
-                display:block;
                 border-radius:12px;
                 border:2px solid #00ffcc;
+                display:block;
                 background:#111;
             "
         >
+    ` : `
+        <div style="
+            width:100%;
+            padding:30px;
+            text-align:center;
+            background:#111;
+            color:#777;
+            border-radius:12px;
+        ">
+            등록된 사진 없음
+        </div>
+    `}
 
-        <button
-            type="button"
+    <button
+        type="button"
+        onclick="
+            event.stopPropagation();
 
-onclick="
-    event.stopPropagation();
+            window.currentEditId='${item.id}';
 
-    window.currentEditId='${item.id}';
+            document
+                .getElementById('replaceImageFile')
+                .click();
+        "
+        style="
+            width:100%;
+            margin-top:8px;
+            padding:12px;
+            border:none;
+            border-radius:10px;
+            background:#00cc88;
+            color:#fff;
+            font-size:16px;
+            font-weight:bold;
+        "
+    >
+        사진 교체
+    </button>
 
-    document
-        .getElementById('replaceImageFile')
-        .click();
-"
+    <button
+        type="button"
+        onclick="
+            event.stopPropagation();
 
+            updateHistoryItem(
+                '${item.id}',
+                'imageUrl',
+                ''
+            );
+        "
+        style="
+            width:100%;
+            margin-top:6px;
+            padding:10px;
+            border:none;
+            border-radius:10px;
+            background:#444;
+            color:#fff;
+            font-weight:bold;
+        "
+    >
+        사진 삭제
+    </button>
 
-            style="
-                width:100%;
-                margin-top:8px;
-                padding:12px;
-                border:none;
-                border-radius:10px;
-                background:#00cc88;
-                color:#fff;
-                font-weight:bold;
-                font-size:16px;
-            "
-        >
-            사진 교체
-        </button>
+</div>
 
-<button
-    type="button"
-    onclick="
-        event.stopPropagation();
-
-        updateHistoryItem(
-            '${item.id}',
-            'imageUrl',
-            ''
-        );
-    "
-    style="
-        width:100%;
-        margin-top:6px;
-        padding:10px;
-        border:none;
-        border-radius:10px;
-        background:#444;
-        color:#fff;
-        font-weight:bold;
-    "
->
-    사진 삭제
-</button>
-
-
-
-    </div>
-
-` : ""}
 
 ${item.videoUrl ? `
 
