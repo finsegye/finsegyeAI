@@ -2351,6 +2351,7 @@ ${type === "ads" ? `
     style="display:none;"
     onchange="replaceHistoryVideo(event)"
 >
+` : ""}
 
 
        
@@ -4637,55 +4638,7 @@ async function replaceHistoryVideo(event) {
     }
 }
 
-async function replaceHistoryVideo(event) {
 
-    const file =
-        event.target.files[0];
-
-    if (!file) return;
-
-    try {
-
-        speak("동영상 교체 업로드 중입니다.");
-
-        const videoStorageRef =
-            window.firebaseRef(
-                window.storage,
-                "history_videos/" +
-                Date.now() +
-                "_" +
-                file.name
-            );
-
-        await window.uploadBytes(
-            videoStorageRef,
-            file
-        );
-
-        const videoUrl =
-            await window.getDownloadURL(
-                videoStorageRef
-            );
-
-        updateHistoryItem(
-            window.currentEditId,
-            "videoUrl",
-            videoUrl
-        );
-
-        loadHistory();
-
-        speak("동영상 교체가 완료되었습니다.");
-
-    } catch(e) {
-
-        console.log(e);
-
-        alert(
-            "동영상 교체 실패: " + e
-        );
-    }
-}
 
 </script>
 
