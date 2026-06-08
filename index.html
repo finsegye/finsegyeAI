@@ -786,19 +786,10 @@
 <section id="mypage">
     <div class="history-grid">
 
-    <div class="history-card">
-
-    <h3
-        onclick="toggleHistoryCard(
-            this.parentElement,
-            '행사'
-        )"
-        style="
-            cursor:pointer;
-        "
-    >
-        행사
-    </h3>
+<div class="history-card" onclick="toggleHistoryCard(this, '행사')">
+    <h3>행사</h3>
+    <div id="list_ads" class="scroll-area"></div>
+</div>
 
     <div
         id="list_ads"
@@ -807,61 +798,19 @@
 
 </div>
 
-     <div class="history-card">
-
-    <h3
-        onclick="toggleHistoryCard(
-            this.parentElement,
-            '공유'
-        )"
-        style="cursor:pointer;"
-    >
-        공유
-    </h3>
-
-    <div
-        id="list_share"
-        class="scroll-area"
-    ></div>
-
+     <div class="history-card" onclick="toggleHistoryCard(this, '공유')">
+    <h3>공유</h3>
+    <div id="list_share" class="scroll-area"></div>
 </div>
 
-    <div class="history-card">
-
-    <h3
-        onclick="toggleHistoryCard(
-            this.parentElement,
-            '루틴'
-        )"
-        style="cursor:pointer;"
-    >
-        루틴
-    </h3>
-
-    <div
-        id="list_routine"
-        class="scroll-area"
-    ></div>
-
+   <div class="history-card" onclick="toggleHistoryCard(this, '루틴')">
+    <h3>루틴</h3>
+    <div id="list_routine" class="scroll-area"></div>
 </div>
-
-<div class="history-card">
-
-    <h3
-        onclick="toggleHistoryCard(
-            this.parentElement,
-            '지갑'
-        )"
-        style="cursor:pointer;"
-    >
-        지갑
-    </h3>
-
-    <div
-        id="list_wallet"
-        class="scroll-area"
-    ></div>
-
+    
+<div class="history-card" onclick="toggleHistoryCard(this, '지갑')">
+    <h3>지갑</h3>
+    <div id="list_wallet" class="scroll-area"></div>
 </div>
 
     </div>
@@ -2494,10 +2443,9 @@ function toggleHistoryCard(card, title) {
 
     grid.classList.remove("expanded-mode");
 
-    if (isOpen) {
-        speak(title + " 목록을 접습니다.");
-        return;
-    }
+if (isOpen) {
+    return;
+}
 
     grid.classList.add("expanded-mode");
     card.classList.add("expanded");
@@ -2510,7 +2458,6 @@ function toggleHistoryCard(card, title) {
             }
         });
 
-    speak(title + " 목록을 크게 봅니다.");
 }
 
     const aiProducts = [
