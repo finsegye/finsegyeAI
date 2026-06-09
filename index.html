@@ -2420,13 +2420,11 @@ function toggleHistoryCard(card, title, event) {
         const clicked =
             event.target;
 
-      if (
-        clicked.closest("button") ||
-        clicked.closest("input")
-    ) {
-            event.preventDefault();
-            event.stopPropagation();
-            return false;
+         if (
+            clicked.closest("button") ||
+            clicked.closest("input")
+        ) {
+            return;
         }
     }
 
