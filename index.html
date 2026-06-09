@@ -2218,19 +2218,17 @@ ${type === "ads" ? `
 
  <button
     type="button"
-    onclick="
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        event.stopPropagation();
+onclick="
+    event.stopPropagation();
 
-        window.currentEditId='${item.id}';
+    window.currentEditId='${item.id}';
 
-        document
-            .getElementById('replaceImageFile')
-            .click();
+    document
+        .getElementById('replaceImageFile')
+        .click();
 
-        return false;
-    "
+    return false;
+"
     style="
         width:100%;
         margin-top:8px;
@@ -2309,8 +2307,6 @@ ${type === "ads" ? `
     <button
         type="button"
 onclick="
-    event.preventDefault();
-    event.stopImmediatePropagation();
     event.stopPropagation();
 
     window.currentEditId='${item.id}';
@@ -2362,8 +2358,6 @@ onclick="
     </button>
 
 </div>
-
-
 
 <input
     type="file"
