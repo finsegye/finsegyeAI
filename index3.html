@@ -786,22 +786,22 @@
 <section id="mypage">
     <div class="history-grid">
 
-<div class="history-card" onclick="toggleHistoryCard(this, '행사')">
+<div class="history-card" onclick="toggleHistoryCard(this, '행사', event)">
     <h3>행사</h3>
     <div id="list_ads" class="scroll-area"></div>
 </div>
 
-        <div class="history-card" onclick="toggleHistoryCard(this, '공유')">
+        <div class="history-card" onclick="toggleHistoryCard(this, '공유', event)">
             <h3>공유</h3>
             <div id="list_shares" class="scroll-area"></div>
         </div>
 
-        <div class="history-card" onclick="toggleHistoryCard(this, '루틴')">
+        <div class="history-card" onclick="toggleHistoryCard(this, '루틴', event)">
             <h3>루틴</h3>
             <div id="list_routines" class="scroll-area"></div>
         </div>
 
-        <div class="history-card" onclick="toggleHistoryCard(this, '지갑')">
+        <div class="history-card" onclick="toggleHistoryCard(this, '지갑', event)">
             <h3>지갑</h3>
             <div id="list_wallets" class="scroll-area"></div>
         </div>
@@ -2216,31 +2216,35 @@ ${type === "ads" ? `
         </div>
     `}
 
-    <button
-        type="button"
-        onclick="
-            event.stopPropagation();
+ <button
+    type="button"
+    onclick="
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        event.stopPropagation();
 
-            window.currentEditId='${item.id}';
+        window.currentEditId='${item.id}';
 
-            document
-                .getElementById('replaceImageFile')
-                .click();
-        "
-        style="
-            width:100%;
-            margin-top:8px;
-            padding:12px;
-            border:none;
-            border-radius:10px;
-            background:#00cc88;
-            color:#fff;
-            font-size:16px;
-            font-weight:bold;
-        "
-    >
-        사진 교체
-    </button>
+        document
+            .getElementById('replaceImageFile')
+            .click();
+
+        return false;
+    "
+    style="
+        width:100%;
+        margin-top:8px;
+        padding:12px;
+        border:none;
+        border-radius:10px;
+        background:#00cc88;
+        color:#fff;
+        font-size:16px;
+        font-weight:bold;
+    "
+>
+    사진 교체
+</button>
 
     <button
         type="button"
@@ -2304,15 +2308,19 @@ ${type === "ads" ? `
 
     <button
         type="button"
-        onclick="
-            event.stopPropagation();
+onclick="
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    event.stopPropagation();
 
-            window.currentEditId='${item.id}';
+    window.currentEditId='${item.id}';
 
-            document
-                .getElementById('replaceVideoFile')
-                .click();
-        "
+    document
+        .getElementById('replaceVideoFile')
+        .click();
+
+    return false;
+"
         style="
             width:100%;
             margin-top:8px;
@@ -2411,7 +2419,22 @@ ${type === "ads" ? `
     }
 }
     
-function toggleHistoryCard(card, title) {
+function toggleHistoryCard(card, title, event) {
+
+    if (event) {
+
+        const clicked =
+            event.target;
+
+      if (
+        clicked.closest("button") ||
+        clicked.closest("input")
+    ) {
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        }
+    }
 
     const grid =
         document.querySelector("#mypage .history-grid");
