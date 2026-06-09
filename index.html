@@ -2219,14 +2219,19 @@ ${type === "ads" ? `
     <button
         type="button"
         onclick="
-            event.stopPropagation();
+           onclick="
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    event.stopPropagation();
 
-            window.currentEditId='${item.id}';
+    window.currentEditId='${item.id}';
 
-            document
-                .getElementById('replaceImageFile')
-                .click();
-        "
+    document
+        .getElementById('replaceImageFile')
+        .click();
+
+    return false;
+"
         style="
             width:100%;
             margin-top:8px;
@@ -2304,15 +2309,19 @@ ${type === "ads" ? `
 
     <button
         type="button"
-        onclick="
-            event.stopPropagation();
+onclick="
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    event.stopPropagation();
 
-            window.currentEditId='${item.id}';
+    window.currentEditId='${item.id}';
 
-            document
-                .getElementById('replaceVideoFile')
-                .click();
-        "
+    document
+        .getElementById('replaceVideoFile')
+        .click();
+
+    return false;
+"
         style="
             width:100%;
             margin-top:8px;
