@@ -2219,16 +2219,8 @@ ${type === "ads" ? `
 <button
     type="button"
     onclick="
-        event.stopPropagation();
-
-        window.currentEditId='${item.id}';
-
-        document
-            .getElementById('replaceImageFile')
-            .click();
-
-        return false;
-    "
+    alert('사진교체버튼클릭');
+"
     style="
         width:100%;
         margin-top:8px;
