@@ -2304,33 +2304,33 @@ ${type === "ads" ? `
         </div>
     `}
 
-    <button
-        type="button"
-onclick="
-    event.stopPropagation();
+<button
+    type="button"
+    onclick="
+        event.stopPropagation();
 
-    window.currentEditId='${item.id}';
+        window.currentEditId='${item.id}';
 
-    document
-        .getElementById('replaceVideoFile')
-        .click();
+        document
+            .getElementById('replaceVideoFile')
+            .click();
 
-    return false;
-"
-        style="
-            width:100%;
-            margin-top:8px;
-            padding:12px;
-            border:none;
-            border-radius:10px;
-            background:#aa00cc;
-            color:#fff;
-            font-weight:bold;
-            font-size:16px;
-        "
-    >
-        동영상 교체
-    </button>
+        return false;
+    "
+    style="
+        width:100%;
+        margin-top:8px;
+        padding:12px;
+        border:none;
+        border-radius:10px;
+        background:#aa00cc;
+        color:#fff;
+        font-weight:bold;
+        font-size:16px;
+    "
+>
+    동영상 교체
+</button>
 
     <button
         type="button"
