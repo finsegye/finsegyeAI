@@ -779,23 +779,6 @@
 
 <section id="mypage">
 
-<button
-    onclick="deleteAllAds()"
-    style="
-        width:100%;
-        padding:12px;
-        border:none;
-        border-radius:10px;
-        background:#cc0000;
-        color:#fff;
-        font-size:16px;
-        font-weight:bold;
-        margin-bottom:10px;
-    "
->
-🗑 행사 전체 삭제
-</button>
-
     <div class="history-grid">
 
 <div class="history-card" onclick="toggleHistoryCard(this, '행사', event)">
@@ -2227,6 +2210,31 @@ ${type === "ads" ? `
             등록된 사진 없음
         </div>
     `}
+
+
+<button
+    type="button"
+    onclick="
+        event.stopPropagation();
+
+        deleteAdCard('${item.id}');
+
+        return false;
+    "
+    style="
+        width:100%;
+        margin-top:8px;
+        padding:12px;
+        border:none;
+        border-radius:10px;
+        background:#cc0000;
+        color:#fff;
+        font-size:16px;
+        font-weight:bold;
+    "
+>
+    🗑 전체 삭제
+</button>
 
  <button
     type="button"
@@ -4714,6 +4722,38 @@ function deleteAllAds() {
     );
 
     loadHistory();
+}
+
+function deleteAdCard(id) {
+
+    if (
+        !confirm(
+            "이 행사 카드를 전체 삭제하시겠습니까?"
+        )
+    ) {
+        return;
+    }
+
+    let all =
+        JSON.parse(
+            localStorage.getItem("fin_all")
+        ) || [];
+
+    all =
+        all.filter(
+            item => item.id !== id
+        );
+
+    localStorage.setItem(
+        "fin_all",
+        JSON.stringify(all)
+    );
+
+    loadHistory();
+
+    alert(
+        "행사 카드가 삭제되었습니다."
+    );
 }
 
 </script>
