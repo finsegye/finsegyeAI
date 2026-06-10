@@ -219,45 +219,66 @@
        
 
 
+<!-- 🔥 행사 문구 박스 -->
+<div style="width:100%; margin-bottom:30px;">
 
-
-       
-
-<div class="input-group">
-
-    <!-- 🔥 토글 오픈 버튼 -->
     <div
-        id="adPreviewBox"
+        id="adTextPreview"
         onclick="openAdEditor()"
         style="
             width:100%;
-            min-height:120px;
-            background:#000;
-            border:1.5px solid gold;
+            height:220px;
+            overflow-y:auto;
+            overflow-x:hidden;
+
+            background:#111;
+            border:5px solid red;
             border-radius:12px;
+
             padding:12px;
             box-sizing:border-box;
-            color:#888;
-            font-size:1em;
-            line-height:1.5;
-            cursor:pointer;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            text-align:center;
+
+            color:#fff;
+            line-height:1.7;
+
+            white-space:pre-wrap;
+            word-break:break-word;
         "
     >
         눌러서 큰 화면에서 행사 문구를 입력하세요
     </div>
 
-    <!-- 🔥 실제 저장용 hidden -->
-    <input type="hidden" id="shopAd">
+</div>
 
-    <input type="hidden" id="shopAdImage">
+<!-- 🔥 사진/동영상 박스 -->
+<div style="width:100%; margin-top:10px;">
 
-    <input type="hidden" id="shopAdVideo">
+    <div
+        id="adMediaPreview"
+        style="
+            width:100%;
+            min-height:300px;
+
+            background:#000;
+            border:5px solid #00ffcc;
+            border-radius:12px;
+
+            padding:12px;
+            box-sizing:border-box;
+
+            overflow:hidden;
+        "
+    >
+    </div>
 
 </div>
+
+<input type="hidden" id="shopAd">
+<input type="hidden" id="shopAdImage">
+<input type="hidden" id="shopAdVideo">
+
+       
+
 
         <button class="submitBtn" onclick="sendEventToGoogle(); validateEvent();">
             행사 신청하기
@@ -300,7 +321,7 @@
                     placeholder="전화번호를 입력해 주세요"
                     onfocus="speak('전화번호를 입력해 주세요')">
         </div>
-
+ 
         <div class="input-group">
             <input type="text" id="rShopLoc" placeholder="지역을 입력해 주세요" onfocus="speak('지역을 입력해 주세요')">
         </div>
@@ -506,6 +527,20 @@
 <div id="globalRegisterBox" style="display:none;">
 
     <div style="
+    background:#111;
+    border:3px solid #00ccff;
+    border-radius:18px;
+
+    padding:18px;
+    margin-top:14px;
+    margin-bottom:20px;
+
+    box-shadow:
+        0 0 12px rgba(0,204,255,0.25);
+">
+ 
+
+    <div style="
         background:#111;
         border:1px solid gold;
         border-radius:10px;
@@ -561,6 +596,7 @@
             </div>
 
         </div>
+    </div>
 
 
 
@@ -750,22 +786,22 @@
 <section id="mypage">
     <div class="history-grid">
 
-        <div class="history-card" onclick="toggleHistoryCard(this, '행사')">
-            <h3>행사</h3>
-            <div id="list_ads" class="scroll-area"></div>
-        </div>
+<div class="history-card" onclick="toggleHistoryCard(this, '행사', event)">
+    <h3>행사</h3>
+    <div id="list_ads" class="scroll-area"></div>
+</div>
 
-        <div class="history-card" onclick="toggleHistoryCard(this, '공유')">
+        <div class="history-card" onclick="toggleHistoryCard(this, '공유', event)">
             <h3>공유</h3>
             <div id="list_shares" class="scroll-area"></div>
         </div>
 
-        <div class="history-card" onclick="toggleHistoryCard(this, '루틴')">
+        <div class="history-card" onclick="toggleHistoryCard(this, '루틴', event)">
             <h3>루틴</h3>
             <div id="list_routines" class="scroll-area"></div>
         </div>
 
-        <div class="history-card" onclick="toggleHistoryCard(this, '지갑')">
+        <div class="history-card" onclick="toggleHistoryCard(this, '지갑', event)">
             <h3>지갑</h3>
             <div id="list_wallets" class="scroll-area"></div>
         </div>
@@ -1307,27 +1343,104 @@ function resetAllForms() {
 // 🔥🔥🔥 바로 여기 아래 추가 🔥🔥🔥
 function resetSectionFields(sectionId) {
 
-    const section = document.getElementById(sectionId);
+    const section =
+        document.getElementById(sectionId);
+
     if (!section) return;
 
+    // 🔥 일반 input 초기화
     section.querySelectorAll('input').forEach(i => {
+
         if (i.type === "checkbox") {
+
             i.checked = false;
+
         } else {
+
             i.value = "";
         }
     });
 
+    // 🔥 select 초기화
     section.querySelectorAll('select').forEach(s => {
+
         s.selectedIndex = 0;
     });
 
+    // 🔥 textarea 초기화
     section.querySelectorAll('textarea').forEach(t => {
+
         t.value = "";
     });
+
+    // 🔥 행사 신청 전체 초기화
+    if (sectionId === "adApplyForm") {
+
+        // 🔥 행사 문구 표시 초기화
+        const preview =
+            document.getElementById("adTextPreview");
+
+        if (preview) {
+
+            preview.innerText =
+                "눌러서 큰 화면에서 행사 문구를 입력하세요";
+        }
+
+        // 🔥 사진/동영상 미리보기 초기화
+        const media =
+            document.getElementById("adMediaPreview");
+
+        if (media) {
+
+            media.innerHTML = "";
+        }
+
+        // 🔥 hidden 값 초기화
+        const adText =
+            document.getElementById("shopAd");
+
+        if (adText) {
+            adText.value = "";
+        }
+
+        const adImage =
+            document.getElementById("shopAdImage");
+
+        if (adImage) {
+            adImage.value = "";
+        }
+
+        const adVideo =
+            document.getElementById("shopAdVideo");
+
+        if (adVideo) {
+            adVideo.value = "";
+        }
+
+        // 🔥 파일 input 초기화
+        const imageFile =
+            document.getElementById("adImageFile");
+
+        if (imageFile) {
+            imageFile.value = "";
+        }
+
+        const videoFile =
+            document.getElementById("adVideoFile");
+
+        if (videoFile) {
+            videoFile.value = "";
+        }
+
+        // 🔥 큰 입력창 초기화
+        const bigText =
+            document.getElementById("bigAdText");
+
+        if (bigText) {
+            bigText.value = "";
+        }
+    }
 }
-
-
 
 
 
@@ -1339,6 +1452,78 @@ function resetSectionFields(sectionId) {
         h.unshift({name: val, time: new Date().toLocaleString(), rawTime: new Date().getTime()});
         localStorage.setItem('fin_'+type, JSON.stringify(h));
         speak(msg); alert(msg);
+
+
+        // 🔥 행사 문구 강제 초기화
+const preview =
+    document.getElementById("adTextPreview");
+
+if (preview) {
+
+    preview.innerText =
+        "눌러서 큰 화면에서 행사 문구를 입력하세요";
+}
+
+const media =
+    document.getElementById("adMediaPreview");
+
+if (media) {
+
+    media.innerHTML = `
+        <div style="
+            color:#666;
+            text-align:center;
+            padding:30px 10px;
+            font-size:14px;
+        ">
+            사진과 동영상 미리보기 영역
+        </div>
+    `;
+}
+
+const adText =
+    document.getElementById("shopAd");
+
+if (adText) {
+    adText.value = "";
+}
+
+const adImage =
+    document.getElementById("shopAdImage");
+
+if (adImage) {
+    adImage.value = "";
+}
+
+const adVideo =
+    document.getElementById("shopAdVideo");
+
+if (adVideo) {
+    adVideo.value = "";
+}
+
+const imageFile =
+    document.getElementById("adImageFile");
+
+if (imageFile) {
+    imageFile.value = "";
+}
+
+const videoFile =
+    document.getElementById("adVideoFile");
+
+if (videoFile) {
+    videoFile.value = "";
+}
+
+const bigText =
+    document.getElementById("bigAdText");
+
+if (bigText) {
+    bigText.value = "";
+}
+
+         
         resetAllForms(); showSection('dashboard', document.querySelectorAll('.nav button')[0]);
     }
 
@@ -1857,26 +2042,33 @@ function loadHistory() {
             // =========================
             if (type === "ads") {
 
-                detail =
-                    editableLine(
-                        item.id,
-                        "name",
-                        "상호명",
-                        item.name
-                    ) +
-                    editableLine(
-                        item.id,
-                        "loc",
-                        "지역",
-                        item.loc
-                    ) +
-                    editableLine(
-                        item.id,
-                        "msg",
-                        "문구",
-                        item.msg
-                    );
-            }
+detail =
+    editableLine(
+        item.id,
+        "name",
+        "상호명",
+        item.name
+    ) +
+
+    editableLine(
+        item.id,
+        "loc",
+        "지역",
+        item.loc
+    ) +
+
+editableLine(
+    item.id,
+    "msg",
+    "문구",
+    (
+        item.msg || ""
+    ).replace(
+        /https?:\/\/\S+/g,
+        ""
+    )
+);
+    }
 
             // =========================
             // 공유
@@ -1903,7 +2095,6 @@ function loadHistory() {
                         item.purpose
                     );
             }
-
             // =========================
             // 루틴
             // =========================
@@ -1956,11 +2147,19 @@ function loadHistory() {
                     );
             }
 
-            return `
+       return `
 
 <div style="
-        border-bottom:1px solid #333;
-        padding:10px 0;
+        background:#111;
+        border:3px solid #00ffcc;
+        border-radius:18px;
+
+        padding:18px;
+        margin-bottom:28px;
+
+        box-shadow:
+            0 0 12px rgba(0,255,204,0.25);
+
         line-height:1.6;
 
         height:auto;
@@ -1968,9 +2167,7 @@ function loadHistory() {
         overflow:visible;
 
         word-break:break-all;
-        padding-bottom:15px;
     ">
-
         <div style="
             color:gold;
             font-weight:bold;
@@ -1987,12 +2184,207 @@ function loadHistory() {
             ${detail}
         </div>
 
+<!-- 🔥 사진 영역 -->
+
+${type === "ads" ? `
+<div style="
+    width:100%;
+    margin-top:12px;
+">
+
+    ${item.imageUrl ? `
+        <img
+            src="${item.imageUrl}"
+            style="
+                width:100%;
+                border-radius:12px;
+                border:2px solid #00ffcc;
+                display:block;
+                background:#111;
+            "
+        >
+    ` : `
+        <div style="
+            width:100%;
+            padding:30px;
+            text-align:center;
+            background:#111;
+            color:#777;
+            border-radius:12px;
+        ">
+            등록된 사진 없음
+        </div>
+    `}
+
+ <button
+    type="button"
+onclick="
+    event.stopPropagation();
+
+    window.currentEditId='${item.id}';
+
+    document
+        .getElementById('replaceImageFile')
+        .click();
+
+    return false;
+"
+    style="
+        width:100%;
+        margin-top:8px;
+        padding:12px;
+        border:none;
+        border-radius:10px;
+        background:#00cc88;
+        color:#fff;
+        font-size:16px;
+        font-weight:bold;
+    "
+>
+    사진 교체
+</button>
+
+    <button
+        type="button"
+        onclick="
+            event.stopPropagation();
+
+            updateHistoryItem(
+                '${item.id}',
+                'imageUrl',
+                ''
+            );
+        "
+        style="
+            width:100%;
+            margin-top:6px;
+            padding:10px;
+            border:none;
+            border-radius:10px;
+            background:#444;
+            color:#fff;
+            font-weight:bold;
+        "
+    >
+        사진 삭제
+    </button>
+
+</div>
+
+<!-- 🔥 동영상 영역 -->
+<div style="
+    width:100%;
+    margin-top:16px;
+">
+
+    ${item.videoUrl ? `
+        <video
+            controls
+            playsinline
+            style="
+                width:100%;
+                display:block;
+                border-radius:12px;
+                background:#000;
+                border:2px solid #ff00ff;
+            "
+        >
+            <source src="${item.videoUrl}">
+        </video>
+    ` : `
+        <div style="
+            width:100%;
+            padding:30px;
+            text-align:center;
+            background:#111;
+            color:#777;
+            border-radius:12px;
+        ">
+            등록된 동영상 없음
+        </div>
+    `}
+
+    <button
+        type="button"
+onclick="
+    event.stopPropagation();
+
+    window.currentEditId='${item.id}';
+
+    document
+        .getElementById('replaceVideoFile')
+        .click();
+
+    return false;
+"
+        style="
+            width:100%;
+            margin-top:8px;
+            padding:12px;
+            border:none;
+            border-radius:10px;
+            background:#aa00cc;
+            color:#fff;
+            font-weight:bold;
+            font-size:16px;
+        "
+    >
+        동영상 교체
+    </button>
+
+    <button
+        type="button"
+        onclick="
+            event.stopPropagation();
+
+            updateHistoryItem(
+                '${item.id}',
+                'videoUrl',
+                ''
+            );
+        "
+        style="
+            width:100%;
+            margin-top:6px;
+            padding:10px;
+            border:none;
+            border-radius:10px;
+            background:#333;
+            color:#fff;
+            font-weight:bold;
+        "
+    >
+        동영상 삭제
+    </button>
+
+</div>
+
+<input
+    type="file"
+    id="replaceImageFile"
+    accept="image/*"
+    style="display:none;"
+    onchange="replaceHistoryImage(event)"
+>
+
+<input
+    type="file"
+    id="replaceVideoFile"
+    accept="video/*"
+    style="display:none;"
+    onchange="replaceHistoryVideo(event)"
+>
+` : ""}
+
+
+       
         <div style="
             color:#00ffcc;
             font-size:0.72em;
             margin-top:6px;
             font-weight:bold;
         ">
+      
             상태: ${item.status || "신규"}
         </div>
 
@@ -2017,16 +2409,26 @@ function loadHistory() {
     </div>
 
 `;
-
         }).join('') || "내역 없음";
     }
 }
+    
+function toggleHistoryCard(card, title, event) {
 
+    if (event) {
 
+        const clicked =
+            event.target;
 
-
-
-function toggleHistoryCard(card, title) {
+      if (
+        clicked.closest("button") ||
+        clicked.closest("input")
+    ) {
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        }
+    }
 
     const grid =
         document.querySelector("#mypage .history-grid");
@@ -2838,6 +3240,7 @@ function getUnifiedDataByUser(user) {
             document.querySelectorAll('.nav button')[1]
         );
 
+        
         return;
     }
 
@@ -2856,10 +3259,105 @@ function getUnifiedDataByUser(user) {
 }
 
 
+function openHistoryEdit(id, type) {
+
+    const all =
+        JSON.parse(
+            localStorage.getItem("fin_all")
+        ) || [];
+
+    const item =
+        all.find(x => x.id === id);
+
+    if (!item) {
+
+        alert("데이터를 찾을 수 없습니다.");
+
+        return;
+    }
+
+    // 🔥 행사 수정
+    if (type === "ads") {
+
+        speak("행사 수정 화면으로 이동합니다.");
+
+        showSection(
+            'adApplyForm',
+            document.querySelectorAll('.nav button')[1]
+        );
+
+        document.getElementById("shopName").value =
+            item.name || "";
+
+        document.getElementById("shopLoc").value =
+            item.loc || "";
+
+        document.getElementById("shopAd").value =
+            item.msg || "";
+
+        const preview =
+            document.getElementById("adTextPreview");
+
+        if (preview) {
+
+            preview.innerText =
+                item.msg || "";
+        }
+
+        document.getElementById("shopAdImage").value =
+            item.imageUrl || "";
+
+        document.getElementById("shopAdVideo").value =
+            item.videoUrl || "";
+
+        const media =
+            document.getElementById("adMediaPreview");
+
+        if (media) {
+
+            media.innerHTML = "";
+
+            if (item.imageUrl) {
+
+                media.innerHTML += `
+                    <img
+                        src="${item.imageUrl}"
+                        style="
+                            width:100%;
+                            border-radius:12px;
+                            margin-bottom:12px;
+                        "
+                    >
+                `;
+            }
+
+            if (item.videoUrl) {
+
+                media.innerHTML += `
+                    <video
+                        controls
+                        playsinline
+                        style="
+                            width:100%;
+                            border-radius:12px;
+                            background:#000;
+                        "
+                    >
+                        <source src="${item.videoUrl}">
+                    </video>
+                `;
+            }
+        }
+
+        return;
+    }
+}
 
 
 
 
+
+    
 function showGlobalTab(type) {
 
     const registerBox =
@@ -2925,52 +3423,52 @@ function showGlobalTab(type) {
         const savedLng =
             Number(localStorage.getItem("fin_current_lng"));
 
-        if (
-            savedLat &&
-            savedLng &&
-            typeof searchNearbyStores === "function"
-        ) {
+if (
+    savedLat &&
+    savedLng &&
+    typeof searchNearbyStores === "function"
+) {
 
+    try {
 
-try {
+        searchNearbyStores(
+            savedLat,
+            savedLng
+        );
 
-searchNearbyStores(
-    savedLat,
-    savedLng
-);
+    } catch(e) {
 
+        console.log(e);
 
-} catch(e) {
+        alert(
+            "주문탭 오류: " + e
+        );
+    }
 
+} else if (
+    typeof showJeonjuAdsFallback === "function"
+) {
 
-console.log(e);
+    try {
 
-alert(
-    "주문탭 오류: " +
-    e
-);
+        showJeonjuAdsFallback();
 
+    } catch(e) {
 
+        console.log(e);
+
+        alert(
+            "전주 광고 오류: " + e
+        );
+    }
 }
 
-
-
-} catch(e) {
-
-
-console.log(e);
-
-alert(
-    "주문탭 오류: " +
-    e
+speak(
+    "주문 메뉴를 엽니다. 반경 1킬로미터, 2킬로미터, 전주 지역 광고를 표시합니다."
 );
 
-
+return;
 }
-
-
-       } else if (typeof showJeonjuAdsFallback === "function") {
-
     try {
 
         showJeonjuAdsFallback();
@@ -3157,18 +3655,24 @@ function getFinsegyeAdStores() {
         .filter(x => x.type === "ads" || x.type === "routines")
         .map(function(x) {
 
-            return {
-                name:
-                    x.name || x.user || "등록 매장",
+ return {
+    name:
+        x.name || x.user || "등록 매장",
 
-               category:
-                x.category || x.msg || x.text || x.purpose || "행사 광고",
-               
-                msg:
-                    x.msg || x.text || x.purpose || "",
-               
-                region:
-                    x.loc || x.addr || "전주",
+   category:
+    x.category || x.msg || x.text || x.purpose || "행사 광고",
+   
+    msg:
+        x.msg || x.text || x.purpose || "",
+
+    imageUrl:
+        x.imageUrl || "",
+
+    videoUrl:
+        x.videoUrl || "",
+   
+    region:
+        x.loc || x.addr || "전주",
 
                 adRange:
     x.adRange || "1km",
@@ -3434,11 +3938,20 @@ function renderStoreGroup(title, list) {
                     : "";
 
                 return `
-                    <div style="
-                        border-bottom:1px solid #333;
-                        padding:8px 0;
-                        line-height:1.5;
-                    ">
+                   <div style="
+    background:#111;
+
+    border:3px solid #ff8800;
+    border-radius:18px;
+
+    padding:18px;
+    margin-bottom:24px;
+
+    box-shadow:
+        0 0 12px rgba(255,136,0,0.25);
+
+    line-height:1.7;
+">
                         <div style="color:#00ffcc; font-weight:bold;">
                             ${x.name}
                         </div>
@@ -3651,6 +4164,12 @@ function openAdEditor() {
 
     overlay.style.display = "block";
 
+overlay.style.pointerEvents = "auto";
+
+overlay.style.visibility = "visible";
+
+document.body.style.overflow = "hidden";
+
     const oldText =
         document.getElementById("shopAd").value || "";
 
@@ -3677,7 +4196,13 @@ function closeAdEditor(isSaved = false) {
 
     overlay.style.display = "none";
 
-    // 🔥 저장이 아닐 때만 닫기 음성
+    overlay.style.pointerEvents = "auto";
+
+    overlay.style.visibility = "visible";
+
+    document.body.style.overflow = "auto";
+
+    // 🔥 저장 아닐 때만 음성
     if (!isSaved) {
 
         speak("행사 문구 입력창을 닫습니다.");
@@ -3876,71 +4401,85 @@ timeoutPromise
 
 
 
-// =========================
-// 🔥 미리보기 출력
-// =========================
-const preview =
+const textPreview =
     document.getElementById(
-        "adPreviewBox"
+        "adTextPreview"
     );
 
-if (preview) {
+const mediaPreview =
+    document.getElementById(
+        "adMediaPreview"
+    );
 
-    let html =
+// 🔥 행사 문구 출력
+if (textPreview) {
+
+    textPreview.textContent =
         text ||
         "눌러서 큰 화면에서 행사 문구를 입력하세요";
+}
 
-    // 🔥 이미지 표시
+// 🔥 미디어 초기화
+if (mediaPreview) {
+
+    mediaPreview.innerHTML = "";
+
     const imageUrl =
         document.getElementById(
             "shopAdImage"
         ).value;
 
-    if (imageUrl) {
-
-        html += `
-            <div style="margin-top:10px;">
-                <img
-                    src="${imageUrl}"
-                    style="
-                        width:100%;
-                        border-radius:12px;
-                        max-height:220px;
-                        object-fit:cover;
-                    "
-                >
-            </div>
-        `;
-    }
-
-    // 🔥 동영상 표시
     const videoUrl =
         document.getElementById(
             "shopAdVideo"
         ).value;
 
-    if (videoUrl) {
+    // 🔥 사진 추가
+    if (imageUrl) {
 
-        html += `
-            <div style="margin-top:10px;">
-                <video
-                    controls
-                    playsinline
-                    preload="metadata"
-                    style="
-                        width:100%;
-                        border-radius:12px;
-                        max-height:260px;
-                        background:#000;
-                    "
-                >
-                    <source src="${videoUrl}">
-                </video>
-            </div>
-        `;
+        const img =
+            document.createElement("img");
+
+        img.src = imageUrl;
+
+        img.style.width = "100%";
+        img.style.display = "block";
+        img.style.borderRadius = "12px";
+        img.style.marginBottom = "12px";
+        img.style.border =
+            "3px solid #00ffcc";
+
+        mediaPreview.appendChild(img);
     }
 
-    preview.innerHTML = html;
+    // 🔥 동영상 추가
+    if (videoUrl) {
+
+        const video =
+            document.createElement("video");
+
+        video.controls = true;
+        video.playsInline = true;
+        video.preload = "metadata";
+
+        video.style.width = "100%";
+        video.style.display = "block";
+        video.style.borderRadius = "12px";
+        video.style.background = "#000";
+        video.style.border =
+            "3px solid #ff00ff";
+
+        const source =
+            document.createElement(
+                "source"
+            );
+
+        source.src = videoUrl;
+
+        video.appendChild(source);
+
+        mediaPreview.appendChild(video);
+    }
 }
 
 speak("행사 문구가 저장되었습니다.");
@@ -4012,6 +4551,140 @@ return new Promise(function(resolve, reject) {
 });
 
 }
+
+function updateHistoryItem(id, key, value) {
+
+    const all =
+        JSON.parse(
+            localStorage.getItem("fin_all")
+        ) || [];
+
+    const target =
+        all.find(x => x.id === id);
+
+    if (!target) return;
+
+    target[key] = value;
+
+    target.editTime =
+        new Date().toLocaleString();
+
+    target.status = "수정";
+
+    localStorage.setItem(
+        "fin_all",
+        JSON.stringify(all)
+    );
+
+    // 🔥 화면 즉시 새로고침
+    loadHistory();
+
+    speak("완료되었습니다.");
+
+    alert("완료되었습니다.");
+}
+
+
+async function replaceHistoryImage(event) {
+
+    const file =
+        event.target.files[0];
+
+    if (!file) return;
+
+    try {
+
+        speak("사진 교체 업로드 중입니다.");
+
+        const imageStorageRef =
+            window.firebaseRef(
+                window.storage,
+                "history_images/" +
+                Date.now() +
+                "_" +
+                file.name
+            );
+
+        await window.uploadBytes(
+            imageStorageRef,
+            file
+        );
+
+        const imageUrl =
+            await window.getDownloadURL(
+                imageStorageRef
+            );
+
+        updateHistoryItem(
+            window.currentEditId,
+            "imageUrl",
+            imageUrl
+        );
+
+        loadHistory();
+
+        speak("사진 교체가 완료되었습니다.");
+
+    } catch(e) {
+
+        console.log(e);
+
+        alert(
+            "사진 교체 실패: " + e
+        );
+    }
+}
+
+async function replaceHistoryVideo(event) {
+
+    const file =
+        event.target.files[0];
+
+    if (!file) return;
+
+    try {
+
+        speak("동영상 교체 업로드 중입니다.");
+
+        const videoStorageRef =
+            window.firebaseRef(
+                window.storage,
+                "history_videos/" +
+                Date.now() +
+                "_" +
+                file.name
+            );
+
+        await window.uploadBytes(
+            videoStorageRef,
+            file
+        );
+
+        const videoUrl =
+            await window.getDownloadURL(
+                videoStorageRef
+            );
+
+        updateHistoryItem(
+            window.currentEditId,
+            "videoUrl",
+            videoUrl
+        );
+
+        loadHistory();
+
+        speak("동영상 교체가 완료되었습니다.");
+
+    } catch(e) {
+
+        console.log(e);
+
+        alert(
+            "동영상 교체 실패: " + e
+        );
+    }
+}
+
 
 
 </script>
