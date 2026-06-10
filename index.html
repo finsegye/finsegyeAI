@@ -586,6 +586,166 @@
     </div>
 </section>
 
+<!-- 🔥 광고 에디터 전체 복구 -->
+
+<div
+    id="adEditorOverlay"
+    style="
+        display:none;
+        position:fixed;
+        top:42px;
+        bottom:65px;
+        left:0;
+        width:100%;
+        background:#000;
+        z-index:999999;
+        padding:12px;
+        box-sizing:border-box;
+        overflow-y:auto;
+    "
+>
+
+
+<div style="
+    color:gold;
+    font-weight:bold;
+    margin-bottom:10px;
+    font-size:18px;
+    text-align:center;
+">
+    행사 문구 입력
+</div>
+
+<textarea
+    id="bigAdText"
+    placeholder="행사 문구를 입력하세요"
+    style="
+        width:100%;
+        height:180px;
+        background:#111;
+        color:#fff;
+        border:1px solid gold;
+        border-radius:12px;
+        padding:12px;
+        box-sizing:border-box;
+        font-size:16px;
+        resize:none;
+    "
+></textarea>
+
+<div style="margin-top:15px;">
+
+    <div style="
+        color:#00ffcc;
+        font-weight:bold;
+        margin-bottom:6px;
+    ">
+        사진 첨부
+    </div>
+
+    <button
+        type="button"
+        onclick="
+            document
+                .getElementById('adImageFile')
+                .click();
+        "
+        style="
+            width:100%;
+            padding:14px;
+            border-radius:12px;
+            background:#00aa88;
+            color:#fff;
+            font-size:18px;
+            border:none;
+        "
+    >
+        사진 선택
+    </button>
+
+    <input
+        type="file"
+        id="adImageFile"
+        accept="image/*"
+        style="display:none;"
+    >
+
+</div>
+
+<div style="margin-top:15px;">
+
+    <div style="
+        color:#ff00ff;
+        font-weight:bold;
+        margin-bottom:6px;
+    ">
+        동영상 첨부
+    </div>
+
+    <button
+        type="button"
+        onclick="
+            document
+                .getElementById('adVideoFile')
+                .click();
+        "
+        style="
+            width:100%;
+            padding:14px;
+            border-radius:12px;
+            background:#aa0088;
+            color:#fff;
+            font-size:18px;
+            border:none;
+        "
+    >
+        동영상 선택
+    </button>
+
+    <input
+        type="file"
+        id="adVideoFile"
+        accept="video/*"
+        style="display:none;"
+    >
+
+</div>
+
+<button
+    onclick="saveAdEditor()"
+    style="
+        width:100%;
+        margin-top:20px;
+        padding:16px;
+        border:none;
+        border-radius:12px;
+        background:gold;
+        color:#000;
+        font-size:20px;
+        font-weight:bold;
+    "
+>
+    저장
+</button>
+
+<button
+    onclick="closeAdEditor()"
+    style="
+        width:100%;
+        margin-top:10px;
+        padding:14px;
+        border:none;
+        border-radius:12px;
+        background:#222;
+        color:#aaa;
+        font-size:18px;
+    "
+>
+    닫기
+</button>
+
+
+</div>
 
 <section id="mypage">
     <div class="history-grid">
@@ -654,8 +814,6 @@
     const GOOGLE_SCRIPT_URL =
     "https://script.google.com/macros/s/AKfycbx9neVoWokKBfCNlm85PbVPXWE8QPSfp1sJfrzFj_c1O4T5rHhPo3ZgzLwNEAtqzLBs/exec";
 
-    const UPLOAD_SCRIPT_URL =
-    "https://script.google.com/macros/s/AKfycbx9neVoWokKBfCNlm85PbVPXWE8QPSfp1sJfrzFj_c1O4T5rHhPo3ZgzLwNEAtqzLBs/exec";
 
 
 
@@ -1123,7 +1281,7 @@ function goToBank() {
     }, 450); // speak 안내가 시작된 후 자연스럽게 포커스
 }
 
-// --- [여기까지 교체 완료] ---
+//  [여기까지 교체 완료] 
     function handleBackButtonClick() {
         const camOverlay = document.getElementById('cameraOverlay');
         if (camOverlay.style.display === 'flex') { closeCamera(); showSection('dashboard', document.querySelectorAll('.nav button')[0]); return; }
@@ -2773,23 +2931,60 @@ function showGlobalTab(type) {
             typeof searchNearbyStores === "function"
         ) {
 
-            searchNearbyStores(
-                savedLat,
-                savedLng
-            );
 
-        } else if (typeof showJeonjuAdsFallback === "function") {
+try {
 
-            showJeonjuAdsFallback();
-        }
+searchNearbyStores(
+    savedLat,
+    savedLng
+);
 
-        speak("주문 메뉴를 엽니다.");
 
-        return;
-    }
+} catch(e) {
+
+
+console.log(e);
+
+alert(
+    "주문탭 오류: " +
+    e
+);
+
+
 }
 
 
+
+} catch(e) {
+
+
+console.log(e);
+
+alert(
+    "주문탭 오류: " +
+    e
+);
+
+
+}
+
+
+       } else if (typeof showJeonjuAdsFallback === "function") {
+
+    try {
+
+        showJeonjuAdsFallback();
+
+    } catch(e) {
+
+        console.log(e);
+
+        alert(
+            "전주 광고 오류: " +
+            e
+        );
+    }
+}
 
 function checkCurrentLocation() {
 
@@ -2810,7 +3005,25 @@ function checkCurrentLocation() {
 
         speak("현재 위치 기능을 사용할 수 없습니다.");
 
-        showJeonjuAdsFallback();
+        try {
+
+
+showJeonjuAdsFallback();
+
+
+} catch(e) {
+
+
+console.log(e);
+
+alert(
+    "전주 광고 오류: " +
+    e
+);
+
+
+}
+
 
         return;
     }
@@ -3486,7 +3699,6 @@ const videoInput =
 document.getElementById("shopAd").value =
     text;
 
-
 // =========================
 // 🔥 이미지 업로드
 // =========================
@@ -3498,87 +3710,68 @@ if (
 
     try {
 
+        const file =
+            imageInput.files[0];
 
-const file =
-    imageInput.files[0];
+        alert(
+            "Firebase 업로드 시작"
+        );
 
-alert(
-    "fetch 시작"
-);
-
-const formData =
-    new FormData();
-
-formData.append(
-    "file",
-    file
-);
-
-formData.append(
-    "fileName",
-    file.name
-);
-
-formData.append(
-    "mimeType",
-    file.type
-);
-
-alert(
-    "FormData 생성 완료"
-);
-
-const res =
-    await fetch(
-        UPLOAD_SCRIPT_URL,
-        {
-            method: "POST",
-
-            body:
-                formData
-        }
-    );
-
-alert(
-    "fetch 완료"
-);
-
-
-
-
-
-
-        if (!res.ok) {
-
-            const text =
-                await res.text();
-
-            console.log(text);
-
-            throw new Error(
-                "업로드 서버 응답 실패"
+        const imageStorageRef =
+            window.firebaseRef(
+                window.storage,
+                "images/" +
+                Date.now() +
+                "_" +
+                file.name
             );
-        }
 
-        const raw = await res.text(); console.log(raw); alert(raw); return;
+const uploadPromise =
+window.uploadBytes(
+imageStorageRef,
+file
+);
 
-        // const result =
-            // await res.json();
+const timeoutPromise =
+new Promise(function(_, reject) {
 
-        if (
-            result.success &&
-            result.url
-        ) {
 
-            document.getElementById(
-                "shopAdImage"
-            ).value =
-                result.url;
+    setTimeout(function() {
 
-            alert(
-                "사진 업로드 완료"
+        reject(
+            new Error(
+                "업로드 시간 초과"
+            )
+        );
+
+    }, 10000);
+
+});
+
+
+await Promise.race([
+uploadPromise,
+timeoutPromise
+]);
+
+
+        const imageUrl =
+            await window.getDownloadURL(
+                imageStorageRef
             );
-        }
+
+        document.getElementById(
+            "shopAdImage"
+        ).value =
+            imageUrl;
+
+        console.log(
+            imageUrl
+        );
+
+        alert(
+            "사진 업로드 완료"
+        );
 
     } catch(e) {
 
@@ -3590,6 +3783,9 @@ alert(
         );
     }
 }
+
+
+
 
 // =========================
 // 🔥 동영상 업로드
@@ -3605,67 +3801,66 @@ if (
         const file =
             videoInput.files[0];
 
-        console.log("동영상 변환 시작");
+        alert(
+            "Firebase 동영상 업로드 시작"
+        );
 
-        const base64 =
-            await fileToBase64(file);
-
-        console.log("동영상 변환 완료");
-
-        console.log(base64);
-
-        const res =
-            await fetch(
-                UPLOAD_SCRIPT_URL,
-                {
-                    method: "POST",
-
-     
-
-                    body: JSON.stringify({
-
-                        fileName:
-                            file.name,
-
-                        mimeType:
-                            file.type,
-
-                        base64:
-                            base64
-
-                    })
-                }
+        const videoStorageRef =
+            window.firebaseRef(
+                window.storage,
+                "videos/" +
+                Date.now() +
+                "_" +
+                file.name
             );
 
-        if (!res.ok) {
+const uploadPromise =
+window.uploadBytes(
+videoStorageRef,
+file
+);
 
-            const text =
-                await res.text();
 
-            console.log(text);
+const timeoutPromise =
+new Promise(function(_, reject) {
 
-            throw new Error(
-                "업로드 서버 응답 실패"
+
+    setTimeout(function() {
+
+        reject(
+            new Error(
+                "업로드 시간 초과"
+            )
+        );
+
+    }, 10000);
+
+});
+
+
+await Promise.race([
+uploadPromise,
+timeoutPromise
+]);
+
+
+        const videoUrl =
+            await window.getDownloadURL(
+                videoStorageRef
             );
-        }
 
-        const result =
-            await res.json();
+        document.getElementById(
+            "shopAdVideo"
+        ).value =
+            videoUrl;
 
-        if (
-            result.success &&
-            result.url
-        ) {
+        console.log(
+            videoUrl
+        );
 
-            document.getElementById(
-                "shopAdVideo"
-            ).value =
-                result.url;
-
-            alert(
-                "동영상 업로드 완료"
-            );
-        }
+        alert(
+            "동영상 업로드 완료"
+        );
 
     } catch(e) {
 
@@ -3677,6 +3872,7 @@ if (
         );
     }
 }
+
 
 
 
@@ -3751,20 +3947,44 @@ speak("행사 문구가 저장되었습니다.");
 
 // 🔥 입력 초기화
 document.getElementById(
-    "bigAdText"
+"bigAdText"
 ).value = "";
 
 if (imageInput) {
-    imageInput.value = "";
+imageInput.value = "";
 }
 
 if (videoInput) {
-    videoInput.value = "";
+videoInput.value = "";
 }
 
 closeAdEditor(true);
 
+document.body.style.overflow = "auto";
+
+const overlay =
+document.getElementById(
+"adEditorOverlay"
+);
+
+if (overlay) {
+
+
+overlay.style.display =
+    "none";
+
+overlay.style.pointerEvents =
+    "none";
+
+overlay.style.visibility =
+    "hidden";
+
+
 }
+
+}
+
+
 
 // 🔥 Base64 변환 함수
 function fileToBase64(file) {
@@ -3774,19 +3994,16 @@ return new Promise(function(resolve, reject) {
     const reader =
         new FileReader();
 
-   reader.onload = function() {
+    reader.onload = function() {
 
+        const result =
+            reader.result.split(",")[1];
 
-const result =
-    reader.result.split(",")[1];
+        console.log(result);
 
-console.log(result);
+        resolve(result);
 
-resolve(result);
-
-
-};
-
+    };
 
     reader.onerror =
         reject;
@@ -3797,163 +4014,55 @@ resolve(result);
 }
 
 
-/* 🔥 추가 끝 */
+</script>
+
+    <!-- Firebase SDK -->
+
+<script type="module">
+
+import {
+    initializeApp
+} from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+    getStorage,
+    ref,
+    uploadBytes,
+    getDownloadURL
+} from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyDCsHw0ibb4pMytyPlVvoCzNKZXy3OSTOo",
+authDomain: "finsegye-upload.firebaseapp.com",
+projectId: "finsegye-upload",
+storageBucket: "finsegye-upload.firebasestorage.app",
+messagingSenderId: "361113771740",
+appId: "1:361113771740:web:9bbc4b6807535d37a65e19",
+measurementId: "G-XQ43DWJRBB"
+};
+
+
+const app =
+    initializeApp(firebaseConfig);
+
+const storage =
+getStorage(
+app,
+"gs://finsegye-upload.firebasestorage.app"
+);
+
+
+window.storage = storage;
+window.firebaseRef = ref;
+window.uploadBytes = uploadBytes;
+window.getDownloadURL = getDownloadURL;
+
+console.log("🔥 Firebase 연결 완료");
 
 </script>
 
-<!-- 🔥 여기 추가 -->
-<div
-    id="adEditorOverlay"
-    style="
-        display:none;
-        position:fixed;
-        top:42px;
-        bottom:65px;
-        left:0;
-        width:100%;
-        background:#000;
-        z-index:999999;
-        padding:12px;
-        box-sizing:border-box;
-        overflow-y:auto;
-    "
->
-
-    <div style="
-        color:gold;
-        font-weight:bold;
-        margin-bottom:10px;
-        text-align:center;
-        font-size:1.1em;
-    ">
-        행사 문구 입력
-    </div>
-
-    <textarea
-        id="bigAdText"
-        placeholder="행사 문구를 입력해 주세요"
-        style="
-            width:100%;
-            height:220px;
-            background:#111;
-            color:#fff;
-            border:1.5px solid gold;
-            border-radius:12px;
-            padding:12px;
-            box-sizing:border-box;
-            font-size:1.05em;
-            resize:none;
-        "
-    ></textarea>
-
- 
-
-<!-- 🔥 사진 업로드 -->
-
-<div style="margin-top:15px;">
-
-
-<div style="
-    color:#00ffcc;
-    font-weight:bold;
-    margin-bottom:6px;
-">
-    사진 첨부
-</div>
-
-<label
-    style="
-        display:block;
-        width:100%;
-        padding:14px;
-        border-radius:12px;
-        background:#00aa88;
-        color:#fff;
-        font-size:18px;
-        text-align:center;
-    "
->
-    사진 선택
-
-    <input
-        type="file"
-        id="adImageFile"
-        accept="image/*"
-        style="display:none;"
-    >
-
-</label>
-
-
-</div>
-
-<!-- 🔥 동영상 업로드 -->
-
-<div style="margin-top:15px;">
-
-
-<div style="
-    color:#ff00ff;
-    font-weight:bold;
-    margin-bottom:6px;
-">
-    동영상 첨부
-</div>
-
-<label
-    style="
-        display:block;
-        width:100%;
-        padding:14px;
-        border-radius:12px;
-        background:#aa0088;
-        color:#fff;
-        font-size:18px;
-        text-align:center;
-    "
->
-    동영상 선택
-
-    <input
-        type="file"
-        id="adVideoFile"
-        accept="video/*"
-        style="display:none;"
-    >
-
-</label>
-
-
-</div>
-
-<div style="
-    display:flex;
-    gap:8px;
-    margin-top:20px;
-">
-
-
-<button
-    onclick="saveAdEditor()"
-    class="submitBtn"
-    style="background:gold !important;"
->
-    저장
-</button>
-
-<button
-    onclick="closeAdEditor()"
-    class="submitBtn"
-    style="
-        background:#222 !important;
-        color:#aaa !important;
-    "
->
-    취소
-</button>
-
-
-</div>
 
 <script src="js/ai_finance.js"></script>
 <script src="js/google_sync.js"></script>
