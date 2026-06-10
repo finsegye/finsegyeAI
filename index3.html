@@ -91,12 +91,6 @@
             font-size: 0.82em;
         }
 
-
-
-
-
-
-
         .nav { position: fixed; bottom: 0; width: 100%; display: flex; background: #000; border-top: 1px solid #444; z-index: 100001; height: 65px; align-items: center; justify-content: space-around; }
         .nav button { flex: 1; background: none; border: none; color: #999; font-size: 0.85em; cursor: pointer; font-weight: bold; height: 100%; }
         .nav button.active { color: gold; border-top: 4px solid gold; background: rgba(255, 215, 0, 0.05); }
@@ -784,6 +778,7 @@
 </div>
 
 <section id="mypage">
+
     <div class="history-grid">
 
 <div class="history-card" onclick="toggleHistoryCard(this, '행사', event)">
@@ -2215,6 +2210,31 @@ ${type === "ads" ? `
             등록된 사진 없음
         </div>
     `}
+
+
+<button
+    type="button"
+    onclick="
+        event.stopPropagation();
+
+        deleteAdCard('${item.id}');
+
+        return false;
+    "
+    style="
+        width:100%;
+        margin-top:8px;
+        padding:12px;
+        border:none;
+        border-radius:10px;
+        background:#cc0000;
+        color:#fff;
+        font-size:16px;
+        font-weight:bold;
+    "
+>
+    🗑 전체 삭제
+</button>
 
  <button
     type="button"
@@ -4671,7 +4691,70 @@ async function replaceHistoryVideo(event) {
     }
 }
 
+function deleteAllAds() {
 
+    if (
+        !confirm(
+            "행사 신청 전체를 삭제하시겠습니까?"
+        )
+    ) {
+        return;
+    }
+
+    let all =
+        JSON.parse(
+            localStorage.getItem("fin_all")
+        ) || [];
+
+    all =
+        all.filter(
+            item =>
+                item.type !== "ads"
+        );
+
+    localStorage.setItem(
+        "fin_all",
+        JSON.stringify(all)
+    );
+
+    alert(
+        "행사 신청 전체 삭제 완료"
+    );
+
+    loadHistory();
+}
+
+function deleteAdCard(id) {
+
+    if (
+        !confirm(
+            "이 행사 카드를 전체 삭제하시겠습니까?"
+        )
+    ) {
+        return;
+    }
+
+    let all =
+        JSON.parse(
+            localStorage.getItem("fin_all")
+        ) || [];
+
+    all =
+        all.filter(
+            item => item.id !== id
+        );
+
+    localStorage.setItem(
+        "fin_all",
+        JSON.stringify(all)
+    );
+
+    loadHistory();
+
+    alert(
+        "행사 카드가 삭제되었습니다."
+    );
+}
 
 </script>
 
