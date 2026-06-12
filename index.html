@@ -3001,8 +3001,6 @@ fetch(
 
 function sendEventToGoogle() {
 
-    alert("sendEventToGoogle 실행");
-
     try {
 
         const data = {
@@ -3029,17 +3027,29 @@ msg:
 
 fetch(
     GOOGLE_SCRIPT_URL,
-            {
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    }
+)
+.then(res => res.text())
+.then(result => {
 
-                method: "POST",
+    console.log("Apps Script 응답:", result);
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+    alert("구글시트 전송 완료");
 
-                body: JSON.stringify(data)
-            }
-        );
+})
+.catch(err => {
+
+    console.log("전송실패:", err);
+
+    alert("구글시트 전송 실패");
+
+});
 
         console.log("행사 전송", data);
 
