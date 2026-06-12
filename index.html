@@ -3004,57 +3004,33 @@ function sendEventToGoogle() {
     try {
 
         const data = {
-
             type: "ads",
-
-            name:
-                document.getElementById("shopName").value,
-
-            shopType:
-                document.getElementById("shopType").value,
-
-            loc:
-                document.getElementById("shopLoc").value,
-
-     adText:
-    document.getElementById("shopAd").value,
-
-msg:
-    document.getElementById("shopAd").value,
-            time:
-                new Date().toLocaleString()
+            name: document.getElementById("shopName").value,
+            category: document.getElementById("shopType").value,
+            loc: document.getElementById("shopLoc").value,
+            msg: document.getElementById("shopAd").value,
+            imageUrl: document.getElementById("shopAdImage").value,
+            videoUrl: document.getElementById("shopAdVideo").value,
+            time: new Date().toLocaleString()
         };
 
-fetch(
-    GOOGLE_SCRIPT_URL,
-    {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    }
-)
-.then(res => res.text())
-.then(result => {
+        fetch(
+            GOOGLE_SCRIPT_URL,
+            {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "text/plain"
+                },
+                body: JSON.stringify(data)
+            }
+        );
 
-    console.log("Apps Script 응답:", result);
-
-    alert("구글시트 전송 완료");
-
-})
-.catch(err => {
-
-    console.log("전송실패:", err);
-
-    alert("구글시트 전송 실패");
-
-});
-
-        console.log("행사 전송", data);
+        alert("구글시트 전송 요청을 보냈습니다.");
 
     } catch(e) {
 
+        alert("구글시트 전송 오류: " + e);
         console.log(e);
     }
 }
