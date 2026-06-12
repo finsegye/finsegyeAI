@@ -1562,7 +1562,24 @@ const currentProvince =
         }
     }
 
-
+// 🔥 여기 추가
+fetch(
+    GOOGLE_SCRIPT_URL,
+    {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "text/plain"
+        },
+        body: JSON.stringify({
+            type: "ads",
+            name: document.getElementById('shopName').value,
+            category: document.getElementById('shopType').value,
+            loc: document.getElementById('shopLoc').value,
+            msg: document.getElementById('shopAd').value
+        })
+    }
+);
 
 saveUnifiedData({
 
