@@ -274,9 +274,9 @@
        
 
 
-        <button class="submitBtn" onclick="sendEventToGoogle(); validateEvent();">
-            행사 신청하기
-        </button>
+  <button class="submitBtn" onclick="validateEvent();">
+    행사 신청하기
+</button>
     </div>
 </section>
 
@@ -842,13 +842,10 @@
     var currentTab = "dashboard";
 
     // 🔥 구글시트 URL 통합
-    const GOOGLE_SCRIPT_URL =
-    "https://script.google.com/macros/s/AKfycbx9neVoWokKBfCNlm85PbVPXWE8QPSfp1sJfrzFj_c1O4T5rHhPo3ZgzLwNEAtqzLBs/exec";
-
-
-
-
    
+const GOOGLE_SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycby6B7gZiNNFqnBvF909WuFMSpRbqKYJY5lRhi-3XMWFQZFDVVKL2sHFsdUptBipFXathg/exec";
+
     var reserveValue = 100.0, reserveStep = -0.04;
 
 function speak(text) {
@@ -1565,7 +1562,52 @@ const currentProvince =
         }
     }
 
+// 🔥 여기 추가
+fetch(
+    GOOGLE_SCRIPT_URL,
+    {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "text/plain"
+        },
+body: JSON.stringify({
 
+    type: "ads",
+
+    name:
+        document.getElementById('shopName').value,
+
+    category:
+        document.getElementById('shopType').value,
+
+    loc:
+        document.getElementById('shopLoc').value,
+
+    msg:
+        document.getElementById('shopAd').value,
+
+    city:
+        currentCity || "",
+
+    province:
+        currentProvince || "",
+
+    imageUrl:
+        document.getElementById('shopAdImage').value || "",
+
+    videoUrl:
+        document.getElementById('shopAdVideo').value || "",
+
+    lat:
+        Number(localStorage.getItem("fin_current_lat")) || "",
+
+    lng:
+        Number(localStorage.getItem("fin_current_lng")) || ""
+
+})
+    }
+);
 
 saveUnifiedData({
 
@@ -3007,45 +3049,33 @@ function sendEventToGoogle() {
     try {
 
         const data = {
-
             type: "ads",
-
-            name:
-                document.getElementById("shopName").value,
-
-            shopType:
-                document.getElementById("shopType").value,
-
-            loc:
-                document.getElementById("shopLoc").value,
-
-     adText:
-    document.getElementById("shopAd").value,
-
-msg:
-    document.getElementById("shopAd").value,
-            time:
-                new Date().toLocaleString()
+            name: document.getElementById("shopName").value,
+            category: document.getElementById("shopType").value,
+            loc: document.getElementById("shopLoc").value,
+            msg: document.getElementById("shopAd").value,
+            imageUrl: document.getElementById("shopAdImage").value,
+            videoUrl: document.getElementById("shopAdVideo").value,
+            time: new Date().toLocaleString()
         };
 
-fetch(
-    GOOGLE_SCRIPT_URL,
+        fetch(
+            GOOGLE_SCRIPT_URL,
             {
-
                 method: "POST",
-
+                mode: "no-cors",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "text/plain"
                 },
-
                 body: JSON.stringify(data)
             }
         );
 
-        console.log("행사 전송", data);
+        alert("구글시트 전송 요청을 보냈습니다.");
 
     } catch(e) {
 
+        alert("구글시트 전송 오류: " + e);
         console.log(e);
     }
 }
