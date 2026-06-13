@@ -1571,13 +1571,41 @@ fetch(
         headers: {
             "Content-Type": "text/plain"
         },
-        body: JSON.stringify({
-            type: "ads",
-            name: document.getElementById('shopName').value,
-            category: document.getElementById('shopType').value,
-            loc: document.getElementById('shopLoc').value,
-            msg: document.getElementById('shopAd').value
-        })
+body: JSON.stringify({
+
+    type: "ads",
+
+    name:
+        document.getElementById('shopName').value,
+
+    category:
+        document.getElementById('shopType').value,
+
+    loc:
+        document.getElementById('shopLoc').value,
+
+    msg:
+        document.getElementById('shopAd').value,
+
+    city:
+        currentCity || "",
+
+    province:
+        currentProvince || "",
+
+    imageUrl:
+        document.getElementById('shopAdImage').value || "",
+
+    videoUrl:
+        document.getElementById('shopAdVideo').value || "",
+
+    lat:
+        Number(localStorage.getItem("fin_current_lat")) || "",
+
+    lng:
+        Number(localStorage.getItem("fin_current_lng")) || ""
+
+})
     }
 );
 
