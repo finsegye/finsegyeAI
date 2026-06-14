@@ -3009,17 +3009,15 @@ function sendWalletToGoogle() {
 
 fetch(
     GOOGLE_SCRIPT_URL,
-            {
-
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify(data)
-            }
-        );
+    {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "text/plain"
+        },
+        body: JSON.stringify(data)
+    }
+);
 
         console.log("지갑 전송", data);
 
