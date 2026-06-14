@@ -1613,15 +1613,12 @@ saveUnifiedData({
 
     type: "ads",
 
-    city:
-        currentCity,
+    city: currentCity,
 
-    province:
-        currentProvince,
+    province: currentProvince,
 
-
-
-    user: "",
+    user:
+        localStorage.getItem("fin_user_phone") || "",
 
     name:
         document.getElementById('shopName').value,
@@ -1726,15 +1723,7 @@ function validateShare() {
         "공유 신청이 완료되었습니다."
     );
 }
-
-
-
-
-
-
-
-
-
+    
 function validateRoutine() {
 
     const f = [
@@ -1763,10 +1752,6 @@ saveUnifiedData({
 
     type: "routines",
 
-
-
-       
-
     user: "",
 
     name:
@@ -1791,13 +1776,7 @@ saveUnifiedData({
     text:
         document.getElementById('routineText').value
 });
-
-
-
-
-
-
-
+    
     // 🔥 기존 베이스캠프 유지
     saveAndFinish(
         'routines',
@@ -1838,6 +1817,18 @@ function validateWallet() {
 
         return;
     }
+
+localStorage.setItem(
+    "fin_user_phone",
+    document.getElementById("walletPhone").value
+);
+
+localStorage.setItem(
+    "fin_user_phone",
+    "0" + String(
+        document.getElementById("walletPhone").value
+    ).trim().replace(/^0+/, "")
+);
 
 saveUnifiedData({
 
