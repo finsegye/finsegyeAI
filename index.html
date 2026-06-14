@@ -1830,21 +1830,50 @@ function validateWallet() {
             return;
         }
     }
-const chk =
-    document.getElementById('agreeCheck');
 
-if(!chk || !chk.checked) {
+    const chk =
+        document.getElementById('agreeCheck');
 
-    speak("동의 체크가 필요합니다.");
+    if(!chk || !chk.checked) {
 
-    return;
-}
+        speak("동의 체크가 필요합니다.");
 
-sendWalletToGoogle();
+        return;
+    }
 
-speak(
-    "AI 지갑 설립이 완료가 되었습니다."
-);
+    sendWalletToGoogle();
+
+    saveUnifiedData({
+
+        type: "wallets",
+
+        user:
+            document.getElementById('walletUser').value,
+
+        name: "",
+
+        amount: "",
+
+        purpose: "",
+
+        phone:
+            document.getElementById('walletPhone').value,
+
+        addr:
+            document.getElementById('walletAddr').value,
+
+        loc: "",
+
+        msg:
+            document.getElementById('referrer').value,
+
+        text: ""
+    });
+
+    speak(
+        "AI 지갑 설립이 완료가 되었습니다."
+    );
+
 }
 
 function editableLine(id, key, label, value) {
