@@ -1830,6 +1830,21 @@ function validateWallet() {
             return;
         }
     }
+const chk =
+    document.getElementById('agreeCheck');
+
+if(!chk || !chk.checked) {
+
+    speak("동의 체크가 필요합니다.");
+
+    return;
+}
+
+sendWalletToGoogle();
+
+speak(
+    "AI 지갑 설립이 완료가 되었습니다."
+);
 }
 
 function editableLine(id, key, label, value) {
