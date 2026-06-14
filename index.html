@@ -1689,6 +1689,45 @@ function validateShare() {
         }
     }
 
+
+
+
+
+
+fetch(
+    GOOGLE_SCRIPT_URL,
+    {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "text/plain"
+        },
+        body: JSON.stringify({
+
+            type: "shares",
+
+            name:
+                document.getElementById('sName').value,
+
+            amount:
+                document.getElementById('sAmount').value,
+
+            purpose:
+                document.getElementById('sPurpose').value
+
+        })
+    }
+);
+
+
+
+
+
+
+
+
+    
+
     // 🔥 통합 저장
     saveUnifiedData({
 
@@ -1747,6 +1786,41 @@ function validateRoutine() {
             return;
         }
     }
+
+
+
+fetch(
+    GOOGLE_SCRIPT_URL,
+    {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "text/plain"
+        },
+        body: JSON.stringify({
+
+            type: "routines",
+
+            name:
+                document.getElementById('rShopName').value,
+
+            phone:
+                "0" + String(
+                    document.getElementById("rShopPhone").value
+                ).trim().replace(/^0+/, ""),
+
+            addr:
+                document.getElementById('rShopLoc').value,
+
+            text:
+                document.getElementById('routineText').value
+
+        })
+    }
+);
+
+
+    
 
 saveUnifiedData({
 
@@ -1829,6 +1903,53 @@ localStorage.setItem(
         document.getElementById("walletPhone").value
     ).trim().replace(/^0+/, "")
 );
+
+
+
+
+
+
+
+
+
+fetch(
+    GOOGLE_SCRIPT_URL,
+    {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "text/plain"
+        },
+        body: JSON.stringify({
+
+            type: "wallets",
+
+            user:
+                document.getElementById('walletUser').value,
+
+            phone:
+                "0" + String(
+                    document.getElementById("walletPhone").value
+                ).trim().replace(/^0+/, ""),
+
+            addr:
+                document.getElementById('walletAddr').value,
+
+            msg:
+                document.getElementById('referrer').value
+
+        })
+    }
+);
+
+
+
+
+
+
+
+
+    
 
 saveUnifiedData({
 
