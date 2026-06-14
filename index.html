@@ -359,12 +359,13 @@
         </div>
 
         <div class="input-group">
-  <input
-    type="text"
-    id="walletPhone"
-    autocomplete="off"
-    placeholder="전화번호를 입력해 주세요"
-    onfocus="speak('전화번호를 입력해 주세요')">
+            <input
+                    type="tel"
+                    id="walletPhone"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder="전화번호를 입력해 주세요"
+                    onfocus="speak('전화번호를 입력해 주세요')">
         </div>
 
         <div class="input-group">
@@ -1612,12 +1613,15 @@ saveUnifiedData({
 
     type: "ads",
 
-    city: currentCity,
+    city:
+        currentCity,
 
-    province: currentProvince,
+    province:
+        currentProvince,
 
-    user:
-        localStorage.getItem("fin_user_phone") || "",
+
+
+    user: "",
 
     name:
         document.getElementById('shopName').value,
@@ -1688,45 +1692,6 @@ function validateShare() {
         }
     }
 
-
-
-
-
-
-fetch(
-    GOOGLE_SCRIPT_URL,
-    {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-            "Content-Type": "text/plain"
-        },
-        body: JSON.stringify({
-
-            type: "shares",
-
-            name:
-                document.getElementById('sName').value,
-
-            amount:
-                document.getElementById('sAmount').value,
-
-            purpose:
-                document.getElementById('sPurpose').value
-
-        })
-    }
-);
-
-
-
-
-
-
-
-
-    
-
     // 🔥 통합 저장
     saveUnifiedData({
 
@@ -1761,7 +1726,15 @@ fetch(
         "공유 신청이 완료되었습니다."
     );
 }
-    
+
+
+
+
+
+
+
+
+
 function validateRoutine() {
 
     const f = [
@@ -1786,44 +1759,13 @@ function validateRoutine() {
         }
     }
 
-
-
-fetch(
-    GOOGLE_SCRIPT_URL,
-    {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-            "Content-Type": "text/plain"
-        },
-        body: JSON.stringify({
-
-            type: "routines",
-
-            name:
-                document.getElementById('rShopName').value,
-
-            phone:
-                "0" + String(
-                    document.getElementById("rShopPhone").value
-                ).trim().replace(/^0+/, ""),
-
-            addr:
-                document.getElementById('rShopLoc').value,
-
-            text:
-                document.getElementById('routineText').value
-
-        })
-    }
-);
-
-
-    
-
 saveUnifiedData({
 
     type: "routines",
+
+
+
+       
 
     user: "",
 
@@ -1849,7 +1791,13 @@ saveUnifiedData({
     text:
         document.getElementById('routineText').value
 });
-    
+
+
+
+
+
+
+
     // 🔥 기존 베이스캠프 유지
     saveAndFinish(
         'routines',
@@ -1883,9 +1831,6 @@ function validateWallet() {
 
     const chk =
         document.getElementById('agreeCheck');
-    alert(
-    document.getElementById("walletPhone").value
-);
 
     if(!chk || !chk.checked) {
 
@@ -1893,65 +1838,6 @@ function validateWallet() {
 
         return;
     }
-
-localStorage.setItem(
-    "fin_user_phone",
-    document.getElementById("walletPhone").value
-);
-
-localStorage.setItem(
-    "fin_user_phone",
-    "0" + String(
-        document.getElementById("walletPhone").value
-    ).trim().replace(/^0+/, "")
-);
-
-
-
-
-
-
-
-
-
-fetch(
-    GOOGLE_SCRIPT_URL,
-    {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-            "Content-Type": "text/plain"
-        },
-        body: JSON.stringify({
-
-            type: "wallets",
-
-            user:
-                document.getElementById('walletUser').value,
-
-            phone:
-                "0" + String(
-                    document.getElementById("walletPhone").value
-                ).trim().replace(/^0+/, ""),
-
-            addr:
-                document.getElementById('walletAddr').value,
-
-            msg:
-                document.getElementById('referrer').value
-
-        })
-    }
-);
-
-
-
-
-
-
-
-
-    
 
 saveUnifiedData({
 
