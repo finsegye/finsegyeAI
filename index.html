@@ -308,7 +308,7 @@
 
         <div class="input-group">
             <input
-                    type="tel"
+                    type="text"
                     id="rShopPhone"
                     inputmode="numeric"
                     autocomplete="off"
@@ -360,7 +360,7 @@
 
         <div class="input-group">
             <input
-                    type="tel"
+                    type="text"
                     id="walletPhone"
                     inputmode="numeric"
                     autocomplete="off"
@@ -1621,7 +1621,8 @@ saveUnifiedData({
 
 
 
-    user: "",
+   user:
+    localStorage.getItem("fin_user_phone") || "",
 
     name:
         document.getElementById('shopName').value,
@@ -1697,8 +1698,8 @@ function validateShare() {
 
         type: "shares",
 
-        user:
-            document.getElementById('sName').value,
+  user:
+    localStorage.getItem("fin_user_phone") || "",
 
         name: "",
 
@@ -1767,7 +1768,8 @@ saveUnifiedData({
 
        
 
-    user: "",
+    user:
+    localStorage.getItem("fin_user_phone") || "",
 
     name:
         document.getElementById('rShopName').value,
@@ -1828,68 +1830,6 @@ function validateWallet() {
             return;
         }
     }
-
-    const chk =
-        document.getElementById('agreeCheck');
-
-    if(!chk || !chk.checked) {
-
-        speak("동의 체크가 필요합니다.");
-
-        return;
-    }
-
-saveUnifiedData({
-
-    type: "wallets",
-
-    user:
-        document.getElementById('walletUser').value,
-
-    name: "",
-
-    amount: "",
-
-    purpose: "",
-
-    phone:
-        "0" + String(
-            document.getElementById("walletPhone").value
-        ).trim().replace(/^0+/, ""),
-
-    addr:
-        document.getElementById('walletAddr').value,
-
-    loc: "",
-
-    msg:
-        document.getElementById('referrer').value,
-
-    text: ""
-});
-
-
-
-
-    // 🔥 약관 접기 + 상태 초기화
-    const terms =
-        document.getElementById('termsContent');
-
-    if (terms)
-        terms.style.display = 'none';
-
-    chk.checked = false;
-    chk.disabled = true;
-
-    // 🔥 기존 완료 처리
-    saveAndFinish(
-        'wallets',
-        document.getElementById('walletUser').value,
-        "AI 지갑 설립이 완료가 되었습니다."
-    );
-}
-
-
 
 function editableLine(id, key, label, value) {
 
