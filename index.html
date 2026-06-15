@@ -1609,6 +1609,36 @@ body: JSON.stringify({
     }
 );
 
+
+fetch(
+    GOOGLE_SCRIPT_URL,
+    {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "text/plain"
+        },
+        body: JSON.stringify({
+
+            type: "shares",
+
+            user:
+                localStorage.getItem("fin_user_phone") || "",
+
+            name:
+                document.getElementById('sName').value,
+
+            amount:
+                document.getElementById('sAmount').value,
+
+            purpose:
+                document.getElementById('sPurpose').value
+        })
+    }
+);
+
+     
+
 saveUnifiedData({
 
     type: "ads",
@@ -1682,16 +1712,43 @@ function validateShare() {
 
     for(let x of f) {
 
-        if(!document.getElementById(x.id).value) {
+    if(!document.getElementById(x.id).value) {
 
-            hiPassSpeak(
-                x.n + " 항목을 입력해 주세요.",
-                x.id
-            );
+        hiPassSpeak(
+            x.n + " 항목을 입력해 주세요.",
+            x.id
+        );
 
-            return;
-        }
+        return;
     }
+}
+
+fetch(
+    GOOGLE_SCRIPT_URL,
+    {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "text/plain"
+        },
+        body: JSON.stringify({
+
+            type: "shares",
+
+            user:
+                localStorage.getItem("fin_user_phone") || "",
+
+            name:
+                document.getElementById('sName').value,
+
+            amount:
+                document.getElementById('sAmount').value,
+
+            purpose:
+                document.getElementById('sPurpose').value
+        })
+    }
+);
 
     // 🔥 통합 저장
     saveUnifiedData({
@@ -1759,6 +1816,40 @@ function validateRoutine() {
             return;
         }
     }
+
+
+fetch(
+    GOOGLE_SCRIPT_URL,
+    {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "text/plain"
+        },
+        body: JSON.stringify({
+
+            type: "routines",
+
+            user:
+                localStorage.getItem("fin_user_phone") || "",
+
+            name:
+                document.getElementById('rShopName').value,
+
+            phone:
+                "0" + String(
+                    document.getElementById("rShopPhone").value
+                ).trim().replace(/^0+/, ""),
+
+            addr:
+                document.getElementById('rShopLoc').value,
+
+            text:
+                document.getElementById('routineText').value
+        })
+    }
+);
+    
 
 saveUnifiedData({
 
