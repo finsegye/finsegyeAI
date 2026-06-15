@@ -1758,7 +1758,8 @@ fetch(
   user:
     localStorage.getItem("fin_user_phone") || "",
 
-        name: "",
+        name:
+    document.getElementById('sName').value,
 
         amount:
             document.getElementById('sAmount').value,
