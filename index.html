@@ -1914,32 +1914,33 @@ function validateWallet() {
 
     sendWalletToGoogle();
 
-    saveUnifiedData({
+saveUnifiedData({
 
-        type: "wallets",
+    type: "wallets",
 
-        user:
-            document.getElementById('walletUser').value,
+    user:
+        document.getElementById('walletPhone').value,
 
-        name: "",
+    name:
+        document.getElementById('walletName').value,
 
-        amount: "",
+    amount: "",
 
-        purpose: "",
+    purpose: "",
 
-        phone:
-            document.getElementById('walletPhone').value,
+    phone:
+        document.getElementById('walletPhone').value,
 
-        addr:
-            document.getElementById('walletAddr').value,
+    addr:
+        document.getElementById('walletAddr').value,
 
-        loc: "",
+    loc: "",
 
-        msg:
-            document.getElementById('referrer').value,
+    msg:
+        document.getElementById('referrer').value,
 
-        text: ""
-    });
+    text: ""
+});
 
     speak(
         "AI 지갑 설립이 완료가 되었습니다."
