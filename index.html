@@ -1614,32 +1614,7 @@ body: JSON.stringify({
 );
 
 
-fetch(
-    GOOGLE_SCRIPT_URL,
-    {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-            "Content-Type": "text/plain"
-        },
-        body: JSON.stringify({
 
-            type: "shares",
-
-            user:
-                localStorage.getItem("fin_user_phone") || "",
-
-            name:
-                document.getElementById('sName').value,
-
-            amount:
-                document.getElementById('sAmount').value,
-
-            purpose:
-                document.getElementById('sPurpose').value
-        })
-    }
-);
 
      
 
