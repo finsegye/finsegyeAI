@@ -806,43 +806,8 @@
         </div>
 
     </div>
-
-<div style="
-    margin-top:30px;
-    color:gold;
-    font-size:1.2em;
-    font-weight:bold;
-    text-align:center;
-">
-    👥 고객 통합 조회
-</div>
-
-<div
-    id="customer_summary"
-    style="
-        min-height:300px;
-        border:3px solid red;
-        padding:20px;
-        margin-top:10px;
-        background:#111;
-    "
-></div>
-
 </section>
 
-<!--
-<div style="
-    margin-top:30px;
-    color:gold;
-    font-size:1.2em;
-    font-weight:bold;
-">
-    👥 고객 통합 조회
-</div>
-
-<div id="customer_summary"></div>
-
--->
 
 <div class="nav">
     <button onclick="showSection('dashboard', this)" class="active">자산현황</button>
@@ -2558,9 +2523,6 @@ onclick="
 `;
         }).join('') || "내역 없음";
     }
-
-    loadCustomerSummary();
-
 }
     
 function toggleHistoryCard(card, title, event) {
@@ -4820,127 +4782,6 @@ async function replaceHistoryVideo(event) {
         );
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function loadCustomerSummary() {
-
-    const all =
-        JSON.parse(
-            localStorage.getItem("fin_all")
-        ) || [];
-
-    const customers = {};
-
-    all.forEach(item => {
-
-        const key =
-            item.user ||
-            item.phone ||
-            "unknown";
-
-        if(!customers[key]) {
-
-            customers[key] = {
-
-                phone:
-                    item.user ||
-                    item.phone ||
-                    "",
-
-                name:
-                    item.name || "",
-
-                ads:0,
-                shares:0,
-                routines:0,
-                wallets:0
-            };
-        }
-
-        if(item.name)
-            customers[key].name =
-                item.name;
-
-        if(item.type === "ads")
-            customers[key].ads++;
-
-        if(item.type === "shares")
-            customers[key].shares++;
-
-        if(item.type === "routines")
-            customers[key].routines++;
-
-        if(item.type === "wallets")
-            customers[key].wallets++;
-    });
-
-    const target =
-        document.getElementById(
-            "customer_summary"
-        );
-
-    if(!target) return;
-
-    target.innerHTML = Object
-        .values(customers)
-        .map(c => `
-
-<div style="
-    background:#111;
-    border:2px solid gold;
-    border-radius:14px;
-    padding:14px;
-    margin-bottom:14px;
-">
-
-<div style="
-    color:gold;
-    font-weight:bold;
-    font-size:1.1em;
-">
-    ${c.name || "고객"}
-</div>
-
-<div style="
-    color:#00ffcc;
-    margin-top:6px;
-">
-    전화번호 :
-    ${c.phone}
-</div>
-
-<div style="
-    margin-top:8px;
-    color:#fff;
-">
-    행사 : ${c.ads}건<br>
-    공유 : ${c.shares}건<br>
-    루틴 : ${c.routines}건<br>
-    지갑 : ${c.wallets}건
-</div>
-
-</div>
-
-`).join("");
-}
-
-
-
-
-    
-    
 
 function deleteAllAds() {
 
