@@ -1942,8 +1942,10 @@ saveUnifiedData({
     text: ""
 });
 
-    speak(
-        "AI 지갑 설립이 완료가 되었습니다."
+    saveAndFinish(
+        'wallets',
+        document.getElementById('walletUser').value,
+        "AI 지갑 설립이 완료되었습니다."
     );
 
 }
