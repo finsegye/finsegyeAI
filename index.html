@@ -1914,6 +1914,11 @@ function validateWallet() {
 
     sendWalletToGoogle();
 
+    localStorage.setItem(
+    "fin_user_phone",
+    document.getElementById("walletPhone").value
+);
+
 saveUnifiedData({
 
     type: "wallets",
