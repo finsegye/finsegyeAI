@@ -2526,6 +2526,30 @@ onclick="
 
     loadCustomerSummary();
 }
+
+
+
+function loadCustomerSummary() {
+
+    const target =
+        document.getElementById(
+            "customer_summary"
+        );
+
+    if (!target) return;
+
+    const all =
+        JSON.parse(
+            localStorage.getItem("fin_all")
+        ) || [];
+
+    target.innerHTML =
+        "<div style='color:red;font-size:30px;'>고객조회 테스트 성공</div>";
+}
+
+
+
+    
     
 function toggleHistoryCard(card, title, event) {
 
