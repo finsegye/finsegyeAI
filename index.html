@@ -2604,9 +2604,25 @@ function loadCustomerSummary() {
         if (item.type === "wallets") customers[key].wallets++;
     });
 
-    target.innerHTML = Object
-        .values(customers)
-        .map((c, index) => {
+target.innerHTML = Object
+    .values(customers)
+    .sort((a, b) => {
+
+        const aCount =
+            a.ads +
+            a.shares +
+            a.routines +
+            a.wallets;
+
+        const bCount =
+            b.ads +
+            b.shares +
+            b.routines +
+            b.wallets;
+
+        return bCount - aCount;
+    })
+    .map((c, index) => {
 
             const detailId =
                 "customer_detail_" + index;
