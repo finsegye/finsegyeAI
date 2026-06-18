@@ -865,10 +865,22 @@
 
 }, { once:true });
 
-    var currentSection = "dashboard", isVoiceEnabled = true, streamObj = null, pause = false;
+var currentSection = "dashboard", isVoiceEnabled = true, streamObj = null, pause = false;    
 
     // 🔥 현재 탭
     var currentTab = "dashboard";
+
+var voiceOrderState = {
+    active: false,
+    city: "",
+    keyword: "",
+    selectedStore: null,
+    orderText: "",
+    deliveryTime: "",
+    deliveryPlace: "",
+    items: []
+};
+    
 
     // 🔥 구글시트 URL 통합
    
@@ -922,7 +934,30 @@ function stopSpeak() {
 }
 
 
+function startVoiceOrder() {
 
+    voiceOrderState = {
+        active: true,
+        city: "",
+        keyword: "",
+        selectedStore: null,
+        orderText: "",
+        deliveryTime: "",
+        deliveryPlace: "",
+        items: []
+    };
+
+    currentTab = "voiceOrder";
+
+    showSection(
+        "globalOrderForm",
+        document.querySelectorAll('.nav button')[0]
+    );
+
+    speak(
+        "음성 주문을 시작합니다. 예를 들어 부산 서면 김밥집 찾아줘 라고 말씀해 주세요."
+    );
+}
 
     function notify(msg) { speak(msg); alert(msg); }
 
