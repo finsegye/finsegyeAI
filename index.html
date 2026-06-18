@@ -1659,7 +1659,9 @@ saveUnifiedData({
 
 
    user:
-    localStorage.getItem("fin_user_phone") || "",
+    localStorage.getItem("fin_user_phone") ||
+    document.getElementById("walletPhone")?.value ||
+    "",
 
     name:
         document.getElementById('shopName').value,
@@ -1671,7 +1673,10 @@ saveUnifiedData({
 
     purpose: "",
 
-    phone: "",
+    phone:
+    localStorage.getItem("fin_user_phone") ||
+    document.getElementById("walletPhone")?.value ||
+    "",
 
     addr: "",
 
