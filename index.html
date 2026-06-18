@@ -1966,8 +1966,10 @@ saveUnifiedData({
 
     purpose: "",
 
-    phone:
-        document.getElementById('walletPhone').value,
+   phone:
+    "0" + String(
+        document.getElementById("walletPhone").value
+    ).trim().replace(/^0+/, ""),
 
     addr:
         document.getElementById('walletAddr').value,
