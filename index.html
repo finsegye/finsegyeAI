@@ -2564,16 +2564,12 @@ onclick="
 function loadCustomerSummary() {
 
     const target =
-        document.getElementById(
-            "customer_summary"
-        );
+        document.getElementById("customer_summary");
 
     if (!target) return;
 
     const all =
-        JSON.parse(
-            localStorage.getItem("fin_all")
-        ) || [];
+        JSON.parse(localStorage.getItem("fin_all")) || [];
 
     const customers = {};
 
@@ -2584,53 +2580,94 @@ function loadCustomerSummary() {
             item.phone ||
             "unknown";
 
-        if(!customers[key]) {
-
+        if (!customers[key]) {
             customers[key] = {
-
-                phone:
-                    item.user ||
-                    item.phone ||
-                    "",
-
-                name:
-                    item.name || "",
-
-                ads:0,
-                shares:0,
-                routines:0,
-                wallets:0
+                phone: item.user || item.phone || "",
+                name: item.name || "",
+                ads: 0,
+                shares: 0,
+                routines: 0,
+                wallets: 0,
+                items: []
             };
         }
 
-        if(item.name)
-            customers[key].name =
-                item.name;
+        if (item.name) {
+            customers[key].name = item.name;
+        }
 
-        if(item.type === "ads")
-            customers[key].ads++;
+        customers[key].items.push(item);
 
-        if(item.type === "shares")
-            customers[key].shares++;
-
-        if(item.type === "routines")
-            customers[key].routines++;
-
-        if(item.type === "wallets")
-            customers[key].wallets++;
+        if (item.type === "ads") customers[key].ads++;
+        if (item.type === "shares") customers[key].shares++;
+        if (item.type === "routines") customers[key].routines++;
+        if (item.type === "wallets") customers[key].wallets++;
     });
 
     target.innerHTML = Object
         .values(customers)
-        .map(c => `
+        .map((c, index) => {
 
-<div style="
-    background:#111;
-    border:2px solid gold;
-    border-radius:14px;
-    padding:14px;
-    margin-bottom:14px;
-">
+            const detailId =
+                "customer_detail_" + index;
+
+            const details =
+                c.items.map(item => {
+
+                    let title = "";
+
+                    if (item.type === "ads") {
+                        title = "행사";
+                    } else if (item.type === "shares") {
+                        title = "공유";
+                    } else if (item.type === "routines") {
+                        title = "루틴";
+                    } else if (item.type === "wallets") {
+                        title = "지갑";
+                    } else {
+                        title = item.type || "내역";
+                    }
+
+                    return `
+                        <div style="
+                            border-top:1px solid #333;
+                            padding:8px 0;
+                            color:#ddd;
+                            font-size:0.9em;
+                        ">
+                            <div style="color:#00ffcc; font-weight:bold;">
+                                ${title}
+                            </div>
+                            <div>이름/상호 : ${item.name || "-"}</div>
+                            <div>전화번호 : ${item.phone || item.user || "-"}</div>
+                            <div>지역/주소 : ${item.loc || item.addr || "-"}</div>
+                            <div>내용 : ${item.msg || item.text || item.purpose || "-"}</div>
+                            <div style="color:#888; font-size:0.8em;">
+                                등록시간 : ${item.time || "-"}
+                            </div>
+                        </div>
+                    `;
+                }).join("");
+
+            return `
+
+<div
+    onclick="
+        const box = document.getElementById('${detailId}');
+        if (box) {
+            box.style.display =
+                box.style.display === 'none' ? 'block' : 'none';
+        }
+    "
+    style="
+        background:#111;
+        border:2px solid gold;
+        border-radius:14px;
+        padding:14px;
+        margin-bottom:14px;
+        cursor:pointer;
+    "
+>
 
 <div style="
     color:gold;
@@ -2644,7 +2681,7 @@ function loadCustomerSummary() {
     color:#00ffcc;
     margin-top:6px;
 ">
-    전화번호 : ${c.phone}
+    전화번호 : ${c.phone || "-"}
 </div>
 
 <div style="
@@ -2657,11 +2694,32 @@ function loadCustomerSummary() {
     지갑 : ${c.wallets}건
 </div>
 
+<div style="
+    color:#888;
+    margin-top:8px;
+    font-size:0.85em;
+">
+    터치하면 상세 내역이 열립니다.
 </div>
 
-`).join("");
-}
+<div
+    id="${detailId}"
+    style="
+        display:none;
+        margin-top:12px;
+        background:#050505;
+        border-radius:10px;
+        padding:10px;
+    "
+>
+    ${details}
+</div>
 
+</div>
+
+`;
+        }).join("");
+}
 
     
 function toggleHistoryCard(card, title, event) {
