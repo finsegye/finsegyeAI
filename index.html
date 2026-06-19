@@ -1198,19 +1198,156 @@ function onVoiceResult(text) {
 
 function handleVoiceOrderText(text) {
 
-    alert(
-        "음성주문 수신 : " + text
-    );
+    const parsed =
+        parseVoiceSearch(text);
 
-    speak(
-        text +
-        " 주문 내용을 확인했습니다."
-    );
+    if (
+        text.includes("찾아") ||
+        text.includes("검색")
+    ) {
+
+        voiceOrderState.city =
+            parsed.city;
+
+        voiceOrderState.keyword =
+            parsed.keyword;
+
+        const result =
+            searchStoresByVoice(
+                parsed.city,
+                parsed.keyword
+            );
+
+        renderVoiceStoreList(result);
+
+        speak(
+            parsed.city + " " +
+            parsed.keyword +
+            " 매장을 찾았습니다. 매장을 선택해 주세요."
+        );
+
+        alert(
+            parsed.city + " " +
+            parsed.keyword +
+            " 매장 " +
+            result.length +
+            "개를 찾았습니다."
+        );
+
+        return;
+    }
+
+    if (!voiceOrderState.selectedStore) {
+
+        speak("먼저 매장을 선택해 주세요.");
+
+        alert("먼저 매장을 선택해 주세요.");
+
+        return;
+    }
+
+    voiceOrderState.orderText = text;
+
+    renderVoiceOrderConfirm();
+
+    speak("주문 내용을 확인해 주세요.");
 }
 
+    function parseVoiceSearch(text) {
 
+    let city = "";
+    let keyword = "";
 
+    const words =
+        text.split(" ");
 
+    if (words.length >= 2) {
+
+        city =
+            words[0] + " " +
+            words[1];
+
+    } else {
+
+        city = words[0] || "";
+    }
+
+    keyword =
+        text
+            .replace(city, "")
+            .replace("찾아줘", "")
+            .replace("찾아", "")
+            .replace("검색", "")
+            .trim();
+
+    return {
+        city,
+        keyword
+    };
+}
+
+    function searchStoresByVoice(
+    city,
+    keyword
+) {
+
+    const all =
+        JSON.parse(
+            localStorage.getItem(
+                "fin_all"
+            )
+        ) || [];
+
+    return all.filter(item => {
+
+        const loc =
+            item.loc || "";
+
+        const name =
+            item.name || "";
+
+        const category =
+            item.category || "";
+
+        return (
+            loc.includes(city) &&
+            (
+                name.includes(keyword) ||
+                category.includes(keyword)
+            )
+        );
+    });
+}
+
+function renderVoiceStoreList(
+    stores
+) {
+
+    let html =
+        "검색결과\n\n";
+
+    stores.forEach(
+        (s, idx) => {
+
+        html +=
+            (idx + 1) +
+            ". " +
+            (s.name || "") +
+            "\n";
+
+    });
+
+    alert(html);
+}
+
+    function renderVoiceOrderConfirm() {
+
+    alert(
+        "주문내용 : " +
+        voiceOrderState.orderText
+    );
+}
+    
     
     function toggleTerms() {
 
