@@ -1009,7 +1009,7 @@ function startVoiceCommand() {
     }
 }
 
-    function startVoiceOrder() {
+function startVoiceOrder() {
 
     voiceOrderState = {
         active: true,
@@ -1032,102 +1032,176 @@ function startVoiceCommand() {
     speak(
         "음성 주문을 시작합니다. 예를 들어 부산 서면 김밥집 찾아줘 라고 말씀해 주세요."
     );
+
+    alert(
+        "음성 주문을 시작합니다. 예를 들어 부산 서면 김밥집 찾아줘 라고 말씀해 주세요."
+    );
 }
+
 
 function onVoiceResult(text) {
+
     if (!isVoiceEnabled) return;
 
-    const t = text.toLowerCase().replace(/\s/g, "");
+    const t =
+        text.toLowerCase().replace(/\s/g, "");
+
     speak(text + " 입력되었습니다.");
 
+    // =========================
+    // 🔥 음성 주문 모드
+    // =========================
     if (voiceOrderState.active) {
 
-    handleVoiceOrderText(text);
+        handleVoiceOrderText(text);
 
-    return;
-}
+        return;
+    }
 
-    const btns = document.querySelectorAll('.nav button');
+    const btns =
+        document.querySelectorAll('.nav button');
 
     function clickByKeyword(keyword, exclude) {
+
         for (let btn of btns) {
-            const name = btn.innerText.toLowerCase().replace(/\s/g, "");
+
+            const name =
+                btn.innerText
+                    .toLowerCase()
+                    .replace(/\s/g, "");
 
             if (name.includes(keyword)) {
-                if (exclude && name.includes(exclude)) continue;
+
+                if (
+                    exclude &&
+                    name.includes(exclude)
+                ) {
+                    continue;
+                }
+
                 btn.click();
+
                 return true;
             }
         }
+
         return false;
     }
 
     // 🔥 1️⃣ 행사 루틴 먼저
     if (t.includes("루틴")) {
+
         speak("행사 루틴 화면으로 이동합니다.");
+
         clickByKeyword("루틴");
     }
 
     // 🔥 2️⃣ 행사
     else if (t.includes("행사")) {
+
         speak("행사 신청 화면으로 이동합니다.");
+
         clickByKeyword("행사", "노티");
     }
 
     // 🔥 3️⃣ 광고
     else if (t.includes("광고")) {
+
         speak("광고 신청 화면으로 이동합니다.");
+
         clickByKeyword("광고");
     }
 
     // 🔥 4️⃣ 공유
     else if (t.includes("공유")) {
+
         speak("공유 신청 화면으로 이동합니다.");
+
         clickByKeyword("공유");
     }
 
     // 🔥 5️⃣ 자산
     else if (t.includes("자산")) {
+
         speak("자산 현황 화면으로 이동합니다.");
+
         clickByKeyword("자산");
     }
 
     // 🔥 6️⃣ 지갑
     else if (t.includes("지갑")) {
+
         speak("지갑 설립 화면으로 이동합니다.");
+
         clickByKeyword("지갑");
     }
 
     // 🔥 7️⃣ 나의
     else if (t.includes("나의")) {
+
         speak("나의 정보 화면으로 이동합니다.");
+
         clickByKeyword("나의");
     }
 
-// 🔥 8️⃣ 국내외 주문
-else if (t.includes("국내") || t.includes("해외") || t.includes("주문")) {
-    speak("국내외 주문 기능입니다. 현재 이 기능은 준비 중입니다.");
-    return;
-}
+    // 🔥 8️⃣ 음성 주문 시작
+    else if (
+        t.includes("음성") ||
+        t.includes("주문")
+    ) {
 
-// 🔥 9️⃣ 음성 주문 (여기 추가)
-else if (t.includes("음성")) {
+        startVoiceOrder();
 
-    startVoiceOrder();
+        return;
+    }
 
-    return;
-}
+    // 🔥 9️⃣ 국내외 주문
+    else if (
+        t.includes("국내") ||
+        t.includes("해외")
+    ) {
 
-// 🔥 10️⃣ AI 재테크
-else if (t.includes("ai") || t.includes("재테크")) {
-    speak("AI 재테크 화면으로 이동합니다.");
-    clickByKeyword("재테크");
-}
+        speak("국내외 주문 화면으로 이동합니다.");
 
-     else {
+        clickGlobal();
+
+        return;
+    }
+
+    // 🔥 10️⃣ AI 재테크
+    else if (
+        t.includes("ai") ||
+        t.includes("재테크")
+    ) {
+
+        speak("AI 재테크 화면으로 이동합니다.");
+
+        clickByKeyword("재테크");
+    }
+
+    else {
+
         handlePlaceSearch(text);
     }
 }
+
+
+function handleVoiceOrderText(text) {
+
+    alert(
+        "음성주문 수신 : " + text
+    );
+
+    speak(
+        text +
+        " 주문 내용을 확인했습니다."
+    );
+}
+
+
+
+
+    
     function toggleTerms() {
 
     var c = document.getElementById('termsContent');
