@@ -1038,6 +1038,20 @@ function startVoiceOrder() {
     );
 }
 
+    setTimeout(function() {
+
+    const testText =
+        prompt(
+            "PC 테스트용입니다. 음성 대신 문장을 입력하세요.",
+            "부산 서면 김밥집 찾아줘"
+        );
+
+    if (testText) {
+        handleVoiceOrderText(testText);
+    }
+
+}, 300);
+
 
 function onVoiceResult(text) {
 
