@@ -3377,9 +3377,32 @@ function clickAI() {
 
 function openFinAI() {
 
-    alert(
-        "핀세계 AI 준비중"
-    );
+    document
+        .getElementById(
+            "finAIWindow"
+        )
+        .style.display = "block";
+
+}
+
+function testFinAI() {
+
+    const text =
+        document
+            .getElementById(
+                "finAIInput"
+            )
+            .value;
+
+    document
+        .getElementById(
+            "finAIResult"
+        )
+        .innerHTML =
+            "질문 : " +
+            text +
+            "<br><br>" +
+            "핀세계 AI 연결 준비중";
 
 }
 
@@ -5490,5 +5513,67 @@ console.log("🔥 Firebase 연결 완료");
     onchange="replaceHistoryVideo(event)"
 >
 
+
+<div
+    id="finAIWindow"
+    style="
+        display:none;
+        position:fixed;
+        top:60px;
+        left:5%;
+        width:90%;
+        height:70%;
+        background:#111;
+        border:2px solid #00ffff;
+        border-radius:15px;
+        z-index:999999;
+        padding:10px;
+        box-sizing:border-box;
+    "
+>
+
+    <div
+        style="
+            color:#00ffff;
+            font-weight:bold;
+            margin-bottom:10px;
+        "
+    >
+        🤖 핀세계 AI
+    </div>
+
+    <input
+        id="finAIInput"
+        placeholder="질문을 입력하세요"
+        style="
+            width:100%;
+            padding:10px;
+            margin-bottom:10px;
+            box-sizing:border-box;
+        "
+    >
+
+    <button
+        onclick="testFinAI()"
+        style="
+            width:100%;
+            padding:10px;
+        "
+    >
+        전송
+    </button>
+
+    <div
+        id="finAIResult"
+        style="
+            margin-top:15px;
+            color:white;
+            white-space:pre-wrap;
+        "
+    ></div>
+
+</div>
+
+    
 </body>
 </html>
