@@ -3047,12 +3047,64 @@ function startVoiceOrder() {
         "음성 주문 시작\n\n예시:\n부산 서면 김밥집 찾아줘"
     );
 
+    // 안드로이드 앱
     if (
         window.Android &&
         window.Android.startListening
     ) {
 
         window.Android.startListening();
+        return;
+
+    }
+
+    // GitHub / Chrome 브라우저
+    if (
+        'webkitSpeechRecognition' in window
+    ) {
+
+        const recognition =
+            new webkitSpeechRecognition();
+
+        recognition.lang = "ko-KR";
+
+        recognition.interimResults = false;
+
+        recognition.maxAlternatives = 1;
+
+        recognition.onresult =
+            function(event) {
+
+                const text =
+                    event.results[0][0].transcript;
+
+                alert(
+                    "음성주문 수신 : " +
+                    text
+                );
+
+                processVoiceOrder(text);
+
+            };
+
+        recognition.onerror =
+            function(e) {
+
+                alert(
+                    "음성인식 오류 : " +
+                    e.error
+                );
+
+            };
+
+        recognition.start();
+
+    }
+    else {
+
+        alert(
+            "이 브라우저는 음성인식을 지원하지 않습니다."
+        );
 
     }
 
