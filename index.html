@@ -830,7 +830,7 @@
 ></div>
 
 
-    
+   
 </section>
 
 
@@ -880,7 +880,7 @@ var voiceOrderState = {
     deliveryPlace: "",
     items: []
 };
-    
+   
 
     // 🔥 구글시트 URL 통합
    
@@ -934,7 +934,30 @@ function stopSpeak() {
 }
 
 
+function startVoiceOrder() {
 
+    voiceOrderState = {
+        active: true,
+        city: "",
+        keyword: "",
+        selectedStore: null,
+        orderText: "",
+        deliveryTime: "",
+        deliveryPlace: "",
+        items: []
+    };
+
+    currentTab = "voiceOrder";
+
+    showSection(
+        "globalOrderForm",
+        document.querySelectorAll('.nav button')[0]
+    );
+
+    speak(
+        "음성 주문을 시작합니다. 예를 들어 부산 서면 김밥집 찾아줘 라고 말씀해 주세요."
+    );
+}
 
     function notify(msg) { speak(msg); alert(msg); }
 
@@ -1188,7 +1211,7 @@ function handleVoiceOrderText(text) {
 
 
 
-    
+   
     function toggleTerms() {
 
     var c = document.getElementById('termsContent');
@@ -1468,7 +1491,7 @@ function goToBank() {
     }, 450); // speak 안내가 시작된 후 자연스럽게 포커스
 }
 
-//  [여기까지 교체 완료] 
+//  [여기까지 교체 완료]
     function handleBackButtonClick() {
         const camOverlay = document.getElementById('cameraOverlay');
         if (camOverlay.style.display === 'flex') { closeCamera(); showSection('dashboard', document.querySelectorAll('.nav button')[0]); return; }
@@ -1992,7 +2015,7 @@ fetch(
         })
     }
 );
-    
+   
 
 saveUnifiedData({
 
@@ -2119,7 +2142,7 @@ saveUnifiedData({
     );
 
 }
-    
+   
 function editableLine(id, key, label, value) {
 
     const safeValue =
@@ -2661,7 +2684,7 @@ onclick="
             margin-top:6px;
             font-weight:bold;
         ">
-      
+     
             상태: ${item.status || "신규"}
         </div>
 
@@ -2869,7 +2892,7 @@ target.innerHTML = Object
         }).join("");
 }
 
-    
+   
 function toggleHistoryCard(card, title, event) {
 
     if (event) {
@@ -3683,7 +3706,7 @@ function getUnifiedDataByUser(user) {
             document.querySelectorAll('.nav button')[1]
         );
 
-        
+       
         return;
     }
 
@@ -3800,7 +3823,7 @@ function openHistoryEdit(id, type) {
 
 
 
-    
+   
 function showGlobalTab(type) {
 
     const registerBox =
