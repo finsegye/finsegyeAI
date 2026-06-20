@@ -3115,8 +3115,18 @@ function processVoiceOrder(text) {
 
     if (!voiceOrderState.active) return false;
 
-    const msg =
-        String(text || "").trim();
+   const msg =
+    String(text || "").trim();
+
+alert(
+    "음성수신=" + msg
+);
+
+
+
+
+
+    
     if (
     msg.includes("1번") ||
     msg.includes("2번") ||
