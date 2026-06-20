@@ -193,7 +193,7 @@
     <div id="realtimeList"></div>
     <div onclick="togglePaymentBox()" style="background:rgba(255,215,0,0.1); border:1.5px solid gold; border-radius:10px; padding:8px; margin: 6px auto; width:92%; cursor:pointer; color:gold; display:flex; justify-content:space-between; font-size:0.82em;"><span>💳 실시간 대출 상환 및 결제</span><span id="toggleArrow">▼</span></div>
     <div id="paymentContent" style="display:none; padding:10px; margin:-10px auto 8px; width:92%; background:rgba(20,20,20,0.95); border:1.5px solid gold; border-top:none; border-radius: 0 0 12px 12px;"><input type="number" id="payAmount" placeholder="금액 입력"><button id="payBtn" onclick="executePayment()" class="submitBtn">상환 및 결제</button></div>
-    <div style="display:flex; gap:5px; width:96%; margin:8px auto; height:55px;"><button onclick="clickAI()" style="flex:1; background:rgba(255, 255, 255, 0.05); border-radius:10px; color:white; border:1.5px solid #00ffcc; font-size:0.8em;">📈 AI 재테크</button><button onclick="clickGlobal()" style="flex:1; background:rgba(255, 255, 255, 0.05); border-radius:10px; color:white; border:1.5px solid #ff00ff; font-size:0.8em;">🌐 국 내 외  등록 및 주문</button><div onclick="startVoiceCommand()" style="flex:1; background:rgba(255, 215, 0, 0.05); border-radius:10px; color:white; border:1.5px solid gold; display:flex; flex-direction:column; justify-content:center; align-items:center; font-size:0.8em; cursor:pointer;">🎙️<span style="font-size: 0.72em; color: gold;">음성 주문</span></div></div>
+    <div style="display:flex; gap:5px; width:96%; margin:8px auto; height:55px;"><button onclick="clickAI()" style="flex:1; background:rgba(255, 255, 255, 0.05); border-radius:10px; color:white; border:1.5px solid #00ffcc; font-size:0.8em;">📈 AI 재테크</button><button onclick="clickGlobal()" style="flex:1; background:rgba(255, 255, 255, 0.05); border-radius:10px; color:white; border:1.5px solid #ff00ff; font-size:0.8em;">🌐 국 내 외  등록 및 주문</button><div onclick="startVoiceOrder()" style="flex:1; background:rgba(255, 215, 0, 0.05); border-radius:10px; color:white; border:1.5px solid gold; display:flex; flex-direction:column; justify-content:center; align-items:center; font-size:0.8em; cursor:pointer;">🎙️<span style="font-size: 0.72em; color: gold;">음성 주문</span></div></div>
 </section>
 
 <section id="adApplyForm" class="raised-form">
@@ -867,6 +867,15 @@
 
     var currentSection = "dashboard", isVoiceEnabled = true, streamObj = null, pause = false;
 
+    // 🔥 음성주문 상태
+let voiceOrderState = {
+    active: false,
+    city: "",
+    keyword: "",
+    stores: []
+};
+
+    
     // 🔥 현재 탭
     var currentTab = "dashboard";
 
@@ -975,6 +984,11 @@ function startVoiceCommand() {
 }
 
 function onVoiceResult(text) {
+
+    if (processVoiceOrder(text)) {
+        return;
+    }
+
     if (!isVoiceEnabled) return;
 
     const t = text.toLowerCase().replace(/\s/g, "");
@@ -3016,6 +3030,126 @@ function handlePlaceSearch(text) {
     }
 }
 
+    function startVoiceOrder() {
+
+    voiceOrderState = {
+        active: true,
+        city: "",
+        keyword: "",
+        stores: []
+    };
+
+    speak(
+        "음성 주문을 시작합니다. 예를 들어 부산 서면 김밥집 찾아줘 라고 말씀해 주세요."
+    );
+
+    alert(
+        "음성 주문 시작\n\n예시:\n부산 서면 김밥집 찾아줘"
+    );
+}
+
+
+function processVoiceOrder(text) {
+
+    if (!voiceOrderState.active) return false;
+
+    const msg =
+        String(text || "").trim();
+
+    // 지역 추출
+    if (msg.includes("부산")) {
+        voiceOrderState.city = "부산";
+    }
+    else if (msg.includes("서울")) {
+        voiceOrderState.city = "서울";
+    }
+    else if (msg.includes("전주")) {
+        voiceOrderState.city = "전주";
+    }
+
+    // 업종 추출
+    if (msg.includes("김밥")) {
+        voiceOrderState.keyword = "김밥";
+    }
+    else if (msg.includes("치킨")) {
+        voiceOrderState.keyword = "치킨";
+    }
+    else if (msg.includes("피자")) {
+        voiceOrderState.keyword = "피자";
+    }
+
+    if (
+        !voiceOrderState.city ||
+        !voiceOrderState.keyword
+    ) {
+
+        speak(
+            "지역 또는 업종을 찾지 못했습니다."
+        );
+
+        return true;
+    }
+
+    showVoiceStoreList();
+
+    return true;
+}
+
+    
+function showVoiceStoreList() {
+
+    voiceOrderState.stores = [
+
+        {
+            id: 1,
+            name: voiceOrderState.city +
+                  " " +
+                  voiceOrderState.keyword +
+                  "천국"
+        },
+
+        {
+            id: 2,
+            name: voiceOrderState.city +
+                  " 고봉민김밥"
+        },
+
+        {
+            id: 3,
+            name: voiceOrderState.city +
+                  " 바르다김선생"
+        }
+
+    ];
+
+    let html =
+        "검색 결과\n\n";
+
+    voiceOrderState.stores.forEach(function(store) {
+
+        html +=
+            store.id +
+            "번. " +
+            store.name +
+            "\n";
+    });
+
+    alert(html);
+
+    speak(
+        voiceOrderState.city +
+        " 지역 " +
+        voiceOrderState.keyword +
+        " 검색 결과를 표시했습니다. 번호를 말씀해 주세요."
+    );
+}
+
+
+
+
+
+
+    
 
 function clickAI() {
 
