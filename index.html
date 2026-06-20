@@ -3030,9 +3030,7 @@ function handlePlaceSearch(text) {
     }
 }
 
-    function startVoiceOrder() {
-
-    alert("STARTVOICEORDER 실행");
+function startVoiceOrder() {
 
     voiceOrderState = {
         active: true,
@@ -3050,12 +3048,14 @@ function handlePlaceSearch(text) {
     );
 
     if (
-    window.Android &&
-    window.Android.startListening
+        window.Android &&
+        window.Android.startListening
     ) {
+
         window.Android.startListening();
+
     }
-        
+
 }
 
 
