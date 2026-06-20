@@ -3117,6 +3117,17 @@ function processVoiceOrder(text) {
 
     const msg =
         String(text || "").trim();
+    if (
+    msg.includes("1번") ||
+    msg.includes("2번") ||
+    msg.includes("3번")
+) {
+
+    showVoiceMenu(msg);
+
+    return true;
+
+}
 
     // 지역 추출
     if (msg.includes("부산")) {
@@ -3208,7 +3219,47 @@ function showVoiceStoreList() {
 
 
 
+function showVoiceMenu(text) {
 
+    let storeName = "";
+
+    if (text.includes("1번")) {
+        storeName =
+            voiceOrderState.stores[0].name;
+    }
+
+    if (text.includes("2번")) {
+        storeName =
+            voiceOrderState.stores[1].name;
+    }
+
+    if (text.includes("3번")) {
+        storeName =
+            voiceOrderState.stores[2].name;
+    }
+
+    voiceOrderState.selectedStore =
+        storeName;
+
+    let menuText =
+        storeName +
+        "\n\n" +
+
+        "1. 김밥 3500원\n" +
+        "2. 참치김밥 4500원\n" +
+        "3. 치즈김밥 4500원\n" +
+        "4. 라면 4000원\n\n" +
+
+        "원하는 메뉴를 말씀하세요.";
+
+    alert(menuText);
+
+    speak(
+        storeName +
+        " 메뉴를 표시했습니다."
+    );
+
+}
 
 
     
