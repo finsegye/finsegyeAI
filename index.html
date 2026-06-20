@@ -3392,17 +3392,97 @@ function testFinAI() {
             .getElementById(
                 "finAIInput"
             )
-            .value;
+            .value
+            .trim();
+
+    let result = "";
+
+    // 김밥집
+    if (
+        text.includes("김밥")
+    ) {
+
+        result =
+            "🤖 핀세계 AI\n\n" +
+
+            "부산 서면 주변 김밥집을 찾았습니다.\n\n" +
+
+            "1. 고봉민김밥\n" +
+            "2. 바르다김선생\n" +
+            "3. 김밥천국\n" +
+            "4. 김가네\n\n" +
+
+            "원하는 번호를 말씀해 주세요.\n\n" +
+
+            "(시연용 화면)";
+
+    }
+
+    // 치킨집
+    else if (
+        text.includes("치킨") ||
+        text.includes("통닭")
+    ) {
+
+        result =
+            "🤖 핀세계 AI\n\n" +
+
+            "주변 치킨집을 찾았습니다.\n\n" +
+
+            "1. BBQ\n" +
+            "2. 교촌치킨\n" +
+            "3. bhc\n" +
+            "4. 굽네치킨\n\n" +
+
+            "원하는 번호를 말씀해 주세요.\n\n" +
+
+            "(시연용 화면)";
+
+    }
+
+    // 피자집
+    else if (
+        text.includes("피자")
+    ) {
+
+        result =
+            "🤖 핀세계 AI\n\n" +
+
+            "주변 피자집을 찾았습니다.\n\n" +
+
+            "1. 도미노피자\n" +
+            "2. 피자헛\n" +
+            "3. 미스터피자\n\n" +
+
+            "원하는 번호를 말씀해 주세요.\n\n" +
+
+            "(시연용 화면)";
+
+    }
+
+    // 기본
+    else {
+
+        result =
+            "🤖 핀세계 AI\n\n" +
+
+            "안녕하세요.\n\n" +
+
+            "현재 시연 버전입니다.\n\n" +
+
+            "예시:\n" +
+
+            "부산 서면 김밥집 찾아줘\n" +
+            "전주 치킨집 찾아줘\n" +
+            "서울 피자집 찾아줘";
+
+    }
 
     document
         .getElementById(
             "finAIResult"
         )
-        .innerHTML =
-            "질문 : " +
-            text +
-            "<br><br>" +
-            "핀세계 AI 연결 준비중";
+        .innerText = result;
 
 }
 
