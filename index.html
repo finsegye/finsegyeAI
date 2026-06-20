@@ -193,7 +193,91 @@
     <div id="realtimeList"></div>
     <div onclick="togglePaymentBox()" style="background:rgba(255,215,0,0.1); border:1.5px solid gold; border-radius:10px; padding:8px; margin: 6px auto; width:92%; cursor:pointer; color:gold; display:flex; justify-content:space-between; font-size:0.82em;"><span>💳 실시간 대출 상환 및 결제</span><span id="toggleArrow">▼</span></div>
     <div id="paymentContent" style="display:none; padding:10px; margin:-10px auto 8px; width:92%; background:rgba(20,20,20,0.95); border:1.5px solid gold; border-top:none; border-radius: 0 0 12px 12px;"><input type="number" id="payAmount" placeholder="금액 입력"><button id="payBtn" onclick="executePayment()" class="submitBtn">상환 및 결제</button></div>
-    <div style="display:flex; gap:5px; width:96%; margin:8px auto; height:55px;"><button onclick="clickAI()" style="flex:1; background:rgba(255, 255, 255, 0.05); border-radius:10px; color:white; border:1.5px solid #00ffcc; font-size:0.8em;">📈 AI 재테크</button><button onclick="clickGlobal()" style="flex:1; background:rgba(255, 255, 255, 0.05); border-radius:10px; color:white; border:1.5px solid #ff00ff; font-size:0.8em;">🌐 국 내 외  등록 및 주문</button><div onclick="startVoiceOrder()" style="flex:1; background:rgba(255, 215, 0, 0.05); border-radius:10px; color:white; border:1.5px solid gold; display:flex; flex-direction:column; justify-content:center; align-items:center; font-size:0.8em; cursor:pointer;">🎙️<span style="font-size: 0.72em; color: gold;">음성 주문</span></div></div>
+   <div style="display:flex; gap:5px; width:96%; margin:8px auto; height:55px;">
+
+    <button
+        onclick="clickAI()"
+        style="
+            flex:1;
+            background:rgba(255,255,255,0.05);
+            border-radius:10px;
+            color:white;
+            border:1.5px solid #00ffcc;
+            font-size:0.8em;
+        "
+    >
+        📈 AI 재테크
+    </button>
+
+    <button
+        onclick="clickGlobal()"
+        style="
+            flex:1;
+            background:rgba(255,255,255,0.05);
+            border-radius:10px;
+            color:white;
+            border:1.5px solid #ff00ff;
+            font-size:0.8em;
+        "
+    >
+        🌐 국 내 외 등록 및 주문
+    </button>
+
+    <div
+        onclick="openFinAI()"
+        style="
+            flex:1;
+            background:rgba(0,255,255,0.05);
+            border-radius:10px;
+            color:white;
+            border:1.5px solid #00ffff;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            font-size:0.8em;
+            cursor:pointer;
+        "
+    >
+        🤖
+        <span
+            style="
+                font-size:0.72em;
+                color:#00ffff;
+            "
+        >
+            핀세계 AI
+        </span>
+    </div>
+
+    <div
+        onclick="startVoiceOrder()"
+        style="
+            flex:1;
+            background:rgba(255,215,0,0.05);
+            border-radius:10px;
+            color:white;
+            border:1.5px solid gold;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            font-size:0.8em;
+            cursor:pointer;
+        "
+    >
+        🎙️
+        <span
+            style="
+                font-size:0.72em;
+                color:gold;
+            "
+        >
+            음성 주문
+        </span>
+    </div>
+
+</div>
 </section>
 
 <section id="adApplyForm" class="raised-form">
