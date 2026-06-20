@@ -3048,6 +3048,14 @@ function handlePlaceSearch(text) {
     alert(
         "음성 주문 시작\n\n예시:\n부산 서면 김밥집 찾아줘"
     );
+
+    if (
+    window.Android &&
+    window.Android.startListening
+    ) {
+        window.Android.startListening();
+    }
+        
 }
 
 
