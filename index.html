@@ -3292,12 +3292,20 @@ speak(
         const recognition =
             new webkitSpeechRecognition();
 
+        recognition.onstart =
+        function() {
+        
+            stopSpeak();
+        
+        };
+        
+
         window.voiceRecognition =
             recognition;
         
 
         recognition.lang = "ko-KR";
-
+        
         recognition.interimResults = false;
 
         recognition.maxAlternatives = 1;
@@ -3306,7 +3314,9 @@ speak(
             function(event) {
 
 const text =
-    event.results[0][0].transcript;
+    event.results[
+        event.results.length - 1
+    ][0].transcript;
 
 // 🔥 현재 읽고 있는 음성 즉시 중단
 stopSpeak();
