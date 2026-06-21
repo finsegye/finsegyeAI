@@ -1081,17 +1081,29 @@ function aiReply(text) {
 
 function stopSpeak() {
 
-    if (
-        'speechSynthesis' in window
-    ) {
-        window.speechSynthesis.cancel();
-    }
+    try {
 
-    if (
-        window.Android &&
-        window.Android.stopSpeak
-    ) {
-        window.Android.stopSpeak();
+        if (
+            'speechSynthesis' in window
+        ) {
+
+            window.speechSynthesis.cancel();
+
+        }
+
+        if (
+            window.Android &&
+            window.Android.stopSpeak
+        ) {
+
+            window.Android.stopSpeak();
+
+        }
+
+    } catch(e) {
+
+        console.log(e);
+
     }
 }
 
@@ -3280,6 +3292,10 @@ speak(
         const recognition =
             new webkitSpeechRecognition();
 
+        window.voiceRecognition =
+            recognition;
+        
+
         recognition.lang = "ko-KR";
 
         recognition.interimResults = false;
@@ -3289,15 +3305,18 @@ speak(
         recognition.onresult =
             function(event) {
 
-                const text =
-                    event.results[0][0].transcript;
+const text =
+    event.results[0][0].transcript;
 
-                alert(
-                    "음성주문 수신 : " +
-                    text
-                );
+// 🔥 현재 읽고 있는 음성 즉시 중단
+stopSpeak();
 
-                processVoiceOrder(text);
+alert(
+    "음성주문 수신 : " +
+    text
+);
+
+processVoiceOrder(text);
 
             };
 
