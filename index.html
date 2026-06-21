@@ -3355,9 +3355,88 @@ function processVoiceOrder(text) {
         return true;
     }
 
-    askFinsegyeAI(msg);
+    // 🔥 자산현황
+if (msg.includes("자산")) {
+
+    stopSpeak();
+
+stopSpeak();
+
+showSection(
+    "dashboard",
+    document.querySelectorAll('.nav button')[0]
+);
+
+speak(
+    "자산현황 화면으로 이동합니다."
+);
 
     return true;
+}
+
+// 🔥 행사신청
+if (msg.includes("행사")) {
+
+    stopSpeak();
+
+    speak(
+        "행사신청 화면으로 이동합니다."
+    );
+
+    showSection(
+        "adApplyForm",
+        document.querySelectorAll('.nav button')[1]
+    );
+
+    return true;
+}
+
+// 🔥 공유신청
+if (msg.includes("공유")) {
+
+    stopSpeak();
+
+    speak(
+        "공유신청 화면으로 이동합니다."
+    );
+
+    showSection(
+        "shareForm",
+        document.querySelectorAll('.nav button')[2]
+    );
+
+    return true;
+}
+
+// 🔥 지갑설립
+if (msg.includes("지갑")) {
+
+    stopSpeak();
+
+    showSection(
+        "bankForm",
+        document.querySelectorAll('.nav button')[4]
+    );
+
+    return true;
+}
+
+// 🔥 나의현황
+if (msg.includes("나의")) {
+
+    stopSpeak();
+
+    showSection(
+        "mypage",
+        document.querySelectorAll('.nav button')[5]
+    );
+
+    return true;
+}
+
+askFinsegyeAI(msg);
+
+return true;
 }
 
     
