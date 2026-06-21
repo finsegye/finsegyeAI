@@ -917,7 +917,35 @@
    
 </section>
 
+<!-- 🔥 핀세계 AI 상담창 -->
 
+<div
+    id="aiChatBox"
+    style="
+        width:94%;
+        min-height:120px;
+        max-height:220px;
+        overflow-y:auto;
+
+        margin:10px auto;
+
+        background:#111;
+        border:2px solid #00ffff;
+        border-radius:12px;
+
+        padding:10px;
+        box-sizing:border-box;
+
+        color:#fff;
+        text-align:left;
+        line-height:1.6;
+    "
+>
+    <div style="color:#00ffff;">
+        🤖 핀세계 AI 상담원 대기중...
+    </div>
+</div>
+    
 <div class="nav">
     <button onclick="showSection('dashboard', this)" class="active">자산현황</button>
     <button onclick="showSection('adApplyForm', this)">행사신청</button>
@@ -1006,6 +1034,32 @@ function speak(text) {
 
         console.log("음성 오류:", e);
     }
+}
+
+function aiReply(text) {
+
+    // 음성
+    speak(text);
+
+    // 문자
+    const box =
+        document.getElementById(
+            "aiChatBox"
+        );
+
+    if (!box) return;
+
+    const row =
+        document.createElement("div");
+
+    row.style.marginBottom = "6px";
+
+    row.innerText = text;
+
+    box.appendChild(row);
+
+    box.scrollTop =
+        box.scrollHeight;
 }
 
 function stopSpeak() {
@@ -3302,20 +3356,30 @@ function showVoiceStoreList() {
     });
 
     alert(html);
+    
+    // 🔥 문자 + 음성 상담창 출력
+    aiReply("검색 결과입니다.");
 
-    speak(
-        voiceOrderState.city +
-        " 지역 " +
-        voiceOrderState.keyword +
-        " 검색 결과를 표시했습니다. 메뉴를 선택하시려면 음성 주문 버튼을 다시 눌러주세요."
+voiceOrderState.stores.forEach(function(store){
+
+    aiReply(
+        store.id +
+        "번 " +
+        store.name
     );
 
-    alert(
-        "검색 결과가 표시되었습니다.\n\n" +
-        "메뉴를 선택하시려면\n" +
-        "음성 주문 버튼을 다시 눌러주세요.\n\n" +
-        "예시 : 2번 선택"
-    );
+});
+
+aiReply(
+    "원하는 매장 번호나 이름을 말씀해 주세요."
+);
+
+alert(
+    "검색 결과가 표시되었습니다.\n\n" +
+    "매장 번호 또는 매장 이름을 말씀해 주세요.\n\n" +
+    "예시 : 2번\n" +
+    "예시 : 바르다김선생"
+);
 
 }
 
