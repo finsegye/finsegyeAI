@@ -3294,7 +3294,32 @@ function processVoiceOrder(text) {
     if (!voiceOrderState.active)
         return false;
 
-    askFinsegyeAI(text);
+    const msg =
+        String(text || "").trim();
+
+    // 🔥 핀세계 호출어
+    if (
+        msg.includes("핀세계") ||
+        msg.includes("신세계") ||
+        msg.includes("핀 세게") ||
+        msg.includes("핀 세상") ||
+        msg.includes("AI 상담원") ||
+        msg.includes("상담 시작") ||
+        msg.includes("주문 시작")
+    ) {
+
+        aiReply(
+            "핀세계 AI 상담원입니다. 무엇을 도와드릴까요?"
+        );
+
+        speak(
+            "핀세계 AI 상담원입니다. 무엇을 도와드릴까요?"
+        );
+
+        return true;
+    }
+
+    askFinsegyeAI(msg);
 
     return true;
 }
