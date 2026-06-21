@@ -3291,67 +3291,10 @@ function startVoiceOrder() {
 
 function processVoiceOrder(text) {
 
-    if (!voiceOrderState.active) return false;
+    if (!voiceOrderState.active)
+        return false;
 
-   const msg =
-    String(text || "").trim();
-
-alert(
-    "음성수신=" + msg
-);
-
-
-
-
-
-    
-    if (
-    msg.includes("1번") ||
-    msg.includes("2번") ||
-    msg.includes("3번")
-) {
-
-    showVoiceMenu(msg);
-
-    return true;
-
-}
-
-    // 지역 추출
-    if (msg.includes("부산")) {
-        voiceOrderState.city = "부산";
-    }
-    else if (msg.includes("서울")) {
-        voiceOrderState.city = "서울";
-    }
-    else if (msg.includes("전주")) {
-        voiceOrderState.city = "전주";
-    }
-
-    // 업종 추출
-    if (msg.includes("김밥")) {
-        voiceOrderState.keyword = "김밥";
-    }
-    else if (msg.includes("치킨")) {
-        voiceOrderState.keyword = "치킨";
-    }
-    else if (msg.includes("피자")) {
-        voiceOrderState.keyword = "피자";
-    }
-
-    if (
-        !voiceOrderState.city ||
-        !voiceOrderState.keyword
-    ) {
-
-        speak(
-            "지역 또는 업종을 찾지 못했습니다."
-        );
-
-        return true;
-    }
-
-    showVoiceStoreList();
+    askFinsegyeAI(text);
 
     return true;
 }
