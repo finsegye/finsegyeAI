@@ -223,32 +223,7 @@
         🌐 국 내 외 등록 및 주문
     </button>
 
-    <div
-        onclick="openFinAI()"
-        style="
-            flex:1;
-            background:rgba(0,255,255,0.05);
-            border-radius:10px;
-            color:white;
-            border:1.5px solid #00ffff;
-            display:flex;
-            flex-direction:column;
-            justify-content:center;
-            align-items:center;
-            font-size:0.8em;
-            cursor:pointer;
-        "
-    >
-        🤖
-        <span
-            style="
-                font-size:0.72em;
-                color:#00ffff;
-            "
-        >
-            핀세계 AI
-        </span>
-    </div>
+
 
     <div
         onclick="startVoiceOrder()"
@@ -3447,116 +3422,9 @@ function clickAI() {
 }
 
 
-function openFinAI() {
 
-    document
-        .getElementById(
-            "finAIWindow"
-        )
-        .style.display = "block";
 
-}
 
-function testFinAI() {
-
-    const text =
-        document
-            .getElementById(
-                "finAIInput"
-            )
-            .value
-            .trim();
-
-    let result = "";
-
-    // 김밥집
-    if (
-        text.includes("김밥")
-    ) {
-
-        result =
-            "🤖 핀세계 AI\n\n" +
-
-            "부산 서면 주변 김밥집을 찾았습니다.\n\n" +
-
-            "1. 고봉민김밥\n" +
-            "2. 바르다김선생\n" +
-            "3. 김밥천국\n" +
-            "4. 김가네\n\n" +
-
-            "원하는 번호를 말씀해 주세요.\n\n" +
-
-            "(시연용 화면)";
-
-    }
-
-    // 치킨집
-    else if (
-        text.includes("치킨") ||
-        text.includes("통닭")
-    ) {
-
-        result =
-            "🤖 핀세계 AI\n\n" +
-
-            "주변 치킨집을 찾았습니다.\n\n" +
-
-            "1. BBQ\n" +
-            "2. 교촌치킨\n" +
-            "3. bhc\n" +
-            "4. 굽네치킨\n\n" +
-
-            "원하는 번호를 말씀해 주세요.\n\n" +
-
-            "(시연용 화면)";
-
-    }
-
-    // 피자집
-    else if (
-        text.includes("피자")
-    ) {
-
-        result =
-            "🤖 핀세계 AI\n\n" +
-
-            "주변 피자집을 찾았습니다.\n\n" +
-
-            "1. 도미노피자\n" +
-            "2. 피자헛\n" +
-            "3. 미스터피자\n\n" +
-
-            "원하는 번호를 말씀해 주세요.\n\n" +
-
-            "(시연용 화면)";
-
-    }
-
-    // 기본
-    else {
-
-        result =
-            "🤖 핀세계 AI\n\n" +
-
-            "안녕하세요.\n\n" +
-
-            "현재 시연 버전입니다.\n\n" +
-
-            "예시:\n" +
-
-            "부산 서면 김밥집 찾아줘\n" +
-            "전주 치킨집 찾아줘\n" +
-            "서울 피자집 찾아줘";
-
-    }
-
-    document
-        .getElementById(
-            "finAIResult"
-        )
-        .innerText = result;
-
-}
 
 
 
@@ -5666,65 +5534,7 @@ console.log("🔥 Firebase 연결 완료");
 >
 
 
-<div
-    id="finAIWindow"
-    style="
-        display:none;
-        position:fixed;
-        top:60px;
-        left:5%;
-        width:90%;
-        height:70%;
-        background:#111;
-        border:2px solid #00ffff;
-        border-radius:15px;
-        z-index:999999;
-        padding:10px;
-        box-sizing:border-box;
-    "
->
 
-    <div
-        style="
-            color:#00ffff;
-            font-weight:bold;
-            margin-bottom:10px;
-        "
-    >
-        🤖 핀세계 AI
-    </div>
-
-    <input
-        id="finAIInput"
-        placeholder="질문을 입력하세요"
-        style="
-            width:100%;
-            padding:10px;
-            margin-bottom:10px;
-            box-sizing:border-box;
-        "
-    >
-
-    <button
-        onclick="testFinAI()"
-        style="
-            width:100%;
-            padding:10px;
-        "
-    >
-        전송
-    </button>
-
-    <div
-        id="finAIResult"
-        style="
-            margin-top:15px;
-            color:white;
-            white-space:pre-wrap;
-        "
-    ></div>
-
-</div>
 
     
 </body>
