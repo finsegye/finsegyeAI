@@ -1077,13 +1077,23 @@ function aiReply(text) {
         box.scrollHeight;
 }
 
+
+
 function stopSpeak() {
-    if (window.Android && window.Android.stopSpeak) {
+
+    if (
+        'speechSynthesis' in window
+    ) {
+        window.speechSynthesis.cancel();
+    }
+
+    if (
+        window.Android &&
+        window.Android.stopSpeak
+    ) {
         window.Android.stopSpeak();
     }
 }
-
-
 
 
     function notify(msg) { speak(msg); alert(msg); }
@@ -1137,6 +1147,8 @@ function startVoiceCommand() {
 }
 
 function onVoiceResult(text) {
+
+    stopSpeak();
 
     if (processVoiceOrder(text)) {
         return;
