@@ -1150,9 +1150,16 @@ function onVoiceResult(text) {
 
     stopSpeak();
 
-    if (processVoiceOrder(text)) {
-        return;
-    }
+if (processVoiceOrder(text)) {
+
+    stopSpeak();
+
+    aiReply(
+        text + " 명령을 확인했습니다."
+    );
+
+    return;
+}
 
     if (!isVoiceEnabled) return;
 
