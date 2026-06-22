@@ -1002,6 +1002,17 @@ let voiceOrderState = {
     stores: []
 };
 
+let voiceOrderTimers = [];
+
+function clearVoiceOrderTimers() {
+
+    voiceOrderTimers.forEach(function(t) {
+        clearTimeout(t);
+    });
+
+    voiceOrderTimers = [];
+}
+
     
     // 🔥 현재 탭
     var currentTab = "dashboard";
