@@ -1170,7 +1170,23 @@ function onVoiceResult(text) {
 
     stopSpeak();
 
-if (processVoiceOrder(text)) {
+    const voiceText =
+        String(text || "")
+            .replace(/\s/g, "");
+
+    if (
+        voiceText.includes("음성주문") ||
+        voiceText.includes("음성으로주문") ||
+        voiceText.includes("핀세계음성주문") ||
+        voiceText.includes("AI상담원")
+    ) {
+
+        startVoiceOrder();
+
+        return;
+    }
+
+    if (processVoiceOrder(text)) {
 
     stopSpeak();
 
@@ -5728,6 +5744,23 @@ function deleteAdCard(id) {
         "행사 카드가 삭제되었습니다."
     );
 }
+
+window.addEventListener("load", function() {
+
+    setTimeout(function() {
+
+        if (
+            window.Android &&
+            window.Android.startListening
+        ) {
+
+            window.Android.startListening();
+
+        }
+
+    }, 1500);
+
+});
 
 </script>
 
