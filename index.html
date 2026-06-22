@@ -5747,32 +5747,14 @@ function deleteAdCard(id) {
 
 window.addEventListener("load", function() {
 
-    alert(
-        "자동실행 테스트"
-    );
-
     setTimeout(function() {
 
-        if (
-            window.Android &&
-            window.Android.startListening
-        ) {
+        alert(
+            "Android=" +
+            typeof window.Android
+        );
 
-            alert(
-                "Android 연결됨"
-            );
-
-            window.Android.startListening();
-
-        } else {
-
-            alert(
-                "Android 없음"
-            );
-
-        }
-
-    }, 1500);
+    }, 5000);
 
 });
 </script>
