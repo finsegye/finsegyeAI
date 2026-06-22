@@ -897,6 +897,7 @@
 <div
     id="aiChatBox"
     style="
+        display:none;
         width:94%;
         min-height:120px;
         max-height:220px;
@@ -3182,12 +3183,94 @@ function clickGlobal() {
     speak("국내외 등록 및 주문 화면입니다.");
 }
 
-    var canvas = document.getElementById('stars'), ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+var canvas =
+    document.getElementById('stars');
+
+var ctx =
+    canvas ? canvas.getContext('2d') : null;
+
+if (canvas && ctx) {
+
+    canvas.width =
+        window.innerWidth;
+
+    canvas.height =
+        window.innerHeight;
+
     var stars = [];
-    for(var i=0; i<155; i++) stars.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.2, v:Math.random()*0.3, c: ["rgba(255, 120, 120, 0.4)", "rgba(255, 220, 100, 0.4)", "rgba(120, 255, 120, 0.4)", "rgba(120, 150, 255, 0.4)", "rgba(220, 120, 255, 0.4)"][Math.floor(Math.random()*5)]});
-    function draw() { ctx.fillStyle = "rgba(0, 0, 0, 0.2)"; ctx.fillRect(0, 0, canvas.width, canvas.height); stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fillStyle = s.c; ctx.fill(); s.y += s.v; if(s.y > canvas.height) { s.y = -10; s.x = Math.random()*canvas.width; } }); requestAnimationFrame(draw); }
+
+    for (var i = 0; i < 155; i++) {
+
+        stars.push({
+            x:
+                Math.random() * canvas.width,
+
+            y:
+                Math.random() * canvas.height,
+
+            r:
+                Math.random() * 1.2,
+
+            v:
+                Math.random() * 0.3,
+
+            c:
+                [
+                    "rgba(255, 120, 120, 0.4)",
+                    "rgba(255, 220, 100, 0.4)",
+                    "rgba(120, 255, 120, 0.4)",
+                    "rgba(120, 150, 255, 0.4)",
+                    "rgba(220, 120, 255, 0.4)"
+                ][Math.floor(Math.random() * 5)]
+        });
+    }
+
+    function draw() {
+
+        ctx.fillStyle =
+            "rgba(0, 0, 0, 0.2)";
+
+        ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        stars.forEach(function(s) {
+
+            ctx.beginPath();
+
+            ctx.arc(
+                s.x,
+                s.y,
+                s.r,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fillStyle =
+                s.c;
+
+            ctx.fill();
+
+            s.y +=
+                s.v;
+
+            if (s.y > canvas.height) {
+
+                s.y = -10;
+
+                s.x =
+                    Math.random() * canvas.width;
+            }
+        });
+
+        requestAnimationFrame(draw);
+    }
+
     draw();
+}
 
     function openSignCamera() {
 
