@@ -3227,6 +3227,9 @@ function handlePlaceSearch(text) {
 
 function startVoiceOrder() {
 
+    clearVoiceOrderTimers();
+    stopSpeak();
+
     voiceOrderState = {
         active: true,
         city: "",
@@ -3234,33 +3237,38 @@ function startVoiceOrder() {
         stores: []
     };
 
-aiReply(
+    aiReply(
 `핀세계 AI 상담원입니다.
 
 5초 내 원하시는 메뉴를 말씀해 주세요.`
-);
+    );
 
-speak(
-"핀세계 AI 상담원입니다. 5초 내 원하시는 메뉴를 말씀해 주세요. "
-);
+    speak(
+        "핀세계 AI 상담원입니다. 5초 내 원하시는 메뉴를 말씀해 주세요."
+    );
 
-// 첫 멘트가 끝난 후 충분히 기다림
-setTimeout(function() {
+    voiceOrderTimers.push(
+        setTimeout(function() {
 
-aiReply(
-    "전체 메뉴는 끝까지 들으신 후 말씀해 주세요."
-);
+            if (!voiceOrderState.active) return;
 
-speak(
-    "전체 메뉴는 끝까지 들으신 후 말씀해 주세요."
-);
+            aiReply(
+                "전체 메뉴는 끝까지 들으신 후 말씀해 주세요."
+            );
 
-}, 12000);
+            speak(
+                "전체 메뉴는 끝까지 들으신 후 말씀해 주세요."
+            );
 
-setTimeout(function() {
+        }, 12000)
+    );
 
-aiReply(
+    voiceOrderTimers.push(
+        setTimeout(function() {
 
+            if (!voiceOrderState.active) return;
+
+            aiReply(
 `1번, AI 재테크.
 
 2번, 국내외 등록 및 주문.
@@ -3285,14 +3293,18 @@ aiReply(
 
 12번, 지갑설립.
 
-13번, 나의현황 입니다. 원하시는 메뉴를 5초 내 말씀해 주세요.`
-);
+13번, 나의현황 입니다.
 
-speak(
-    "1번, AI 재테크. 2번, 국내외 등록 및 주문. 3번, 음성 주문. 4번, 실시간 대출 상환 및 결제. 5번, 실시간 참여 현황. 6번, 큐알 참여. 7번, 간판 사진 찍기. 8번, 자산현황. 9번, 행사신청. 10번, 공유신청. 11번, 행사루틴. 12번, 지갑설립. 13번, 나의현황 입니다. 원하시는 메뉴를 5초 내에 말씀해 주세요."
-);
+원하시는 메뉴를 5초 내에 말씀해 주세요.`
+            );
 
-}, 16500);
+            speak(
+                "1번, AI 재테크. 2번, 국내외 등록 및 주문. 3번, 음성 주문. 4번, 실시간 대출 상환 및 결제. 5번, 실시간 참여 현황. 6번, 큐알 참여. 7번, 간판 사진 찍기. 8번, 자산현황. 9번, 행사신청. 10번, 공유신청. 11번, 행사루틴. 12번, 지갑설립. 13번, 나의현황 입니다. 원하시는 메뉴를 5초 내에 말씀해 주세요."
+            );
+
+        }, 16400)
+    );
+}
 
     // 안드로이드 앱
     if (
