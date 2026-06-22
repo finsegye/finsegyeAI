@@ -5747,6 +5747,10 @@ function deleteAdCard(id) {
 
 window.addEventListener("load", function() {
 
+    alert(
+        "자동실행 테스트"
+    );
+
     setTimeout(function() {
 
         if (
@@ -5754,14 +5758,23 @@ window.addEventListener("load", function() {
             window.Android.startListening
         ) {
 
+            alert(
+                "Android 연결됨"
+            );
+
             window.Android.startListening();
+
+        } else {
+
+            alert(
+                "Android 없음"
+            );
 
         }
 
     }, 1500);
 
 });
-
 </script>
 
     <!-- Firebase SDK -->
