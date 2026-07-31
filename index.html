@@ -178,16 +178,37 @@
     <div id="qrWrap">
 
         <div id="qrBox" onclick="showQrGuide()">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https%3A%2F%2Ffinsegye.github.io%2FfinsegyeAI%2Findex.html"
-                 style="width:100%;">
+            <img
+                id="referralQrImage"
+                src=""
+                alt="핀세계 추천인 지갑 설립 QR"
+                style="width:100%;"
+            >
         </div>
 
         <div style="color:gold; font-weight:bold; text-align:center; margin-top:5px; font-size:0.85em;">
-            추천인: 신성일
+            추천인: <span id="qrReferrerName">신성일</span>
         </div>
 
-        <!-- 🔥 추가 -->
         <div id="qrMsg" style="color:#00ffcc; text-align:center; margin-top:6px; font-size:0.8em;"></div>
+
+        <button
+            type="button"
+            onclick="openOneStore()"
+            style="
+                width:160px;
+                margin-top:8px;
+                padding:10px 6px;
+                border:none;
+                border-radius:9px;
+                background:#00ffcc;
+                color:#000;
+                font-weight:bold;
+                cursor:pointer;
+            "
+        >
+            원스토어에서 핀세계 설치
+        </button>
 
     </div>
     <div id="realtimeList"></div>
@@ -404,6 +425,42 @@
 
 <section id="bankForm" class="raised-form">
     <div class="form-box">
+
+        <div
+            id="oneStoreInstallGuide"
+            style="
+                display:none;
+                margin-bottom:10px;
+                padding:10px;
+                border:1.5px solid #00ffcc;
+                border-radius:10px;
+                background:rgba(0,255,204,0.08);
+                text-align:center;
+                color:#fff;
+                line-height:1.5;
+            "
+        >
+            <div style="color:#00ffcc; font-weight:bold; margin-bottom:6px;">
+                핀세계 앱이 설치되지 않았습니까?
+            </div>
+            <button
+                type="button"
+                onclick="openOneStore()"
+                style="
+                    width:100%;
+                    padding:11px;
+                    border:none;
+                    border-radius:8px;
+                    background:#00ffcc;
+                    color:#000;
+                    font-weight:bold;
+                    cursor:pointer;
+                "
+            >
+                원스토어에서 핀세계 설치
+            </button>
+        </div>
+
         <div class="auth-tab-row">
             <button class="kakao-btn" onclick="kakaoAuth()">카카오 인증</button>
             <button class="auto-fill-btn" onclick="autoFillAuth()">자동 입력</button>
@@ -995,6 +1052,17 @@ askFinsegyeAI(
 
     var currentSection = "dashboard", isVoiceEnabled = true, streamObj = null, pause = false;
 
+    const FINSEGYE_ONESTORE_URL =
+        "https://m.onestore.co.kr/v2/ko-kr/app/0001004603";
+
+    const FINSEGYE_WEB_URL =
+        "https://finsegye.github.io/finsegyeAI/index.html";
+
+    const DEFAULT_REFERRER_NAME =
+        "신성일";
+
+    let isReferralEntryMode = false;
+
     // 🔥 음성주문 상태
 let voiceOrderState = {
     active: false,
@@ -1297,8 +1365,130 @@ else if (t.includes("ai") || t.includes("재테크")) {
         }
     }
 }
-    function toggleQR() { var q = document.getElementById('qrWrap'); q.style.display = (q.style.display === 'block' ? 'none' : 'block'); if(q.style.display==='block') speak("큐알 참여 메뉴입니다."); }
-    function goToBank() { showSection('bankForm', document.querySelectorAll('.nav button')[4]); document.getElementById('referrer').value = "신성일"; }
+    function getCurrentReferrerName() {
+
+        try {
+
+            const savedName =
+                localStorage.getItem("fin_referrer_name");
+
+            if (savedName && savedName.trim()) {
+                return savedName.trim();
+            }
+
+            const all =
+                JSON.parse(
+                    localStorage.getItem("fin_all")
+                ) || [];
+
+            const wallet =
+                all.find(function(item) {
+                    return (
+                        item &&
+                        item.type === "wallets" &&
+                        item.name
+                    );
+                });
+
+            if (wallet && wallet.name) {
+                return String(wallet.name).trim();
+            }
+
+        } catch(e) {
+            console.log("추천인 확인 오류:", e);
+        }
+
+        return DEFAULT_REFERRER_NAME;
+    }
+
+    function buildReferralUrl(referrerName) {
+
+        const url =
+            new URL(FINSEGYE_WEB_URL);
+
+        url.searchParams.set(
+            "join",
+            "wallet"
+        );
+
+        url.searchParams.set(
+            "ref",
+            referrerName || DEFAULT_REFERRER_NAME
+        );
+
+        return url.toString();
+    }
+
+    function refreshReferralQR() {
+
+        const referrerName =
+            getCurrentReferrerName();
+
+        const referralUrl =
+            buildReferralUrl(referrerName);
+
+        const qrImage =
+            document.getElementById(
+                "referralQrImage"
+            );
+
+        const qrName =
+            document.getElementById(
+                "qrReferrerName"
+            );
+
+        if (qrImage) {
+
+            qrImage.src =
+                "https://api.qrserver.com/v1/create-qr-code/" +
+                "?size=140x140&data=" +
+                encodeURIComponent(referralUrl);
+        }
+
+        if (qrName) {
+            qrName.innerText = referrerName;
+        }
+    }
+
+    function toggleQR() {
+
+        const q =
+            document.getElementById("qrWrap");
+
+        if (!q) return;
+
+        const willOpen =
+            q.style.display !== "block";
+
+        q.style.display =
+            willOpen ? "block" : "none";
+
+        if (willOpen) {
+
+            refreshReferralQR();
+
+            speak(
+                "큐알 참여 메뉴입니다. 다른 기기로 큐알을 스캔하면 추천인이 자동 입력된 지갑 설립 화면으로 이동합니다."
+            );
+        } else {
+
+            stopSpeak();
+        }
+    }
+
+    function openOneStore() {
+
+        speak(
+            "원스토어의 핀세계 설치 화면으로 이동합니다."
+        );
+
+        setTimeout(function() {
+
+            window.location.href =
+                FINSEGYE_ONESTORE_URL;
+
+        }, 250);
+    }
     function kakaoAuth() {
     speak("카카오 정보를 자동으로 입력했습니다.");
     document.getElementById('referrer').value = "핀세계 본부";
@@ -1518,14 +1708,19 @@ if (id !== "globalOrderForm") {
         'adApplyForm': { msg: "행사 신청 화면입니다. 상호를 입력해 주세요.", focusId: "shopName" },
         'shareForm': { msg: "공유 신청 화면입니다. 신청자명을 입력해 주세요.", focusId: "sName" },
         'routineForm': { msg: "행사 루틴 화면입니다. 간판명을 입력해 주세요.", focusId: "rShopName" },
-        'bankForm': { msg: "지갑 설립 화면입니다. 추천인 성함을 입력해 주세요.", focusId: "referrer" },
+        'bankForm': isReferralEntryMode
+            ? { msg: "", focusId: null }
+            : { msg: "지갑 설립 화면입니다. 추천인 성함을 입력해 주세요.", focusId: "referrer" },
         'mypage': { msg: "나의 현황 화면입니다.", focusId: null }
     };
 
     const config = setupGuide[id];
 
     if (config) {
-        speak(config.msg);
+
+        if (config.msg) {
+            speak(config.msg);
+        }
 
         if (config.focusId) {
             setTimeout(() => {
@@ -1542,26 +1737,115 @@ if (id !== "globalOrderForm") {
 }
 
 // 2. QR 코드를 클릭하고 들어올 때 호출되는 함수 (성함부터 안내)
-function goToBank() {
-    const bankNavBtn = document.querySelectorAll('.nav button')[4];
+function goToBank(referrerName) {
 
-    // 먼저 지갑설립 섹션을 엽니다.
-    showSection('bankForm', bankNavBtn);
+    const bankNavBtn =
+        document.querySelectorAll(
+            ".nav button"
+        )[4];
 
-    // 추천인 자동 입력
-    document.getElementById('referrer').value = "신성일";
+    const finalReferrer =
+        String(
+            referrerName ||
+            localStorage.getItem(
+                "fin_pending_referrer"
+            ) ||
+            getCurrentReferrerName()
+        ).trim();
 
-    // [대표님 정정 요청] QR 전용 안내 멘트 (에이아이 삭제)
-    speak("지갑 설립 화면입니다. 성함을 입력하여 주세요.");
+    isReferralEntryMode = true;
 
-    // 포커스를 추천인이 아닌 '성함'으로 강제 이동
-    setTimeout(() => {
-        const walletUser = document.getElementById('walletUser');
-        if(walletUser) {
+    showSection(
+        "bankForm",
+        bankNavBtn
+    );
+
+    isReferralEntryMode = false;
+
+    const referrerInput =
+        document.getElementById(
+            "referrer"
+        );
+
+    if (referrerInput) {
+        referrerInput.value = finalReferrer;
+    }
+
+    const installGuide =
+        document.getElementById(
+            "oneStoreInstallGuide"
+        );
+
+    if (
+        installGuide &&
+        !(
+            window.Android &&
+            typeof window.Android === "object"
+        )
+    ) {
+        installGuide.style.display = "block";
+    }
+
+    speak(
+        finalReferrer +
+        "님의 추천으로 지갑 설립을 시작합니다. 성함을 입력하여 주세요."
+    );
+
+    setTimeout(function() {
+
+        const walletUser =
+            document.getElementById(
+                "walletUser"
+            );
+
+        if (walletUser) {
             walletUser.focus();
             walletUser.click();
         }
-    }, 450); // speak 안내가 시작된 후 자연스럽게 포커스
+
+    }, 450);
+}
+
+function openWalletFromReferralLink() {
+
+    try {
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        if (
+            params.get("join") !== "wallet"
+        ) {
+            return;
+        }
+
+        const referrerName =
+            String(
+                params.get("ref") ||
+                DEFAULT_REFERRER_NAME
+            ).trim();
+
+        localStorage.setItem(
+            "fin_pending_referrer",
+            referrerName
+        );
+
+        localStorage.setItem(
+            "fin_referrer_name",
+            referrerName
+        );
+
+        goToBank(referrerName);
+
+    } catch(e) {
+
+        console.log(
+            "추천인 링크 처리 오류:",
+            e
+        );
+    }
 }
 
 //  [여기까지 교체 완료]
@@ -3779,18 +4063,31 @@ function retryOCRCamera() {
 
     function showQrGuide() {
 
-    const msg = "다른 기기로 QR을 스캔해 주세요";
+    refreshReferralQR();
+
+    const referrerName =
+        getCurrentReferrerName();
+
+    const msg =
+        "다른 기기로 큐알을 스캔해 주세요. " +
+        referrerName +
+        "님의 추천 정보가 자동으로 입력되고 지갑 설립 화면으로 이동합니다.";
 
     speak(msg);
 
-    const el = document.getElementById("qrMsg");
+    const el =
+        document.getElementById(
+            "qrMsg"
+        );
 
     if (el) {
-        el.innerText = msg;
 
-        setTimeout(function () {
+        el.innerText =
+            "스캔하면 추천인 자동 입력 → 지갑 설립";
+
+        setTimeout(function() {
             el.innerText = "";
-        }, 3000);
+        }, 5000);
     }
 }
 
@@ -3864,7 +4161,12 @@ function renderWalletStatus() {
 
 // 🔥 페이지 로드시 자동 실행
 window.addEventListener("load", function () {
+
     renderWalletStatus();
+
+    refreshReferralQR();
+
+    openWalletFromReferralLink();
 });
 
 
