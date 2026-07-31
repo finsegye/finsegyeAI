@@ -1815,29 +1815,81 @@ function openWalletFromReferralLink() {
                 window.location.search
             );
 
-        if (
-            params.get("join") !== "wallet"
-        ) {
-            return;
-        }
+        const join =
+            String(
+                params.get("join") || ""
+            ).trim();
 
         const referrerName =
             String(
-                params.get("ref") ||
-                DEFAULT_REFERRER_NAME
+                params.get("ref") || ""
             ).trim();
+
+        if (join !== "wallet") {
+            return;
+        }
+
+        const finalReferrer =
+            referrerName || "신성일";
 
         localStorage.setItem(
             "fin_pending_referrer",
-            referrerName
+            finalReferrer
         );
 
-        localStorage.setItem(
-            "fin_referrer_name",
-            referrerName
+        const bankNavBtn =
+            document.querySelectorAll(
+                ".nav button"
+            )[4];
+
+        showSection(
+            "bankForm",
+            bankNavBtn
         );
 
-        goToBank(referrerName);
+        const referrerInput =
+            document.getElementById(
+                "referrer"
+            );
+
+        if (referrerInput) {
+
+            referrerInput.value =
+                finalReferrer;
+        }
+
+        const installGuide =
+            document.getElementById(
+                "oneStoreInstallGuide"
+            );
+
+        if (installGuide) {
+
+            installGuide.style.display =
+                "block";
+        }
+
+        setTimeout(function () {
+
+            const referrerInputAgain =
+                document.getElementById(
+                    "referrer"
+                );
+
+            if (referrerInputAgain) {
+
+                referrerInputAgain.value =
+                    finalReferrer;
+            }
+
+            stopSpeak();
+
+            speak(
+                finalReferrer +
+                "님의 추천으로 지갑 설립을 시작합니다. 카카오 인증 버튼을 눌러 주세요."
+            );
+
+        }, 700);
 
     } catch(e) {
 
@@ -1847,7 +1899,6 @@ function openWalletFromReferralLink() {
         );
     }
 }
-
 //  [여기까지 교체 완료]
     function handleBackButtonClick() {
         const camOverlay = document.getElementById('cameraOverlay');
