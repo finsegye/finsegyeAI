@@ -95,35 +95,6 @@
         .nav button { flex: 1; background: none; border: none; color: #999; font-size: 0.85em; cursor: pointer; font-weight: bold; height: 100%; }
         .nav button.active { color: gold; border-top: 4px solid gold; background: rgba(255, 215, 0, 0.05); }
 
-        /* 모든 화면 공통 고정 배치: 브라우저가 폴더블 폭을 잘못 보고해도 유지 */
-        #statusContainer {
-            height: 42px;
-            box-sizing: border-box;
-            align-items: center;
-        }
-
-        .top-spacer {
-            height: 42px;
-        }
-
-        #dashboard {
-            padding-top: 62px;
-            padding-bottom: 155px;
-        }
-
-        #dashboard .asset-summary {
-            position: fixed;
-            top: 42px;
-            left: 12px;
-            right: 12px;
-            width: auto;
-            z-index: 100000;
-            box-sizing: border-box;
-            background: #000;
-            margin: 0;
-            padding-top: 2px;
-        }
-
         #cameraOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 99999; flex-direction: column; }
         #videoStream { width: 100%; height: 100%; object-fit: cover; position: absolute; }
         .camera-ui-layer { position: relative; z-index: 100000; height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 50px 0 85px 0; background: rgba(0,0,0,0.1); }
@@ -184,7 +155,7 @@
 <div class="top-spacer"></div>
 
 <section id="dashboard" style="display:block;">
-    <div class="asset-summary" style="display: flex; gap: 4px; margin-bottom: 2px;">
+    <div style="display: flex; gap: 4px; margin-bottom: 2px;">
         <div class="digital">행사자 자산<br><span id="advValue">50,000원</span></div>
         <div class="digital">소비자 자산<br><span id="consValue">20,000원</span></div>
     </div>
