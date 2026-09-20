@@ -483,6 +483,27 @@
             </button>
         </div>
 
+
+
+
+<div class="ad-reservation-box" style="padding: 10px 15px; border: 1px solid #ccc; margin: 0px auto 10px auto; width: 100%; background: rgba(255,255,255,0.05); border-radius: 8px;">
+    <h3 style="margin: 0 0 6px 0; font-size: 14px; color: #fff;">광고 예약 및 등록</h3>
+    <label style="font-size: 11px; color: #ccc;">광고 내용:</label><br>
+    <textarea id="adContent" rows="2" style="width: 100%; margin-bottom: 5px;" placeholder="광고 내용을 입력하세요"></textarea><br>
+
+    <label style="font-size: 11px; color: #ccc;">날짜 선택:</label><br>
+    <input type="date" id="adDate" style="width: 100%; margin-bottom: 5px;"><br>
+
+    <label style="font-size: 11px; color: #ccc;">시간 선택:</label><br>
+    <input type="time" id="adTime" style="width: 100%; margin-bottom: 8px;"><br>
+
+    <button onclick="submitAdReservation()" style="width: 100%; padding: 8px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">광고 등록하기</button>
+</div>
+
+
+
+
+        
         <div class="auth-tab-row">
             <button class="kakao-btn" onclick="kakaoAuth()">카카오 인증</button>
             <button class="auto-fill-btn" onclick="autoFillAuth()">자동 입력</button>
