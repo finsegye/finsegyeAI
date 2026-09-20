@@ -157,12 +157,26 @@
 
 
 
+<div class="ad-reservation-box" style="padding: 20px; border: 1px solid #ccc; margin: 20px 0;">
+    <h3>광고 예약 및 등록</h3>
+    <label>광고 내용:</label><br>
+    <textarea id="adContent" rows="4" style="width: 100%; margin-bottom: 10px;" placeholder="광고 내용을 입력하세요"></textarea><br>
 
+    <label>날짜 선택:</label><br>
+    <input type="date" id="adDate" style="width: 100%; margin-bottom: 10px;"><br>
+
+    <label>시간 선택:</label><br>
+    <input type="time" id="adTime" style="width: 100%; margin-bottom: 20px;"><br>
+
+    <button onclick="submitAdReservation()" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">광고 등록하기</button>
+</div>
 
 
 
 
     
+
+<section id="dashboard" style="display:block;">
     <div style="display: flex; gap: 4px; margin-bottom: 2px;">
         <div class="digital">행사자 자산<br><span id="advValue">50,000원</span></div>
         <div class="digital">소비자 자산<br><span id="consValue">20,000원</span></div>
@@ -469,15 +483,6 @@
             </button>
         </div>
 
-
-
-
-
-
-
-
-
-        
         <div class="auth-tab-row">
             <button class="kakao-btn" onclick="kakaoAuth()">카카오 인증</button>
             <button class="auto-fill-btn" onclick="autoFillAuth()">자동 입력</button>
@@ -669,7 +674,7 @@
     box-shadow:
         0 0 12px rgba(0,204,255,0.25);
 ">
-	
+ 
 
     <div style="
         background:#111;
@@ -739,23 +744,8 @@
             </div>
 
             <div id="nearStoreList"
-                 style="background:#111; border:1px solid #333; border-radius:10px; padding:10px; color:#ccc; margin-bottom:12px;">
+                 style="background:#111; border:1px solid #333; border-radius:10px; padding:10px; color:#ccc;">
                 등록된 주변 매장이 없습니다.
-            </div>
-
-            <!-- 🔥🔥🔥 주문 탭 내부에 추가된 광고 예약 및 등록 폼 박스 🔥🔥🔥 -->
-            <div class="ad-reservation-box" style="padding: 12px 15px; border: 2px solid #ff00ff; margin: 10px 0; background: #1a1a1a; border-radius: 10px;">
-                <h3 style="margin: 0 0 8px 0; font-size: 15px; color: #ff00ff; font-weight: bold;">📢 광고 예약 및 등록</h3>
-                <label style="font-size: 12px; color: #ccc;">광고 내용:</label><br>
-                <textarea id="adContent" rows="2" style="width: 100%; margin-bottom: 8px; background: #222; color: #fff; border: 1px solid #444; border-radius: 6px; padding: 6px;" placeholder="광고 내용을 입력하세요"></textarea><br>
-
-                <label style="font-size: 12px; color: #ccc;">날짜 선택:</label><br>
-                <input type="date" id="adDate" style="width: 100%; margin-bottom: 8px; background: #222; color: #fff; border: 1px solid #444; border-radius: 6px; padding: 6px;"><br>
-
-                <label style="font-size: 12px; color: #ccc;">시간 선택:</label><br>
-                <input type="time" id="adTime" style="width: 100%; margin-bottom: 12px; background: #222; color: #fff; border: 1px solid #444; border-radius: 6px; padding: 6px;"><br>
-
-                <button onclick="submitAdReservation()" style="width: 100%; padding: 10px; background-color: #ff00ff; color: #000; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px;">광고 등록하기</button>
             </div>
         </div>
 
@@ -1017,19 +1007,19 @@ function submitAdReservation() {
     // 전송할 데이터 객체
     const postData = {
         action: 'create_reservation',
-        storeId: 'PEONGHWA-01', 
-        customerPhone: '010-0000-0000', 
+        storeId: 'PEONGHWA-01', // 필요시 변경 가능
+        customerPhone: '010-0000-0000', // 필요시 입력받은 값으로 변경 가능
         adContent: content,
         adDate: date,
         adTime: time
     };
 
-    // 구글 앱스크립트 웹앱 URL을 정확하게 넣어두었습니다!
-    const scriptURL = 'https://script.google.com/macros/s/AKfycby6B7gZiNNFqnBvF909WuFMSpRbqKYJY5lRhi-3XMWFQZFDVVKL2sHFsdUptBipFXathg/exec';
+    // 배포한 구글 앱스크립트 웹앱 URL을 여기에 입력하세요
+    const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
 
     fetch(scriptURL, {
         method: 'POST',
-        mode: 'no-cors', 
+        mode: 'no-cors', // 크로스 도메인 이슈 방지용 (필요시 조정)
         headers: {
             'Content-Type': 'application/json',
         },
@@ -3870,7 +3860,7 @@ function clickAI() {
 
     // 🔥 화면 이동 제거 (핵심)
     speak("AI 재테크 기능입니다. 놀라운일이 벌어집니다. 기대해 주세요.");
-    // alert("AI 재테크 기능입니다. 놀라운일이 벌어집니다. 기대해 주세요.");
+    alert("AI 재테크 기능입니다. 놀라운일이 벌어집니다. 기대해 주세요.");
 
 }
 
