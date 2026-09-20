@@ -1007,19 +1007,19 @@ function submitAdReservation() {
     // 전송할 데이터 객체
     const postData = {
         action: 'create_reservation',
-        storeId: 'PEONGHWA-01', // 필요시 변경 가능
-        customerPhone: '010-0000-0000', // 필요시 입력받은 값으로 변경 가능
+        storeId: 'PEONGHWA-01', 
+        customerPhone: '010-0000-0000', 
         adContent: content,
         adDate: date,
         adTime: time
     };
 
-    // 배포한 구글 앱스크립트 웹앱 URL을 여기에 입력하세요
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxHOqZOnV6aY_XEsrkhAssV28-2jCuaX-y1QM0lltG6KGROd3_1bJtRpXIxvPNY7ah0jw/exec';
+    // 구글 앱스크립트 웹앱 URL을 정확하게 넣어두었습니다!
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby6B7gZiNNFqnBvF909WuFMSpRbqKYJY5lRhi-3XMWFQZFDVVKL2sHFsdUptBipFXathg/exec';
 
     fetch(scriptURL, {
         method: 'POST',
-        mode: 'no-cors', // 크로스 도메인 이슈 방지용 (필요시 조정)
+        mode: 'no-cors', 
         headers: {
             'Content-Type': 'application/json',
         },
