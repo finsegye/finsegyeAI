@@ -154,6 +154,28 @@
 
 <div class="top-spacer"></div>
 
+
+
+
+<div class="ad-reservation-box" style="padding: 20px; border: 1px solid #ccc; margin: 20px 0;">
+    <h3>광고 예약 및 등록</h3>
+    <label>광고 내용:</label><br>
+    <textarea id="adContent" rows="4" style="width: 100%; margin-bottom: 10px;" placeholder="광고 내용을 입력하세요"></textarea><br>
+
+    <label>날짜 선택:</label><br>
+    <input type="date" id="adDate" style="width: 100%; margin-bottom: 10px;"><br>
+
+    <label>시간 선택:</label><br>
+    <input type="time" id="adTime" style="width: 100%; margin-bottom: 20px;"><br>
+
+    <button onclick="submitAdReservation()" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">광고 등록하기</button>
+</div>
+
+
+
+
+    
+
 <section id="dashboard" style="display:block;">
     <div style="display: flex; gap: 4px; margin-bottom: 2px;">
         <div class="digital">행사자 자산<br><span id="advValue">50,000원</span></div>
@@ -967,6 +989,62 @@
 </div>
 
 <script>
+
+
+
+
+
+function submitAdReservation() {
+    const content = document.getElementById('adContent').value;
+    const date = document.getElementById('adDate').value;
+    const time = document.getElementById('adTime').value;
+
+    if (!content || !date || !time) {
+        alert("모든 항목을 입력해 주세요.");
+        return;
+    }
+
+    // 전송할 데이터 객체
+    const postData = {
+        action: 'create_reservation',
+        storeId: 'PEONGHWA-01', // 필요시 변경 가능
+        customerPhone: '010-0000-0000', // 필요시 입력받은 값으로 변경 가능
+        adContent: content,
+        adDate: date,
+        adTime: time
+    };
+
+    // 배포한 구글 앱스크립트 웹앱 URL을 여기에 입력하세요
+    const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
+
+    fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors', // 크로스 도메인 이슈 방지용 (필요시 조정)
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData)
+    })
+    .then(response => {
+        alert("광고 예약이 성공적으로 요청되었습니다!");
+        // 입력창 초기화
+        document.getElementById('adContent').value = '';
+        document.getElementById('adDate').value = '';
+        document.getElementById('adTime').value = '';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("오류가 발생했습니다.");
+    });
+}
+
+
+
+
+
+
+
+    
 
 async function askFinsegyeAI(question) {
 
