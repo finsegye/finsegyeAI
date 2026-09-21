@@ -3467,30 +3467,29 @@ function takePhoto() {
     }
 }
 
-    /* [대표님 요청 핵심] 루틴 창으로 갈 때 모든 입력을 비우고 커서만 활성화 */
-    function receiveOCRData(shopName, phone, rawData) {
+    /* Android 네이티브 OCR 결과를 행사루틴 입력란으로 전달 */
+    function receiveOCRData(shopName, phone, address) {
         closeCamera();
         showSection('routineForm', document.querySelectorAll('.nav button')[3]);
 
-        // 자동 입력된 문자를 모두 지우고placeholder만 보이게 함
         const shopInput = document.getElementById('rShopName');
         const phoneInput = document.getElementById('rShopPhone');
+        const addressInput = document.getElementById('rShopLoc');
 
-        shopInput.value = shopName
-        phoneInput.value = String(phone).trim();
+        if (shopInput) shopInput.value = String(shopName || '').trim();
+        if (phoneInput) phoneInput.value = String(phone || '').trim();
+        if (addressInput) addressInput.value = String(address || '').trim();
 
-document.getElementById("ocrConfirmBox").style.display = "block";
+        const confirmBox = document.getElementById('ocrConfirmBox');
+        if (confirmBox) confirmBox.style.display = 'block';
 
-speak("촬영 결과가 입력되었습니다. 내용이 맞으면 확인 버튼을 누르고, 틀리면 다시 촬영을 눌러 주세요.");
+        speak('촬영 결과가 입력되었습니다. 내용이 맞으면 확인 버튼을 누르고, 틀리면 다시 촬영을 눌러 주세요.');
 
-
-        // "간판명을 입력해 주세요" 음성 안내
-        // speak("간판명을 입력해 주세요.");
-
-        // 즉시 커서 깜빡임(Focus)
         setTimeout(() => {
-            shopInput.focus();
-            shopInput.click();
+            if (shopInput) {
+                shopInput.focus();
+                shopInput.click();
+            }
         }, 300);
     }
 
