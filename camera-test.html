@@ -30,9 +30,6 @@ body { background-color: #000 !important; color: white; margin: 0; padding: 0; f
 .video-button { background:#920070; }
 .event-media-status { color:#bbb; font-size:.85em; margin:4px 0 10px; }
 .event-media-preview { min-height:80px; padding:10px; background:#080808; border:2px solid #00ffcc; border-radius:12px; overflow:hidden; }
-.photo-voice-overlay { position:absolute; left:10px; right:10px; bottom:10px; padding:10px; border-radius:12px; background:rgba(0,0,0,.72); color:#fff; text-align:center; z-index:4; }
-.photo-voice-overlay button { width:100%; padding:10px; border:0; border-radius:9px; background:#b91532; color:#fff; font-weight:800; }
-.photo-voice-overlay progress { width:100%; height:10px; margin:7px 0; accent-color:#ff3355; }
 .event-media-item { position:relative; }
 .event-media-preview img,.event-media-preview video { width:100%; display:block; border-radius:9px; margin-bottom:10px; }
 .event-media-item { position:relative; margin-bottom:12px; }
@@ -427,7 +424,8 @@ body { background-color: #000 !important; color: white; margin: 0; padding: 0; f
             <div class="event-media-actions">
                 <button type="button" onclick="openMediaSamples('image')">핀세계 샘플</button>
                 <label>내 사진 선택<input type="file" id="adImageFile" accept="image/*" onchange="uploadEventMedia('image','adImageFile')"></label>
-                <button type="button" class="camera-open-button" onclick="openEventCamera('image')">📷 지금 촬영</button>
+                <button type="button" class="camera-open-button" onclick="openNativeEventPhotoCamera()">📷 지금 촬영</button>
+                <input type="file" id="adImageCapture" accept="image/*" capture="environment" hidden onchange="handleNativeEventPhotoCapture(this)">
             </div>
         </div>
         <div class="event-media-section">
@@ -5580,6 +5578,19 @@ function openNativeEventVideoCamera() {
     input.click();
 }
 
+function openNativeEventPhotoCamera() {
+    const input = document.getElementById("adImageCapture");
+    if (!input) return;
+    input.value = "";
+    input.click();
+}
+
+async function handleNativeEventPhotoCapture(input) {
+    const file = input && input.files && input.files[0];
+    if (!file) return;
+    await processEventMediaFile("image", file);
+}
+
 async function handleNativeEventVideoCapture(input) {
     const file = input && input.files && input.files[0];
     if (!file) return;
@@ -6789,7 +6800,7 @@ console.log("🔥 Firebase 연결 완료");
 
     
 <!-- FINSEGYE CAMERA STANDALONE TEST -->
-<script src="media-audio-session.js?v=13"></script>
-<script src="photo-voice-native.js?v=13"></script>
+<script src="media-audio-session.js?v=14"></script>
+<script src="photo-voice-native.js?v=14"></script>
 </body>
 </html>
