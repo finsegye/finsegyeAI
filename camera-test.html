@@ -5590,11 +5590,24 @@ async function openEventCamera(mode) {
     shutter.classList.remove("recording");
     document.body.style.overflow = "hidden";
     try {
+        if (eventCameraMode === "video" && window.Android && typeof Android.pauseVoiceForMedia === "function") {
+            Android.pauseVoiceForMedia();
+            await new Promise(resolve => setTimeout(resolve, 350));
+        }
         if (eventCameraStream) eventCameraStream.getTracks().forEach(track => track.stop());
-        eventCameraStream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: { ideal: eventCameraFacing } },
-            audio: eventCameraMode === "video"
-        });
+        try {
+            eventCameraStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: { ideal: eventCameraFacing } },
+                audio: eventCameraMode === "video"
+            });
+        } catch (mediaError) {
+            if (eventCameraMode !== "video") throw mediaError;
+            eventCameraStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: { ideal: eventCameraFacing } },
+                audio: false
+            });
+            label.textContent = "동영상 촬영 · 마이크 없이 촬영됩니다";
+        }
         document.getElementById("eventCameraVideo").srcObject = eventCameraStream;
     } catch (error) {
         closeEventCamera();
@@ -5612,6 +5625,9 @@ function closeEventCamera() {
     document.getElementById("eventCameraVideo").srcObject = null;
     document.getElementById("eventCameraOverlay").hidden = true;
     document.body.style.overflow = "";
+    if (eventCameraMode === "video" && window.Android && typeof Android.resumeVoiceAfterMedia === "function") {
+        setTimeout(() => Android.resumeVoiceAfterMedia(), 500);
+    }
 }
 
 async function switchEventCamera() {
@@ -6383,7 +6399,7 @@ function deleteAdCard(id) {
   global.openMediaSamples = function (kind) {
     const items = mediaSamples[kind] || [];
     overlay(kind === 'image' ? '핀세계 사진 샘플' : '핀세계 동영상 샘플', items.map((item, i) => {
-      const media = kind === 'image' ? `<img src="${item.src}" alt="${item.title}">` : `<video src="${item.src}" controls playsinline></video>`;
+      const media = kind === 'image' ? `<img src="${item.src}" alt="${item.title}">` : `<video src="${item.src}" controls playsinline preload="metadata" onended="this.pause();this.currentTime=0;this.load();"></video>`;
       return `<div class="sample-card">${media}<strong>${item.title}</strong><button type="button" class="choice-done" onclick="selectMediaSample('${kind}',${i})">이 샘플 사용</button></div>`;
     }).join(''));
   };
@@ -6396,7 +6412,16 @@ function deleteAdCard(id) {
     if (old) old.remove();
     const media = document.createElement(kind === 'image' ? 'img' : 'video');
     media.src = item.src;
-    if (kind === 'video') { media.controls = true; media.playsInline = true; }
+    if (kind === 'video') {
+      media.controls = true;
+      media.playsInline = true;
+      media.preload = 'metadata';
+      media.addEventListener('ended', function () {
+        this.pause();
+        this.currentTime = 0;
+        this.load();
+      });
+    }
     preview.appendChild(media);
     document.getElementById('eventMediaStatus').textContent = item.title + ' 샘플을 선택했습니다.';
     global.closeEventChoice();
