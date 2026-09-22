@@ -30,9 +30,10 @@ body { background-color: #000 !important; color: white; margin: 0; padding: 0; f
 .video-button { background:#920070; }
 .event-media-status { color:#bbb; font-size:.85em; margin:4px 0 10px; }
 .event-media-preview { min-height:80px; padding:10px; background:#080808; border:2px solid #00ffcc; border-radius:12px; overflow:hidden; }
-.photo-audio-progress { margin-top:8px; color:#fff; font-weight:700; text-align:center; }
-.photo-audio-progress progress { width:100%; height:14px; accent-color:#ff3355; }
-.photo-audio-stop { margin-top:8px; width:100%; padding:12px; border:0; border-radius:10px; background:#b91532; color:#fff; font-weight:800; }
+.photo-voice-overlay { position:absolute; left:10px; right:10px; bottom:10px; padding:10px; border-radius:12px; background:rgba(0,0,0,.72); color:#fff; text-align:center; z-index:4; }
+.photo-voice-overlay button { width:100%; padding:10px; border:0; border-radius:9px; background:#b91532; color:#fff; font-weight:800; }
+.photo-voice-overlay progress { width:100%; height:10px; margin:7px 0; accent-color:#ff3355; }
+.event-media-item { position:relative; }
 .event-media-preview img,.event-media-preview video { width:100%; display:block; border-radius:9px; margin-bottom:10px; }
 .event-media-item { position:relative; margin-bottom:12px; }
 .event-media-item img,.event-media-item video { margin-bottom:0; }
@@ -428,9 +429,6 @@ body { background-color: #000 !important; color: white; margin: 0; padding: 0; f
                 <label>내 사진 선택<input type="file" id="adImageFile" accept="image/*" onchange="uploadEventMedia('image','adImageFile')"></label>
                 <button type="button" class="camera-open-button" onclick="openEventCamera('image')">📷 지금 촬영</button>
             </div>
-            <button type="button" class="photo-audio-button" id="photoAudioButton" onclick="recordPhotoVoiceNote()">🎙️ 사진 설명 10초 녹음</button>
-            <div id="photoAudioProgress" class="photo-audio-progress">최대 10초 동안 녹음할 수 있습니다.<progress id="photoAudioProgressBar" max="10" value="0"></progress><div id="photoAudioElapsed">00:00 / 00:10</div></div>
-            <button type="button" class="photo-audio-stop" id="photoAudioStopButton" onclick="stopPhotoVoiceNote()" hidden>녹음 완료</button>
         </div>
         <div class="event-media-section">
             <div class="event-media-title">🎥 행사 동영상</div>
@@ -6791,7 +6789,7 @@ console.log("🔥 Firebase 연결 완료");
 
     
 <!-- FINSEGYE CAMERA STANDALONE TEST -->
-<script src="media-audio-session.js?v=12"></script>
-<script src="photo-voice-native.js?v=12"></script>
+<script src="media-audio-session.js?v=13"></script>
+<script src="photo-voice-native.js?v=13"></script>
 </body>
 </html>
