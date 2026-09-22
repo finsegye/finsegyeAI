@@ -65,6 +65,15 @@ body { background-color: #000 !important; color: white; margin: 0; padding: 0; f
 @media (max-width:480px) { .event-grid-two { grid-template-columns:1fr; } }
 @media (max-width:480px) { .event-media-actions,.choice-grid { grid-template-columns:1fr; } }
 .time-choice-grid { grid-template-columns:repeat(4,1fr) !important; max-height:60vh; overflow:auto; }
+.calendar-head { display:grid; grid-template-columns:54px 1fr 54px; gap:8px; align-items:center; margin-bottom:12px; }
+.calendar-head button { min-height:46px; border:1px solid #00ffcc; border-radius:9px; background:#133b34; color:#fff; font-size:22px; }
+.calendar-title { color:gold; text-align:center; font-size:21px; font-weight:800; }
+.calendar-week,.calendar-days { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }
+.calendar-week span { padding:6px 0; color:#aaa; text-align:center; font-weight:700; }
+.calendar-days button { min-height:48px; padding:4px; border:1px solid #555; border-radius:8px; background:#202020; color:#fff; font-size:16px; }
+.calendar-days button.today { border:2px solid #00ffcc; }
+.calendar-days button.selected { background:gold; color:#000; border-color:gold; }
+.calendar-days .calendar-empty { min-height:48px; }
         #stars {
     position: fixed;
     top: 0;
@@ -357,11 +366,13 @@ body { background-color: #000 !important; color: white; margin: 0; padding: 0; f
         <div class="event-grid-two">
             <div class="input-group">
                 <label for="eventStartDate">시작 날짜</label>
-                <input type="date" id="eventStartDate" onclick="this.showPicker && this.showPicker()" oninput="finishEventDatePicker(this)" onchange="finishEventDatePicker(this)">
+                <button type="button" id="eventStartDateDisplay" class="digital-picker" onclick="openDatePicker('eventStartDate')">날짜 선택 ▾</button>
+                <input type="hidden" id="eventStartDate">
             </div>
             <div class="input-group">
                 <label for="eventEndDate">종료 날짜</label>
-                <input type="date" id="eventEndDate" onclick="this.showPicker && this.showPicker()" oninput="finishEventDatePicker(this)" onchange="finishEventDatePicker(this)">
+                <button type="button" id="eventEndDateDisplay" class="digital-picker" onclick="openDatePicker('eventEndDate')">날짜 선택 ▾</button>
+                <input type="hidden" id="eventEndDate">
             </div>
             <div class="input-group">
                 <label>시작 시간</label>
@@ -384,7 +395,7 @@ body { background-color: #000 !important; color: white; margin: 0; padding: 0; f
         </div>
 
         <div class="input-group">
-            <label for="eventAdRange">광고 지역 (500m에서부터 해외)</label>
+            <label for="eventAdRange">광고 지역 ( 반경 500m ~ 해외 )</label>
             <select id="eventAdRange">
                 <option value="">광고 지역을 선택해 주세요</option>
                 <option value="반경 500m">반경 500m 광고</option>
@@ -5603,11 +5614,16 @@ async function openEventCamera(mode) {
     const overlay = document.getElementById("eventCameraOverlay");
     const label = document.getElementById("eventCameraLabel");
     const shutter = document.getElementById("eventCameraShutter");
-    overlay.hidden = false;
-    label.textContent = eventCameraMode === "image" ? "사진 촬영" : "동영상 촬영 · 흰 버튼을 눌러 시작";
+    const cameraVideo = document.getElementById("eventCameraVideo");
+    overlay.hidden = true;
+    cameraVideo.style.visibility = "hidden";
+    cameraVideo.controls = false;
+    cameraVideo.disablePictureInPicture = true;
+    label.textContent = "카메라 준비 중…";
     shutter.classList.remove("recording");
     document.body.style.overflow = "hidden";
     try {
+        let silentVideo = false;
         if (eventCameraMode === "video" && window.Android && typeof Android.pauseVoiceForMedia === "function") {
             Android.pauseVoiceForMedia();
             await new Promise(resolve => setTimeout(resolve, 350));
@@ -5624,9 +5640,21 @@ async function openEventCamera(mode) {
                 video: { facingMode: { ideal: eventCameraFacing } },
                 audio: false
             });
-            label.textContent = "동영상 촬영 · 마이크 없이 촬영됩니다";
+            silentVideo = true;
         }
-        document.getElementById("eventCameraVideo").srcObject = eventCameraStream;
+        cameraVideo.srcObject = eventCameraStream;
+        await new Promise(resolve => {
+            if (cameraVideo.readyState >= 2) return resolve();
+            const done = () => { cameraVideo.removeEventListener("loadedmetadata", done); resolve(); };
+            cameraVideo.addEventListener("loadedmetadata", done);
+            setTimeout(done, 1500);
+        });
+        await cameraVideo.play();
+        label.textContent = eventCameraMode === "image"
+            ? "사진 촬영"
+            : (silentVideo ? "동영상 촬영 · 마이크 없이 촬영됩니다" : "동영상 촬영 · 흰 버튼을 눌러 시작");
+        cameraVideo.style.visibility = "visible";
+        overlay.hidden = false;
     } catch (error) {
         closeEventCamera();
         const reason = error && error.name === "NotAllowedError"
@@ -5640,7 +5668,12 @@ function closeEventCamera() {
     if (eventMediaRecorder && eventMediaRecorder.state === "recording") eventMediaRecorder.stop();
     if (eventCameraStream) eventCameraStream.getTracks().forEach(track => track.stop());
     eventCameraStream = null;
-    document.getElementById("eventCameraVideo").srcObject = null;
+    const cameraVideo = document.getElementById("eventCameraVideo");
+    cameraVideo.pause();
+    cameraVideo.srcObject = null;
+    cameraVideo.controls = false;
+    cameraVideo.style.visibility = "hidden";
+    cameraVideo.load();
     document.getElementById("eventCameraOverlay").hidden = true;
     document.body.style.overflow = "";
     if (eventCameraMode === "video" && window.Android && typeof Android.resumeVoiceAfterMedia === "function") {
@@ -6381,9 +6414,17 @@ function deleteAdCard(id) {
   global.openMediaSamples = function (kind) {
     const items = mediaSamples[kind] || [];
     overlay(kind === 'image' ? '핀세계 사진 샘플' : '핀세계 동영상 샘플', items.map((item, i) => {
-      const media = kind === 'image' ? `<img src="${item.src}" alt="${item.title}">` : `<video src="${item.src}" controls playsinline preload="metadata" onended="this.pause();this.currentTime=0;this.load();"></video>`;
+      const media = kind === 'image' ? `<img src="${item.src}" alt="${item.title}">` : `<video src="${item.src}" autoplay loop muted playsinline preload="auto" disablepictureinpicture></video>`;
       return `<div class="sample-card">${media}<strong>${item.title}</strong><button type="button" class="choice-done" onclick="selectMediaSample('${kind}',${i})">이 샘플 사용</button></div>`;
     }).join(''));
+    if (kind === 'video') {
+      document.querySelectorAll('#eventChoiceBody video').forEach(video => {
+        video.controls = false;
+        video.muted = true;
+        video.loop = true;
+        video.play().catch(() => {});
+      });
+    }
   };
   global.selectMediaSample = function (kind, index) {
     const item = (mediaSamples[kind] || [])[index];
@@ -6403,12 +6444,50 @@ function deleteAdCard(id) {
     global.closeEventChoice();
   };
 
-  global.finishEventDatePicker = function (input) {
-    if (!input || !input.value) return;
-    window.setTimeout(() => {
-      input.blur();
-      document.body.focus();
-    }, 0);
+  let eventCalendarField = '';
+  let eventCalendarMonth = new Date();
+  function eventDateValue(date) {
+    return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2,'0') + '-' + String(date.getDate()).padStart(2,'0');
+  }
+  global.openDatePicker = function (fieldId) {
+    eventCalendarField = fieldId;
+    const saved = document.getElementById(fieldId).value;
+    const initial = saved ? new Date(saved + 'T00:00:00') : new Date();
+    eventCalendarMonth = new Date(initial.getFullYear(), initial.getMonth(), 1);
+    overlay(fieldId === 'eventStartDate' ? '시작 날짜 선택' : '종료 날짜 선택', '<div id="eventCalendarBody"></div>');
+    global.renderEventCalendar();
+  };
+  global.moveEventCalendar = function (offset) {
+    eventCalendarMonth = new Date(eventCalendarMonth.getFullYear(), eventCalendarMonth.getMonth() + offset, 1);
+    global.renderEventCalendar();
+  };
+  global.renderEventCalendar = function () {
+    const body = document.getElementById('eventCalendarBody');
+    if (!body) return;
+    const year = eventCalendarMonth.getFullYear();
+    const month = eventCalendarMonth.getMonth();
+    const firstDay = new Date(year, month, 1).getDay();
+    const lastDate = new Date(year, month + 1, 0).getDate();
+    const selected = document.getElementById(eventCalendarField).value;
+    const today = eventDateValue(new Date());
+    let days = '';
+    for (let i = 0; i < firstDay; i += 1) days += '<span class="calendar-empty"></span>';
+    for (let day = 1; day <= lastDate; day += 1) {
+      const value = eventDateValue(new Date(year, month, day));
+      const classes = [value === today ? 'today' : '', value === selected ? 'selected' : ''].filter(Boolean).join(' ');
+      days += `<button type="button" class="${classes}" onclick="selectEventDate('${value}')">${day}</button>`;
+    }
+    body.innerHTML = `
+      <div class="calendar-head"><button type="button" onclick="moveEventCalendar(-1)">‹</button><div class="calendar-title">${year}년 ${month + 1}월</div><button type="button" onclick="moveEventCalendar(1)">›</button></div>
+      <div class="calendar-week"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+      <div class="calendar-days">${days}</div>`;
+  };
+  global.selectEventDate = function (value) {
+    const input = document.getElementById(eventCalendarField);
+    const display = document.getElementById(eventCalendarField + 'Display');
+    input.value = value;
+    display.textContent = value.replaceAll('-', '.') + ' ▾';
+    global.closeEventChoice();
   };
 
   global.openTimePicker = function (fieldId) {
