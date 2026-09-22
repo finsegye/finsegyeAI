@@ -33,6 +33,8 @@ body { background-color: #000 !important; color: white; margin: 0; padding: 0; f
 .event-media-preview img,.event-media-preview video { width:100%; display:block; border-radius:9px; margin-bottom:10px; }
 .event-media-item { position:relative; margin-bottom:12px; }
 .event-media-item img,.event-media-item video { margin-bottom:0; }
+.event-video-play { position:absolute; left:50%; top:50%; z-index:4; transform:translate(-50%,-50%); width:68px; height:68px; padding:0 0 2px 5px; border:3px solid #fff; border-radius:50%; background:rgba(0,0,0,.68); color:#fff; font-size:34px; line-height:60px; box-shadow:0 3px 14px rgba(0,0,0,.8); }
+.event-video-play[hidden] { display:none; }
 .event-media-delete { position:absolute; top:8px; right:8px; z-index:5; width:42px; height:42px; padding:0; border:2px solid #fff; border-radius:50%; background:#e60023; color:#fff; font-size:25px; font-weight:900; line-height:36px; box-shadow:0 2px 10px rgba(0,0,0,.8); }
 .event-helper-button,.digital-picker { width:100%; margin-top:8px; min-height:46px; border:1px solid #00ffcc; border-radius:9px; background:#10231f; color:#00ffcc; font-size:16px; font-weight:700; }
 .region-picker-input { background:#3a3a3a !important; color:#fff !important; border-color:#777 !important; cursor:pointer; }
@@ -5568,14 +5570,46 @@ function renderEventMediaPreview(kind, source) {
     const media = document.createElement(isImage ? "img" : "video");
     media.src = source;
     if (!isImage) {
-        media.controls = true;
+        media.controls = false;
         media.playsInline = true;
-        media.preload = "metadata";
+        media.preload = "auto";
+        media.muted = false;
+        media.disablePictureInPicture = true;
+        const playButton = document.createElement("button");
+        playButton.type = "button";
+        playButton.className = "event-video-play";
+        playButton.textContent = "▶";
+        playButton.setAttribute("aria-label", "촬영한 동영상 재생");
+        const showFirstFrame = () => {
+            media.pause();
+            if (Number.isFinite(media.duration) && media.duration > 0.12) media.currentTime = 0.1;
+            playButton.hidden = false;
+        };
+        media.addEventListener("loadedmetadata", showFirstFrame, {once:true});
+        playButton.onclick = async () => {
+            try {
+                playButton.hidden = true;
+                await media.play();
+            } catch (error) {
+                playButton.hidden = false;
+            }
+        };
+        media.addEventListener("click", () => {
+            if (media.paused) playButton.click();
+            else {
+                media.pause();
+                playButton.hidden = false;
+            }
+        });
         media.addEventListener("ended", function () {
             this.pause();
-            this.currentTime = 0;
-            this.load();
+            this.currentTime = this.duration > 0.12 ? 0.1 : 0;
+            playButton.hidden = false;
         });
+        item.appendChild(media);
+        item.appendChild(playButton);
+    } else {
+        item.appendChild(media);
     }
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
@@ -5583,7 +5617,6 @@ function renderEventMediaPreview(kind, source) {
     deleteButton.textContent = "×";
     deleteButton.setAttribute("aria-label", isImage ? "사진 삭제" : "동영상 삭제");
     deleteButton.onclick = () => removeEventMedia(kind);
-    item.appendChild(media);
     item.appendChild(deleteButton);
     preview.appendChild(item);
 }
@@ -5623,24 +5656,21 @@ async function openEventCamera(mode) {
     shutter.classList.remove("recording");
     document.body.style.overflow = "hidden";
     try {
-        let silentVideo = false;
         if (eventCameraMode === "video" && window.Android && typeof Android.pauseVoiceForMedia === "function") {
             Android.pauseVoiceForMedia();
-            await new Promise(resolve => setTimeout(resolve, 350));
+            await new Promise(resolve => setTimeout(resolve, 600));
         }
         if (eventCameraStream) eventCameraStream.getTracks().forEach(track => track.stop());
-        try {
-            eventCameraStream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: { ideal: eventCameraFacing } },
-                audio: eventCameraMode === "video"
-            });
-        } catch (mediaError) {
-            if (eventCameraMode !== "video") throw mediaError;
-            eventCameraStream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: { ideal: eventCameraFacing } },
-                audio: false
-            });
-            silentVideo = true;
+        eventCameraStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: eventCameraFacing } },
+            audio: eventCameraMode === "video"
+                ? { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+                : false
+        });
+        if (eventCameraMode === "video" && eventCameraStream.getAudioTracks().length === 0) {
+            eventCameraStream.getTracks().forEach(track => track.stop());
+            eventCameraStream = null;
+            throw new DOMException("마이크 음성 트랙이 연결되지 않았습니다.", "NotAllowedError");
         }
         cameraVideo.srcObject = eventCameraStream;
         await new Promise(resolve => {
@@ -5652,13 +5682,13 @@ async function openEventCamera(mode) {
         await cameraVideo.play();
         label.textContent = eventCameraMode === "image"
             ? "사진 촬영"
-            : (silentVideo ? "동영상 촬영 · 마이크 없이 촬영됩니다" : "동영상 촬영 · 흰 버튼을 눌러 시작");
+            : "동영상 촬영 · 음성 녹음 중 · 흰 버튼을 눌러 시작";
         cameraVideo.style.visibility = "visible";
         overlay.hidden = false;
     } catch (error) {
         closeEventCamera();
         const reason = error && error.name === "NotAllowedError"
-            ? "브라우저 주소창의 카메라 권한을 '허용'으로 바꾼 뒤 다시 눌러 주세요."
+            ? "휴대폰 설정에서 핀세계 앱의 카메라와 마이크 권한을 모두 '허용'한 뒤 다시 눌러 주세요."
             : "연결된 카메라를 확인한 뒤 다시 눌러 주세요.";
         alert("카메라를 열 수 없습니다. " + reason);
     }
