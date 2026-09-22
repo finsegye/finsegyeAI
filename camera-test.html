@@ -5658,14 +5658,12 @@ async function openEventCamera(mode) {
     try {
         if (eventCameraMode === "video" && window.Android && typeof Android.pauseVoiceForMedia === "function") {
             Android.pauseVoiceForMedia();
-            await new Promise(resolve => setTimeout(resolve, 600));
+            await new Promise(resolve => setTimeout(resolve, 1400));
         }
         if (eventCameraStream) eventCameraStream.getTracks().forEach(track => track.stop());
         eventCameraStream = await navigator.mediaDevices.getUserMedia({
             video: { facingMode: { ideal: eventCameraFacing } },
             audio: eventCameraMode === "video"
-                ? { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
-                : false
         });
         if (eventCameraMode === "video" && eventCameraStream.getAudioTracks().length === 0) {
             eventCameraStream.getTracks().forEach(track => track.stop());
