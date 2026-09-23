@@ -43,6 +43,7 @@ body { background-color: #000 !important; color: white; margin: 0; padding: 0; f
 .region-picker-input { background:#3a3a3a !important; color:#fff !important; border-color:#777 !important; cursor:pointer; }
 .region-picker-input::placeholder { color:#d5d5d5; opacity:1; }
 .digital-picker { background:#050505; color:#fff; border:2px solid gold; font-size:18px; }
+.digital-picker.selected { background:gold; color:#000; border-color:gold; box-shadow:0 0 0 2px rgba(255,215,0,.22); }
 .picker-summary { margin-top:7px; color:#00ffcc; font-size:.88em; }
 .event-media-section { margin-top:12px; padding:12px; background:#101010; border:1px solid #444; border-radius:12px; }
 .event-media-title { color:gold; font-weight:800; margin-bottom:9px; }
@@ -6684,12 +6685,12 @@ function deleteAdCard(id) {
     const monthDays = Array.from({length:31}, (_,i)=>i+1);
     overlay('디지털 반복 주기 선택', `
       <div class="choice-grid">
-        <button type="button" onclick="setRepeatMode('none')">반복 없음</button>
-        <button type="button" onclick="setRepeatMode('weekly')">매주 반복</button>
-        <button type="button" onclick="setRepeatMode('monthly')">매월 반복</button>
+        <button type="button" data-repeat-mode="none" onclick="setRepeatMode('none')">반복 없음</button>
+        <button type="button" data-repeat-mode="weekly" onclick="setRepeatMode('weekly')">매주 반복</button>
+        <button type="button" data-repeat-mode="monthly" onclick="setRepeatMode('monthly')">매월 반복</button>
       </div>
-      <div id="repeatWeekPanel" hidden><h3>요일 선택</h3><div class="choice-grid">${weekdays.map(day=>`<button type="button" data-weekday="${day}" onclick="toggleWeekdayButton(this,'${day}')">${day}요일</button>`).join('')}</div></div>
-      <div id="repeatMonthPanel" hidden><h3>매월 날짜 선택</h3><div class="choice-grid">${monthDays.map(day=>`<button type="button" data-monthday="${day}" onclick="selectMonthDayAndClose(${day})">${day}일</button>`).join('')}</div></div>`);
+      <div id="repeatWeekPanel" hidden><h3>요일 선택</h3><div class="choice-grid">${weekdays.map(day=>`<button type="button" data-weekday="${day}" onclick="toggleWeekdayButton(this,'${day}')">${day}요일</button>`).join('')}</div><div id="repeatWeekSelectionSummary" class="picker-summary">요일을 여러 개 선택할 수 있습니다.</div><button type="button" class="choice-done" onclick="finishRepeatPicker()">선택 완료</button></div>
+      <div id="repeatMonthPanel" hidden><h3>매월 날짜 선택</h3><div class="choice-grid">${monthDays.map(day=>`<button type="button" data-monthday="${day}" onclick="toggleMonthDay(this,${day})">${day}일</button>`).join('')}</div><div id="repeatMonthSelectionSummary" class="picker-summary">날짜를 여러 개 선택할 수 있습니다.</div><button type="button" class="choice-done" onclick="finishRepeatPicker()">선택 완료</button></div>`);
     global.setRepeatMode(document.getElementById('eventRepeat').value || 'none', true);
     document.querySelectorAll('input[name="eventWeekday"]').forEach(input => {
       document.querySelector(`[data-weekday="${input.value}"]`)?.classList.add('selected');
@@ -6697,21 +6698,33 @@ function deleteAdCard(id) {
     (document.getElementById('eventMonthDays').value || '').split(',').filter(Boolean).forEach(day => {
       document.querySelector(`[data-monthday="${day}"]`)?.classList.add('selected');
     });
+    global.updateRepeatPickerSelectionSummary?.();
   };
   global.setRepeatMode = function (mode, keepOpen) {
     if (mode !== 'none') global.useContinuousEventDates?.();
     document.getElementById('eventRepeat').value = mode;
     const weekPanel = document.getElementById('repeatWeekPanel');
     const monthPanel = document.getElementById('repeatMonthPanel');
+    document.querySelectorAll('[data-repeat-mode]').forEach(button => button.classList.toggle('selected', button.dataset.repeatMode === mode));
     if (weekPanel) weekPanel.hidden = mode !== 'weekly';
     if (monthPanel) monthPanel.hidden = mode !== 'monthly';
+    if (mode === 'weekly') {
+      document.getElementById('eventMonthDays').value = '';
+      document.querySelectorAll('[data-monthday].selected').forEach(button=>button.classList.remove('selected'));
+    }
+    if (mode === 'monthly') {
+      document.querySelectorAll('input[name="eventWeekday"]').forEach(el=>el.remove());
+      document.querySelectorAll('[data-weekday].selected').forEach(button=>button.classList.remove('selected'));
+    }
     if (mode === 'none') {
       document.querySelectorAll('input[name="eventWeekday"]').forEach(el=>el.remove());
       document.getElementById('eventMonthDays').value = '';
+      document.querySelectorAll('[data-weekday].selected,[data-monthday].selected').forEach(button=>button.classList.remove('selected'));
       document.getElementById('selectedRepeatSummary').textContent = '반복하지 않습니다.';
       document.getElementById('eventRepeatDisplay').textContent = '반복 없음 ▾';
       if (!keepOpen) global.closeEventChoice();
     }
+    global.updateRepeatPickerSelectionSummary?.();
   };
   global.toggleWeekdayButton = function (button, day) {
     button.classList.toggle('selected');
@@ -6719,27 +6732,21 @@ function deleteAdCard(id) {
     if (button.classList.contains('selected')) {
       if (!input) { input = document.createElement('input'); input.type='hidden'; input.name='eventWeekday'; input.value=day; document.getElementById('adApplyForm').appendChild(input); }
     } else if (input) input.remove();
-    const days = Array.from(document.querySelectorAll('input[name="eventWeekday"]')).map(el=>el.value);
-    if (days.length) {
-      const summary = '매주 ' + days.join('·') + '요일 반복';
-      document.getElementById('selectedRepeatSummary').textContent = summary;
-      document.getElementById('eventRepeatDisplay').textContent = summary + ' ▾';
-      global.closeEventChoice();
-    }
+    global.updateRepeatPickerSelectionSummary();
   };
   global.toggleMonthDay = function (button, day) {
     button.classList.toggle('selected');
     const selected = Array.from(document.querySelectorAll('[data-monthday].selected')).map(el=>Number(el.dataset.monthday)).sort((a,b)=>a-b);
     document.getElementById('eventMonthDays').value = selected.join(',');
+    global.updateRepeatPickerSelectionSummary();
   };
-  global.selectMonthDayAndClose = function (day) {
-    document.getElementById('eventRepeat').value = 'monthly';
-    document.getElementById('eventMonthDays').value = String(day);
-    document.querySelectorAll('input[name="eventWeekday"]').forEach(el=>el.remove());
-    const summary = '매월 ' + day + '일 반복';
-    document.getElementById('selectedRepeatSummary').textContent = summary;
-    document.getElementById('eventRepeatDisplay').textContent = summary + ' ▾';
-    global.closeEventChoice();
+  global.updateRepeatPickerSelectionSummary = function () {
+    const weekDays = Array.from(document.querySelectorAll('input[name="eventWeekday"]')).map(el=>el.value);
+    const monthDays = (document.getElementById('eventMonthDays')?.value || '').split(',').filter(Boolean);
+    const weekSummary = document.getElementById('repeatWeekSelectionSummary');
+    const monthSummary = document.getElementById('repeatMonthSelectionSummary');
+    if (weekSummary) weekSummary.textContent = weekDays.length ? `선택: ${weekDays.join(' · ')}요일` : '요일을 여러 개 선택할 수 있습니다.';
+    if (monthSummary) monthSummary.textContent = monthDays.length ? `선택: ${monthDays.join('일 · ')}일` : '날짜를 여러 개 선택할 수 있습니다.';
   };
   global.finishRepeatPicker = function () {
     const mode = document.getElementById('eventRepeat').value;
@@ -6752,7 +6759,7 @@ function deleteAdCard(id) {
     if (mode === 'monthly') {
       const days = document.getElementById('eventMonthDays').value;
       if (!days) { alert('반복할 날짜를 선택해 주세요.'); return; }
-      summary = '매월 ' + days.split(',').join('·') + '일 반복';
+      summary = '매월 ' + days.split(',').map(day=>day + '일').join('·') + ' 반복';
     }
     document.getElementById('selectedRepeatSummary').textContent = summary;
     document.getElementById('eventRepeatDisplay').textContent = summary + ' ▾';
@@ -6816,7 +6823,7 @@ function deleteAdCard(id) {
 
     
 <!-- FINSEGYE CAMERA STANDALONE TEST -->
-<script src="specific-event-dates.js?v=14.9"></script>
+<script src="specific-event-dates.js?v=14.9.1"></script>
 <script src="media-audio-session.js?v=14"></script>
 <script src="photo-voice-native.js?v=14"></script>
 </body>

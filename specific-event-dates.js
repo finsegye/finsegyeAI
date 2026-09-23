@@ -17,10 +17,15 @@
   }
   function renderSummary() {
     const dates = sortedDates();
+    const mode = byId('eventDateMode')?.value || 'range';
     const display = byId('eventSpecificDatesDisplay');
     const summary = byId('selectedSpecificDatesSummary');
     if (display) display.textContent = dates.length ? `특정 날짜 ${dates.length}개 선택 ▾` : '특정 날짜 여러 개 ▾';
-    if (summary) summary.textContent = dates.length ? dates.map(pretty).join(' · ') : '연속 기간 또는 원하는 날짜 여러 개를 선택할 수 있습니다.';
+    if (summary) {
+      summary.textContent = mode === 'specific' && dates.length
+        ? `특정 날짜를 선택하셨습니다: ${dates.map(pretty).join(' · ')}`
+        : '연속 기간을 선택하셨습니다.';
+    }
   }
   function setMode(mode) {
     const input = byId('eventDateMode');
