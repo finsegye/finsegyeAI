@@ -15,47 +15,38 @@
   function readSavedDates() {
     state.selected = new Set((byId('eventSpecificDates')?.value || '').split(',').map(v => v.trim()).filter(Boolean));
   }
+  function rangeEnabled() { return byId('eventRangeEnabled')?.value === 'true'; }
+  function currentMode() {
+    const hasRange = rangeEnabled();
+    const hasSpecific = sortedDates().length > 0;
+    if (hasRange && hasSpecific) return 'combined';
+    if (hasRange) return 'range';
+    if (hasSpecific) return 'specific';
+    return 'none';
+  }
   function renderSummary() {
     const dates = sortedDates();
-    const mode = byId('eventDateMode')?.value || 'range';
+    const mode = currentMode();
     const display = byId('eventSpecificDatesDisplay');
     const summary = byId('selectedSpecificDatesSummary');
-    if (display) display.textContent = dates.length ? `특정 날짜 ${dates.length}개 선택 ▾` : '특정 날짜 여러 개 ▾';
+    const start = byId('eventStartDate')?.value || '';
+    const end = byId('eventEndDate')?.value || '';
+    if (display) display.textContent = dates.length ? `특정 날짜 ${dates.length}개 선택 ▾` : '특정 날짜 추가 ▾';
     if (summary) {
-      summary.textContent = mode === 'specific' && dates.length
-        ? `특정 날짜를 선택하셨습니다: ${dates.map(pretty).join(' · ')}`
-        : '연속 기간을 선택하셨습니다.';
+      const parts = [];
+      if (rangeEnabled()) parts.push(start && end ? `연속 기간: ${pretty(start)}~${pretty(end)}` : '연속 기간: 시작 날짜와 종료 날짜를 선택해 주세요.');
+      if (dates.length) parts.push(`특정 날짜: ${dates.map(pretty).join(' · ')}`);
+      summary.textContent = parts.length ? parts.join(' / ') : '연속 기간과 특정 날짜를 각각 또는 함께 추가할 수 있습니다.';
     }
-  }
-  function setMode(mode) {
     const input = byId('eventDateMode');
     if (input) input.value = mode;
-    byId('eventContinuousDateButton')?.classList.toggle('selected', mode === 'range');
-    byId('eventSpecificDatesDisplay')?.classList.toggle('selected', mode === 'specific');
-  }
-  function clearRepeat() {
-    const repeat = byId('eventRepeat');
-    if (repeat) repeat.value = 'none';
-    const monthDays = byId('eventMonthDays');
-    if (monthDays) monthDays.value = '';
-    document.querySelectorAll('input[name="eventWeekday"]').forEach(el => el.remove());
-    const repeatDisplay = byId('eventRepeatDisplay');
-    if (repeatDisplay) repeatDisplay.textContent = '반복 없음 ▾';
-    const repeatSummary = byId('selectedRepeatSummary');
-    if (repeatSummary) repeatSummary.textContent = '특정 날짜 선택에서는 반복하지 않습니다.';
+    byId('eventContinuousDateButton')?.classList.toggle('selected', rangeEnabled());
+    byId('eventSpecificDatesDisplay')?.classList.toggle('selected', dates.length > 0);
   }
   function applyDates() {
     const dates = sortedDates();
     const hidden = byId('eventSpecificDates');
     if (hidden) hidden.value = dates.join(',');
-    if (dates.length) {
-      byId('eventStartDate').value = dates[0];
-      byId('eventEndDate').value = dates[dates.length - 1];
-      byId('eventStartDateDisplay').textContent = pretty(dates[0]) + ' ▾';
-      byId('eventEndDateDisplay').textContent = pretty(dates[dates.length - 1]) + ' ▾';
-      setMode('specific');
-      clearRepeat();
-    }
     renderSummary();
   }
   function renderCalendar() {
@@ -105,11 +96,21 @@
     applyDates();
     global.closeEventChoice?.();
   };
-  global.useContinuousEventDates = function () {
-    state.selected.clear();
-    const hidden = byId('eventSpecificDates');
-    if (hidden) hidden.value = '';
-    setMode('range');
+  global.activateContinuousEventDates = function () {
+    if (byId('eventRangeEnabled')) byId('eventRangeEnabled').value = 'true';
+    renderSummary();
+  };
+  global.useContinuousEventDates = global.activateContinuousEventDates;
+  global.toggleContinuousEventDates = function () {
+    const enabled = !rangeEnabled();
+    if (byId('eventRangeEnabled')) byId('eventRangeEnabled').value = String(enabled);
+    if (!enabled) {
+      ['eventStartDate', 'eventEndDate'].forEach(id => { if (byId(id)) byId(id).value = ''; });
+      if (byId('eventStartDateDisplay')) byId('eventStartDateDisplay').textContent = '날짜 선택 ▾';
+      if (byId('eventEndDateDisplay')) byId('eventEndDateDisplay').textContent = '날짜 선택 ▾';
+      byId('eventStartDateDisplay')?.classList.remove('selected');
+      byId('eventEndDateDisplay')?.classList.remove('selected');
+    }
     renderSummary();
   };
 
@@ -118,19 +119,24 @@
     title: '불규칙 특정 행사 날짜',
     collect() {
       return {
-        mode: byId('eventDateMode')?.value || 'range',
+        mode: currentMode(),
+        rangeEnabled: rangeEnabled(),
+        startDate: byId('eventStartDate')?.value || '',
+        endDate: byId('eventEndDate')?.value || '',
         dates: (byId('eventSpecificDates')?.value || '').split(',').filter(Boolean)
       };
     },
     validate() {
       const data = this.collect();
+      if (data.mode === 'none') return false;
+      if (data.rangeEnabled && (!data.startDate || !data.endDate)) return false;
       return data.mode !== 'specific' || data.dates.length > 0;
     },
     reset() {
       state.selected.clear();
-      if (byId('eventDateMode')) byId('eventDateMode').value = 'range';
+      if (byId('eventDateMode')) byId('eventDateMode').value = 'none';
+      if (byId('eventRangeEnabled')) byId('eventRangeEnabled').value = 'false';
       if (byId('eventSpecificDates')) byId('eventSpecificDates').value = '';
-      setMode('range');
       renderSummary();
     }
   });
@@ -140,7 +146,7 @@
     id: api.id,
     title: api.title,
     file: 'specific-event-dates.js',
-    exports: ['openSpecificEventDatePicker', 'useContinuousEventDates']
+    exports: ['openSpecificEventDatePicker', 'activateContinuousEventDates', 'toggleContinuousEventDates']
   });
   document.addEventListener('DOMContentLoaded', renderSummary, { once: true });
 })(window);

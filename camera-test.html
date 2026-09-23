@@ -380,36 +380,31 @@ body { background-color: #000 !important; color: white; margin: 0; padding: 0; f
                 <button type="button" id="eventEndDateDisplay" class="digital-picker" onclick="openDatePicker('eventEndDate')">날짜 선택 ▾</button>
                 <input type="hidden" id="eventEndDate">
             </div>
-            <div class="input-group">
-                <label>시작 시간</label>
-                <button type="button" id="eventStartTimeDisplay" class="digital-picker" onclick="openTimePicker('eventStartTime')">시간 선택 ▾</button>
-                <input type="hidden" id="eventStartTime">
-            </div>
-            <div class="input-group">
-                <label>종료 시간</label>
-                <button type="button" id="eventEndTimeDisplay" class="digital-picker" onclick="openTimePicker('eventEndTime')">시간 선택 ▾</button>
-                <input type="hidden" id="eventEndTime">
-            </div>
         </div>
 
         <div class="input-group event-panel">
             <label>행사 날짜 선택 방식</label>
             <div class="event-grid-two">
-                <button type="button" id="eventContinuousDateButton" class="digital-picker selected" onclick="useContinuousEventDates()">연속 기간 사용</button>
-                <button type="button" id="eventSpecificDatesDisplay" class="digital-picker" onclick="openSpecificEventDatePicker()">특정 날짜 여러 개 ▾</button>
+                <button type="button" id="eventContinuousDateButton" class="digital-picker" onclick="toggleContinuousEventDates()">연속 기간 추가</button>
+                <button type="button" id="eventSpecificDatesDisplay" class="digital-picker" onclick="openSpecificEventDatePicker()">특정 날짜 추가 ▾</button>
             </div>
-            <input type="hidden" id="eventDateMode" value="range">
+            <input type="hidden" id="eventDateMode" value="none">
+            <input type="hidden" id="eventRangeEnabled" value="false">
             <input type="hidden" id="eventSpecificDates">
-            <div id="selectedSpecificDatesSummary" class="picker-summary">연속 기간 또는 원하는 날짜 여러 개를 선택할 수 있습니다.</div>
+            <div id="selectedSpecificDatesSummary" class="picker-summary">연속 기간과 특정 날짜를 각각 또는 함께 추가할 수 있습니다.</div>
         </div>
 
-        <div class="input-group event-panel">
-            <label>반복 주기</label>
-            <button type="button" id="eventRepeatDisplay" class="digital-picker" onclick="openRepeatPicker()">반복 없음 ▾</button>
-            <input type="hidden" id="eventRepeat" value="none">
-            <input type="hidden" id="eventMonthDays">
-            <div id="selectedRepeatSummary" class="picker-summary">반복하지 않습니다.</div>
-        </div>
+        <input type="hidden" id="eventStartTime">
+        <input type="hidden" id="eventEndTime">
+        <input type="hidden" id="eventRepeat" value="">
+        <input type="hidden" id="eventMonthDays">
+        <input type="hidden" id="eventTimeSlots">
+        <input type="hidden" id="eventHolidayPolicy">
+        <input type="hidden" id="eventHolidayTimeSlots">
+        <input type="hidden" id="eventDateTimeOverrides">
+        <input type="hidden" id="eventSchedulePlan">
+        <div id="eventSchedulePlannerRoot"></div>
+        <div id="eventDateOverridesRoot"></div>
 
         <div class="input-group">
             <label for="eventAdRange">광고 지역 ( 반경 500m ~ 해외 )</label>
@@ -2063,6 +2058,8 @@ function resetAllForms() {
     document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
 
     window.FinsegyeSpecificEventDates?.reset();
+    window.FinsegyeDateTimeOverrides?.reset();
+    window.FinsegyeEventSchedulePlanner?.reset();
 }
 
 // 🔥🔥🔥 바로 여기 아래 추가 🔥🔥🔥
@@ -2280,10 +2277,6 @@ const currentProvince =
         {id:'shopType', n:'업종'},
         {id:'shopLoc', n:'지역'},
         {id:'shopAd', n:'행사 내용'},
-        {id:'eventStartDate', n:'시작 날짜'},
-        {id:'eventEndDate', n:'종료 날짜'},
-        {id:'eventStartTime', n:'시작 시간'},
-        {id:'eventEndTime', n:'종료 시간'},
         {id:'eventAdRange', n:'광고 지역'}
     ];
 
@@ -2300,28 +2293,9 @@ const currentProvince =
         }
     }
 
-    const startStamp = new Date(document.getElementById('eventStartDate').value + 'T' + document.getElementById('eventStartTime').value);
-    const endStamp = new Date(document.getElementById('eventEndDate').value + 'T' + document.getElementById('eventEndTime').value);
-    if (endStamp < startStamp) {
-        alert('종료 날짜와 시간은 시작 날짜와 시간보다 뒤여야 합니다.');
-        document.getElementById('eventEndDate').focus();
-        return;
-    }
-
-    const repeatCycle = document.getElementById('eventRepeat').value;
-    const repeatWeekdays = Array.from(document.querySelectorAll('input[name="eventWeekday"]'));
-    if (repeatCycle === 'weekly' && repeatWeekdays.length === 0) {
-        alert('매주 반복할 요일을 하나 이상 선택해 주세요.');
-        return;
-    }
-    if (repeatCycle === 'monthly' && !document.getElementById('eventMonthDays').value.trim()) {
-        alert('매월 반복할 날짜를 입력해 주세요.');
-        document.getElementById('eventMonthDays').focus();
-        return;
-    }
-
-    if (window.FinsegyeSpecificEventDates && !window.FinsegyeSpecificEventDates.validate()) {
-        alert('특정 행사 날짜를 하나 이상 선택해 주세요.');
+    const scheduleValidation = window.FinsegyeEventSchedulePlanner?.validate();
+    if (!scheduleValidation || !scheduleValidation.ok) {
+        alert(scheduleValidation?.message || '광고 일정을 확인해 주세요.');
         return;
     }
 
@@ -2375,7 +2349,7 @@ body: JSON.stringify({
         document.getElementById('eventEndTime').value,
 
     eventDateMode:
-        document.getElementById('eventDateMode').value || 'range',
+        document.getElementById('eventDateMode').value || 'none',
 
     eventSpecificDates:
         document.getElementById('eventSpecificDates').value.split(',').filter(Boolean),
@@ -2388,6 +2362,9 @@ body: JSON.stringify({
 
     repeatMonthDays:
         document.getElementById('eventMonthDays').value,
+
+    eventSchedulePlan:
+        window.FinsegyeEventSchedulePlanner?.collect() || null,
 
     adRange:
         document.getElementById('eventAdRange').value,
@@ -2471,7 +2448,7 @@ eventEndTime:
     document.getElementById("eventEndTime").value,
 
 eventDateMode:
-    document.getElementById("eventDateMode").value || "range",
+    document.getElementById("eventDateMode").value || "none",
 
 eventSpecificDates:
     document.getElementById("eventSpecificDates").value.split(',').filter(Boolean),
@@ -2484,6 +2461,9 @@ repeatWeekdays:
 
 repeatMonthDays:
     document.getElementById("eventMonthDays").value,
+
+eventSchedulePlan:
+    window.FinsegyeEventSchedulePlanner?.collect() || null,
 
 adRange:
     document.getElementById("eventAdRange").value,
@@ -4439,11 +4419,12 @@ function sendEventToGoogle() {
             eventEndDate: document.getElementById("eventEndDate").value,
             eventStartTime: document.getElementById("eventStartTime").value,
             eventEndTime: document.getElementById("eventEndTime").value,
-            eventDateMode: document.getElementById("eventDateMode").value || "range",
+            eventDateMode: document.getElementById("eventDateMode").value || "none",
             eventSpecificDates: document.getElementById("eventSpecificDates").value.split(',').filter(Boolean),
             repeatCycle: document.getElementById("eventRepeat").value,
             repeatWeekdays: Array.from(document.querySelectorAll('input[name="eventWeekday"]')).map(function(el){ return el.value; }),
             repeatMonthDays: document.getElementById("eventMonthDays").value,
+            eventSchedulePlan: window.FinsegyeEventSchedulePlanner?.collect() || null,
             adRange: document.getElementById("eventAdRange").value,
             time: new Date().toLocaleString()
         };
@@ -6506,9 +6487,15 @@ function deleteAdCard(id) {
     'eventStartTime',
     'eventEndTime',
     'eventDateMode',
+    'eventRangeEnabled',
     'eventSpecificDates',
     'eventRepeat',
     'eventMonthDays',
+    'eventTimeSlots',
+    'eventHolidayPolicy',
+    'eventHolidayTimeSlots',
+    'eventDateTimeOverrides',
+    'eventSchedulePlan',
     'eventAdRange',
     'shopAd',
     'shopAdImage',
@@ -6526,6 +6513,7 @@ function deleteAdCard(id) {
       const data = Object.fromEntries(fieldIds.map(id => [id, document.getElementById(id)?.value || '']));
       data.eventWeekdays = Array.from(document.querySelectorAll('input[name="eventWeekday"]')).map(el => el.value);
       data.eventSpecificDates = (document.getElementById('eventSpecificDates')?.value || '').split(',').filter(Boolean);
+      data.eventSchedulePlan = global.FinsegyeEventSchedulePlanner?.collect() || null;
       return data;
     },
     submit() {
@@ -6659,7 +6647,7 @@ function deleteAdCard(id) {
       <div class="calendar-days">${days}</div>`;
   };
   global.selectEventDate = function (value) {
-    global.useContinuousEventDates?.();
+    global.activateContinuousEventDates?.();
     const input = document.getElementById(eventCalendarField);
     const display = document.getElementById(eventCalendarField + 'Display');
     input.value = value;
@@ -6824,8 +6812,10 @@ function deleteAdCard(id) {
 
     
 <!-- FINSEGYE CAMERA STANDALONE TEST -->
-<script src="specific-event-dates.js?v=14.9.1"></script>
-<script src="selection-state-ui.js?v=14.9.2"></script>
+<script src="specific-event-dates.js?v=14.10"></script>
+<script src="selection-state-ui.js?v=14.10"></script>
+<script src="date-time-overrides.js?v=14.10"></script>
+<script src="event-schedule-planner.js?v=14.10"></script>
 <script src="media-audio-session.js?v=14"></script>
 <script src="photo-voice-native.js?v=14"></script>
 </body>
