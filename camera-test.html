@@ -392,6 +392,17 @@ body { background-color: #000 !important; color: white; margin: 0; padding: 0; f
         </div>
 
         <div class="input-group event-panel">
+            <label>행사 날짜 선택 방식</label>
+            <div class="event-grid-two">
+                <button type="button" id="eventContinuousDateButton" class="digital-picker selected" onclick="useContinuousEventDates()">연속 기간 사용</button>
+                <button type="button" id="eventSpecificDatesDisplay" class="digital-picker" onclick="openSpecificEventDatePicker()">특정 날짜 여러 개 ▾</button>
+            </div>
+            <input type="hidden" id="eventDateMode" value="range">
+            <input type="hidden" id="eventSpecificDates">
+            <div id="selectedSpecificDatesSummary" class="picker-summary">연속 기간 또는 원하는 날짜 여러 개를 선택할 수 있습니다.</div>
+        </div>
+
+        <div class="input-group event-panel">
             <label>반복 주기</label>
             <button type="button" id="eventRepeatDisplay" class="digital-picker" onclick="openRepeatPicker()">반복 없음 ▾</button>
             <input type="hidden" id="eventRepeat" value="none">
@@ -2049,6 +2060,8 @@ function resetAllForms() {
 
     // 🔥 체크박스 초기화
     document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+
+    window.FinsegyeSpecificEventDates?.reset();
 }
 
 // 🔥🔥🔥 바로 여기 아래 추가 🔥🔥🔥
@@ -2306,6 +2319,11 @@ const currentProvince =
         return;
     }
 
+    if (window.FinsegyeSpecificEventDates && !window.FinsegyeSpecificEventDates.validate()) {
+        alert('특정 행사 날짜를 하나 이상 선택해 주세요.');
+        return;
+    }
+
 // 🔥 여기 추가
 fetch(
     GOOGLE_SCRIPT_URL,
@@ -2354,6 +2372,12 @@ body: JSON.stringify({
 
     eventEndTime:
         document.getElementById('eventEndTime').value,
+
+    eventDateMode:
+        document.getElementById('eventDateMode').value || 'range',
+
+    eventSpecificDates:
+        document.getElementById('eventSpecificDates').value.split(',').filter(Boolean),
 
     repeatCycle:
         document.getElementById('eventRepeat').value,
@@ -2444,6 +2468,12 @@ eventStartTime:
 
 eventEndTime:
     document.getElementById("eventEndTime").value,
+
+eventDateMode:
+    document.getElementById("eventDateMode").value || "range",
+
+eventSpecificDates:
+    document.getElementById("eventSpecificDates").value.split(',').filter(Boolean),
 
 repeatCycle:
     document.getElementById("eventRepeat").value,
@@ -4408,6 +4438,8 @@ function sendEventToGoogle() {
             eventEndDate: document.getElementById("eventEndDate").value,
             eventStartTime: document.getElementById("eventStartTime").value,
             eventEndTime: document.getElementById("eventEndTime").value,
+            eventDateMode: document.getElementById("eventDateMode").value || "range",
+            eventSpecificDates: document.getElementById("eventSpecificDates").value.split(',').filter(Boolean),
             repeatCycle: document.getElementById("eventRepeat").value,
             repeatWeekdays: Array.from(document.querySelectorAll('input[name="eventWeekday"]')).map(function(el){ return el.value; }),
             repeatMonthDays: document.getElementById("eventMonthDays").value,
@@ -6472,6 +6504,8 @@ function deleteAdCard(id) {
     'eventEndDate',
     'eventStartTime',
     'eventEndTime',
+    'eventDateMode',
+    'eventSpecificDates',
     'eventRepeat',
     'eventMonthDays',
     'eventAdRange',
@@ -6490,6 +6524,7 @@ function deleteAdCard(id) {
     collect() {
       const data = Object.fromEntries(fieldIds.map(id => [id, document.getElementById(id)?.value || '']));
       data.eventWeekdays = Array.from(document.querySelectorAll('input[name="eventWeekday"]')).map(el => el.value);
+      data.eventSpecificDates = (document.getElementById('eventSpecificDates')?.value || '').split(',').filter(Boolean);
       return data;
     },
     submit() {
@@ -6535,6 +6570,7 @@ function deleteAdCard(id) {
     document.getElementById('eventChoiceOverlay').hidden = false;
     document.body.style.overflow = 'hidden';
   }
+  global.openEventChoice = overlay;
   global.closeEventChoice = function () {
     document.getElementById('eventChoiceOverlay').hidden = true;
     document.body.style.overflow = '';
@@ -6622,6 +6658,7 @@ function deleteAdCard(id) {
       <div class="calendar-days">${days}</div>`;
   };
   global.selectEventDate = function (value) {
+    global.useContinuousEventDates?.();
     const input = document.getElementById(eventCalendarField);
     const display = document.getElementById(eventCalendarField + 'Display');
     input.value = value;
@@ -6662,6 +6699,7 @@ function deleteAdCard(id) {
     });
   };
   global.setRepeatMode = function (mode, keepOpen) {
+    if (mode !== 'none') global.useContinuousEventDates?.();
     document.getElementById('eventRepeat').value = mode;
     const weekPanel = document.getElementById('repeatWeekPanel');
     const monthPanel = document.getElementById('repeatMonthPanel');
@@ -6778,6 +6816,7 @@ function deleteAdCard(id) {
 
     
 <!-- FINSEGYE CAMERA STANDALONE TEST -->
+<script src="specific-event-dates.js?v=14.9"></script>
 <script src="media-audio-session.js?v=14"></script>
 <script src="photo-voice-native.js?v=14"></script>
 </body>
