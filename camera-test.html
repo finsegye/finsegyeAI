@@ -428,24 +428,24 @@ body { background-color: #000 !important; color: white; margin: 0; padding: 0; f
         <div class="input-group">
             <label for="shopAd">행사 문구</label>
             <textarea id="shopAd" class="event-message" placeholder="행사 문구를 입력해 주세요"></textarea>
-            <button type="button" class="event-helper-button" onclick="openTextSamples()">✨ 핀세계 행사 문구 샘플 선택</button>
+            <button type="button" id="eventTextSampleButton" class="event-helper-button" onclick="openTextSamples()">✨ 핀세계 행사 문구 샘플 선택</button>
         </div>
 
         <div class="event-media-section">
             <div class="event-media-title">📷 행사 사진</div>
             <div class="event-media-actions">
-                <button type="button" onclick="openMediaSamples('image')">핀세계 샘플</button>
-                <label>내 사진 선택<input type="file" id="adImageFile" accept="image/*" onchange="uploadEventMedia('image','adImageFile')"></label>
-                <button type="button" class="camera-open-button" onclick="openNativeEventPhotoCamera()">📷 지금 촬영</button>
+                <button type="button" id="eventImageSampleButton" onclick="openMediaSamples('image')">핀세계 샘플</button>
+                <label id="eventImageFileButton">내 사진 선택<input type="file" id="adImageFile" accept="image/*" onchange="uploadEventMedia('image','adImageFile')"></label>
+                <button type="button" id="eventImageCaptureButton" class="camera-open-button" onclick="openNativeEventPhotoCamera()">📷 지금 촬영</button>
                 <input type="file" id="adImageCapture" accept="image/*" capture="environment" hidden onchange="handleNativeEventPhotoCapture(this)">
             </div>
         </div>
         <div class="event-media-section">
             <div class="event-media-title">🎥 행사 동영상</div>
             <div class="event-media-actions">
-                <button type="button" onclick="openMediaSamples('video')">핀세계 샘플</button>
-                <label>내 동영상 선택<input type="file" id="adVideoFile" accept="video/*" onchange="uploadEventMedia('video','adVideoFile')"></label>
-                <button type="button" class="camera-open-button" onclick="openNativeEventVideoCamera()">🎥 지금 촬영</button>
+                <button type="button" id="eventVideoSampleButton" onclick="openMediaSamples('video')">핀세계 샘플</button>
+                <label id="eventVideoFileButton">내 동영상 선택<input type="file" id="adVideoFile" accept="video/*" onchange="uploadEventMedia('video','adVideoFile')"></label>
+                <button type="button" id="eventVideoCaptureButton" class="camera-open-button" onclick="openNativeEventVideoCamera()">🎥 지금 촬영</button>
                 <input type="file" id="adVideoCapture" accept="video/*" capture="environment" hidden onchange="handleNativeEventVideoCapture(this)">
             </div>
         </div>
@@ -6664,6 +6664,7 @@ function deleteAdCard(id) {
     const display = document.getElementById(eventCalendarField + 'Display');
     input.value = value;
     display.textContent = value.replaceAll('-', '.') + ' ▾';
+    global.FinsegyeSelectionState?.markField(eventCalendarField);
     global.closeEventChoice();
   };
 
@@ -6824,6 +6825,7 @@ function deleteAdCard(id) {
     
 <!-- FINSEGYE CAMERA STANDALONE TEST -->
 <script src="specific-event-dates.js?v=14.9.1"></script>
+<script src="selection-state-ui.js?v=14.9.2"></script>
 <script src="media-audio-session.js?v=14"></script>
 <script src="photo-voice-native.js?v=14"></script>
 </body>
