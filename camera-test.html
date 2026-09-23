@@ -6730,30 +6730,8 @@ function deleteAdCard(id) {
 
 </script>
 
-    <!-- Firebase SDK -->
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDCsHw0ibb4pMytyPlVvoCzNKZXy3OSTOo",
-  authDomain: "finsegye-upload.firebaseapp.com",
-  projectId: "finsegye-upload",
-  storageBucket: "finsegye-upload.firebasestorage.app",
-  messagingSenderId: "361113771740",
-  appId: "1:361113771740:web:9bbc4b6807535d37a65e19",
-  measurementId: "G-XQ43DWJRBB"
-};
-
-const app = initializeApp(firebaseConfig);
-const storage = getStorage(app, "gs://finsegye-upload.firebasestorage.app");
-window.storage = storage;
-window.firebaseRef = ref;
-window.uploadBytes = uploadBytes;
-window.getDownloadURL = getDownloadURL;
-console.log("🔥 Firebase 연결 완료");
-</script>
+    <!-- Firebase Storage + anonymous authentication (independent module) -->
+<script type="module" src="firebase-storage-auth.js?v=14.4"></script>
 
 
 <script>
