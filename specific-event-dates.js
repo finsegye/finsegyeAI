@@ -69,7 +69,8 @@
       <div class="calendar-week"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
       <div class="calendar-days">${days}</div>
       <div class="picker-summary">선택: ${state.selected.size}개 · 날짜를 다시 누르면 해제됩니다.</div>
-      <button type="button" class="choice-done" onclick="finishSpecificEventDates()">선택 완료</button>`;
+      <button type="button" class="choice-done" onclick="finishSpecificEventDates()">선택 완료</button>
+      <button type="button" class="choice-clear" onclick="clearSpecificEventDates()">선택 날짜 모두 삭제</button>`;
   }
 
   global.openSpecificEventDatePicker = function () {
@@ -89,12 +90,17 @@
   };
   global.toggleSpecificEventDate = function (value) {
     if (state.selected.has(value)) state.selected.delete(value); else state.selected.add(value);
+    applyDates();
     renderCalendar();
   };
   global.finishSpecificEventDates = function () {
-    if (!state.selected.size) { alert('특정 행사 날짜를 하나 이상 선택해 주세요.'); return; }
     applyDates();
     global.closeEventChoice?.();
+  };
+  global.clearSpecificEventDates = function () {
+    state.selected.clear();
+    applyDates();
+    renderCalendar();
   };
   global.activateContinuousEventDates = function () {
     if (byId('eventRangeEnabled')) byId('eventRangeEnabled').value = 'true';

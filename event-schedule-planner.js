@@ -45,6 +45,7 @@
       },
       specificDates: (byId('eventSpecificDates')?.value || '').split(',').filter(Boolean),
       repeatMode: state.repeatMode,
+      monthlyRule: state.repeatMode === 'monthly' ? (state.monthDays.size ? 'selectedDays' : 'currentDatePlan') : null,
       weekdays: sortedWeekdays(),
       monthDays: sortedMonthDays(),
       timeSlots: state.timeSlots.map(slot => ({...slot})),
@@ -77,7 +78,9 @@
     if (state.repeatMode === 'none') return '반복 없음';
     if (state.repeatMode === 'daily') return '매일 반복';
     if (state.repeatMode === 'weekly') return `매주 ${sortedWeekdays().join('·') || '요일 미선택'} 반복`;
-    if (state.repeatMode === 'monthly') return `매월 ${sortedMonthDays().map(day=>day+'일').join('·') || '날짜 미선택'} 반복`;
+    if (state.repeatMode === 'monthly') return state.monthDays.size
+      ? `매월 ${sortedMonthDays().map(day=>day+'일').join('·')} 반복`
+      : '매월 현재 선택한 행사 날짜 구성 반복';
     return '반복 주기를 선택해 주세요.';
   }
   function holidayLabel() {
@@ -101,7 +104,7 @@
         <label>반복 주기 선택</label>
         <div class="schedule-grid-four">${repeatButtons}</div>
         ${state.repeatMode==='weekly'?`<div class="schedule-subpanel"><b>반복 요일 선택</b><div class="schedule-grid-seven">${weekdays}</div></div>`:''}
-        ${state.repeatMode==='monthly'?`<button type="button" class="digital-picker ${state.monthDays.size?'selected':''}" onclick="openScheduleMonthDays()">${state.monthDays.size?`매월 날짜 ${state.monthDays.size}개 선택`:'매월 날짜 선택'} ▾</button>`:''}
+        ${state.repeatMode==='monthly'?`<button type="button" class="digital-picker ${state.monthDays.size?'selected':''}" onclick="openScheduleMonthDays()">${state.monthDays.size?`매월 날짜 ${state.monthDays.size}개 선택`:'매월 날짜 선택(선택 사항)'} ▾</button><div class="schedule-help">날짜를 따로 선택하지 않으면 현재 선택한 행사 날짜 구성을 매월 반복합니다.</div>`:''}
       </div>
       <div class="event-panel schedule-panel">
         <label>하루 광고 시간대</label>
@@ -144,7 +147,7 @@
   global.toggleScheduleWeekday = function (day) { state.weekdays.has(day) ? state.weekdays.delete(day) : state.weekdays.add(day); render(); };
   global.openScheduleMonthDays = function () {
     const buttons = Array.from({length:31},(_,i)=>i+1).map(day => `<button type="button" data-plan-monthday="${day}" class="${state.monthDays.has(day)?'selected':''}" onclick="toggleScheduleMonthDay(${day},this)">${day}일</button>`).join('');
-    global.openEventChoice?.('매월 반복 날짜 선택', `<div class="choice-grid">${buttons}</div><div id="scheduleMonthDaySummary" class="picker-summary">${sortedMonthDays().map(day=>day+'일').join(' · ') || '날짜를 여러 개 선택할 수 있습니다.'}</div><button type="button" class="choice-done" onclick="finishScheduleMonthDays()">선택 완료</button>`);
+    global.openEventChoice?.('매월 반복 날짜 선택', `<div class="choice-grid">${buttons}</div><div id="scheduleMonthDaySummary" class="picker-summary">${sortedMonthDays().map(day=>day+'일').join(' · ') || '선택하지 않으면 현재 행사 날짜 구성을 매월 반복합니다.'}</div><button type="button" class="choice-done" onclick="finishScheduleMonthDays()">선택 완료</button><button type="button" class="choice-clear" onclick="clearScheduleMonthDays()">매월 지정 날짜 모두 삭제</button>`);
   };
   global.toggleScheduleMonthDay = function (day,button) {
     state.monthDays.has(day) ? state.monthDays.delete(day) : state.monthDays.add(day);
@@ -152,8 +155,12 @@
     if (byId('scheduleMonthDaySummary')) byId('scheduleMonthDaySummary').textContent = sortedMonthDays().map(value=>value+'일').join(' · ') || '날짜를 여러 개 선택할 수 있습니다.';
   };
   global.finishScheduleMonthDays = function () {
-    if (!state.monthDays.size) { alert('반복할 날짜를 하나 이상 선택해 주세요.'); return; }
     global.closeEventChoice?.(); render();
+  };
+  global.clearScheduleMonthDays = function () {
+    state.monthDays.clear();
+    global.closeEventChoice?.();
+    render();
   };
   global.openScheduleTimeSlot = function (isHoliday) {
     global.openEventChoice?.(isHoliday?'공휴일 광고 시간 추가':'하루 광고 시간 추가', `<div class="event-grid-two"><div><label>시작 시간</label><select id="scheduleSlotStart">${timeOptions()}</select></div><div><label>종료 시간</label><select id="scheduleSlotEnd">${timeOptions()}</select></div></div><button type="button" class="choice-done" onclick="addScheduleTimeSlot(${Boolean(isHoliday)})">시간대 추가</button>`);
@@ -172,7 +179,7 @@
     if (plan.range.enabled && (!plan.range.start || !plan.range.end)) return {ok:false,message:'연속 기간의 시작 날짜와 종료 날짜를 모두 선택해 주세요.'};
     if (plan.range.enabled && plan.range.end < plan.range.start) return {ok:false,message:'종료 날짜는 시작 날짜보다 뒤로 선택해 주세요.'};
     if (plan.repeatMode === 'weekly' && !plan.weekdays.length) return {ok:false,message:'매주 반복할 요일을 하나 이상 선택해 주세요.'};
-    if (plan.repeatMode === 'monthly' && !plan.monthDays.length) return {ok:false,message:'매월 반복할 날짜를 하나 이상 선택해 주세요.'};
+    if (plan.repeatMode === 'monthly' && !plan.monthDays.length && !hasDate) return {ok:false,message:'매월 반복 기준이 될 행사 날짜를 선택하거나 매월 날짜를 직접 지정해 주세요.'};
     const overrideDates = new Set(plan.dateTimeOverrides.map(item => item.date));
     const hasUncoveredSpecificDate = plan.specificDates.some(date => !overrideDates.has(date));
     const needsBaseTime = plan.repeatMode !== 'none' || plan.range.enabled || hasUncoveredSpecificDate;
@@ -192,7 +199,7 @@
 
   function installStyles() {
     const style=document.createElement('style');
-    style.textContent=`.schedule-panel{margin-top:12px}.schedule-grid-four,.schedule-grid-three,.schedule-grid-seven{display:grid;gap:8px;margin-top:9px}.schedule-grid-four{grid-template-columns:repeat(4,1fr)}.schedule-grid-three{grid-template-columns:repeat(3,1fr)}.schedule-grid-seven{grid-template-columns:repeat(7,1fr)}.schedule-choice{min-height:48px;border:1px solid #00ffcc;border-radius:9px;background:#10231f;color:#fff;font-weight:800}.schedule-choice.selected{background:gold;color:#000;border-color:gold;box-shadow:0 0 0 2px rgba(255,215,0,.22)}.schedule-subpanel{margin-top:12px;padding-top:10px;border-top:1px solid #444}.schedule-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding:10px;border:1px solid #555;border-radius:9px;background:#181818}.schedule-row button{min-width:64px;min-height:38px;border:0;border-radius:7px;background:#8c1325;color:#fff}.schedule-empty{margin-top:8px;color:#aaa}.schedule-summary{margin-top:12px;line-height:1.7;color:#00ffcc}.schedule-summary b{color:gold}.event-choice-card select{width:100%;min-height:52px;background:#050505;color:#fff;border:2px solid gold;border-radius:9px;font-size:18px}@media(max-width:560px){.schedule-grid-four{grid-template-columns:repeat(2,1fr)}.schedule-grid-seven{grid-template-columns:repeat(4,1fr)}.schedule-grid-three{grid-template-columns:1fr}}`;
+    style.textContent=`.schedule-panel{margin-top:12px}.schedule-grid-four,.schedule-grid-three,.schedule-grid-seven{display:grid;gap:8px;margin-top:9px}.schedule-grid-four{grid-template-columns:repeat(4,1fr)}.schedule-grid-three{grid-template-columns:repeat(3,1fr)}.schedule-grid-seven{grid-template-columns:repeat(7,1fr)}.schedule-choice{min-height:48px;border:1px solid #00ffcc;border-radius:9px;background:#10231f;color:#fff;font-weight:800}.schedule-choice.selected{background:gold;color:#000;border-color:gold;box-shadow:0 0 0 2px rgba(255,215,0,.22)}.schedule-subpanel{margin-top:12px;padding-top:10px;border-top:1px solid #444}.schedule-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding:10px;border:1px solid #555;border-radius:9px;background:#181818}.schedule-row button{min-width:64px;min-height:38px;border:0;border-radius:7px;background:#8c1325;color:#fff}.schedule-empty{margin-top:8px;color:#aaa}.schedule-help{margin-top:7px;color:#aaa;font-size:.8em;line-height:1.45}.schedule-summary{margin-top:12px;line-height:1.7;color:#00ffcc}.schedule-summary b{color:gold}.event-choice-card select{width:100%;min-height:52px;background:#050505;color:#fff;border:2px solid gold;border-radius:9px;font-size:18px}.choice-clear{width:100%;min-height:48px;margin-top:8px;border:1px solid #ff6b6b;border-radius:9px;background:#351014;color:#fff;font-weight:800}@media(max-width:560px){.schedule-grid-four{grid-template-columns:repeat(2,1fr)}.schedule-grid-seven{grid-template-columns:repeat(4,1fr)}.schedule-grid-three{grid-template-columns:1fr}}`;
     document.head.appendChild(style);
   }
 

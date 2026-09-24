@@ -367,6 +367,8 @@ body { background-color: #000 !important; color: white; margin: 0; padding: 0; f
 
         <div class="input-group">
             <input type="text" id="shopLoc" class="region-picker-input" placeholder="행사 지역을 지도에서 선택해 주세요" readonly onclick="openRegionMap()">
+            <input type="text" id="shopLocDetail" class="event-region-detail-input" placeholder="지역을 먼저 선택해 주세요" disabled>
+            <div id="eventRegionDetailHint" class="event-region-detail-hint">지역을 선택하면 위 칸 아래에 상세 주소를 입력할 수 있습니다.</div>
         </div>
 
         <div class="event-grid-two">
@@ -2060,6 +2062,7 @@ function resetAllForms() {
     window.FinsegyeSpecificEventDates?.reset();
     window.FinsegyeDateTimeOverrides?.reset();
     window.FinsegyeEventSchedulePlanner?.reset();
+    window.FinsegyeEventRegionDetail?.reset();
 }
 
 // 🔥🔥🔥 바로 여기 아래 추가 🔥🔥🔥
@@ -4940,10 +4943,14 @@ const currentProvince =
                 document.getElementById("shopLoc");
 
             if (eventRegionInput) {
-                eventRegionInput.value =
-                    [area.country, area.province, area.city]
-                        .filter(Boolean)
-                        .join(" ");
+                const detectedRegion = [area.country, area.province, area.city]
+                    .filter(Boolean)
+                    .join(" ");
+                if (window.FinsegyeEventRegionDetail) {
+                    window.FinsegyeEventRegionDetail.enable(detectedRegion);
+                } else {
+                    eventRegionInput.value = detectedRegion;
+                }
             }
 
 
@@ -6604,8 +6611,17 @@ function deleteAdCard(id) {
     overlay('행사 지역 지도 선택', `<div class="choice-grid">${regions.map(region => `<button type="button" onclick="selectEventRegion('${region}')">${region}</button>`).join('')}</div><p class="picker-summary">지역을 누르면 입력되고 지도가 닫힙니다. 상세 주소는 입력창에 이어서 적을 수 있습니다.</p>`);
   };
   global.selectEventRegion = function (region) {
-    document.getElementById('shopLoc').value = region;
     global.closeEventChoice();
+    if (global.FinsegyeEventRegionDetail) {
+      global.FinsegyeEventRegionDetail.enable(region);
+    } else {
+      const input = document.getElementById('shopLoc');
+      input.value = region + ' ';
+      input.readOnly = false;
+      input.removeAttribute('readonly');
+      input.removeAttribute('onclick');
+      input.focus();
+    }
   };
 
   let eventCalendarField = '';
@@ -6812,10 +6828,11 @@ function deleteAdCard(id) {
 
     
 <!-- FINSEGYE CAMERA STANDALONE TEST -->
-<script src="specific-event-dates.js?v=14.10"></script>
-<script src="selection-state-ui.js?v=14.10"></script>
-<script src="date-time-overrides.js?v=14.10"></script>
-<script src="event-schedule-planner.js?v=14.10"></script>
+<script src="specific-event-dates.js?v=14.12"></script>
+<script src="selection-state-ui.js?v=14.12"></script>
+<script src="date-time-overrides.js?v=14.12"></script>
+<script src="event-schedule-planner.js?v=14.12"></script>
+<script src="event-region-detail.js?v=14.12"></script>
 <script src="media-audio-session.js?v=14"></script>
 <script src="photo-voice-native.js?v=14"></script>
 </body>
