@@ -1,6 +1,6 @@
 (function (global) {
   'use strict';
-  const MODULE_ID = 'field-sales-demo-v14.13';
+  const MODULE_ID = 'field-sales-demo-v14.13.1';
   const LIVE_ROOT = 'https://finsegye.github.io/finsegyeAI/';
   const state = { mediaUrls: [], campaignUrl: '' };
   const esc = value => String(value || '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -9,12 +9,12 @@
   function mount() {
     if (byId('fsdLaunch')) return;
     const style = document.createElement('link');
-    style.rel = 'stylesheet'; style.href = 'field-sales-demo.css?v=14.13';
+    style.rel = 'stylesheet'; style.href = 'field-sales-demo.css?v=14.13.1';
     document.head.appendChild(style);
     document.body.insertAdjacentHTML('beforeend', `
       <button id="fsdLaunch" class="fsd-launch" type="button">✨ 매장 현장 시연</button>
       <div id="fsdBackdrop" class="fsd-backdrop" role="dialog" aria-modal="true" aria-label="매장 광고 현장 시연">
-        <section class="fsd-panel">
+        <div class="fsd-panel">
           <header class="fsd-head"><div><div class="fsd-help">핀세계 영업용 독립 모듈</div><h2>QR 즉시 광고 시연</h2></div><button id="fsdClose" class="fsd-close" type="button">×</button></header>
           <div class="fsd-steps"><div class="fsd-step on">1 광고 입력</div><div class="fsd-step">2 자동 제작</div><div class="fsd-step">3 사장님 확인</div></div>
           <div id="fsdForm" class="fsd-form">
@@ -38,9 +38,10 @@
             <div class="fsd-note">카메라로 QR을 비추면 설치 없이 사진·동영상 광고가 바로 열립니다.</div>
             <img id="fsdQr" class="fsd-qr" alt="광고 확인 QR 코드">
             <div id="fsdUrl" class="fsd-url"></div>
-            <div class="fsd-actions"><button id="fsdAgain" class="fsd-btn secondary" type="button">다른 광고 만들기</button><button id="fsdShare" class="fsd-btn primary" type="button">주소 공유하기</button></div>
+            <div class="fsd-actions"><button id="fsdPreview" class="fsd-btn secondary" type="button">이 스마트폰에서 열기</button><button id="fsdShare" class="fsd-btn primary" type="button">다른 폰으로 주소 공유</button></div>
+            <button id="fsdAgain" class="fsd-btn secondary" style="width:100%;margin-top:10px" type="button">다른 광고 만들기</button>
           </div>
-        </section></div>`);
+        </div></div>`);
     bind();
   }
 
@@ -51,6 +52,7 @@
     byId('fsdSample').onclick = fillSample;
     byId('fsdCreate').onclick = createCampaign;
     byId('fsdAgain').onclick = reset;
+    byId('fsdPreview').onclick = () => { if (state.campaignUrl) global.open(state.campaignUrl, '_blank'); };
     byId('fsdShare').onclick = share;
   }
 
@@ -83,7 +85,6 @@
   }
 
   function viewerRoot() {
-    if (/^https?:$/.test(location.protocol)) return new URL('field-sales-view.html', location.href).href;
     return LIVE_ROOT + 'field-sales-view.html';
   }
 
@@ -100,7 +101,7 @@
       ]);
       setProgress('2/3 스마트폰 광고 화면을 만들고 있습니다…', true);
       const payload = {
-        version:'14.13', id:`FSD-${Date.now().toString(36).toUpperCase()}`, createdAt:new Date().toISOString(),
+        version:'14.13.1', id:`FSD-${Date.now().toString(36).toUpperCase()}`, createdAt:new Date().toISOString(),
         store, title, benefit, phone:byId('fsdPhone').value.trim(), address:byId('fsdAddress').value.trim(),
         photoUrl, videoUrl, provider:'핀세계', badge:'현장 시연 광고 · 실제 발송 아님'
       };
