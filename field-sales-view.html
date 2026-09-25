@@ -4,9 +4,10 @@
 (async function(){
   const esc=v=>String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const p=new URLSearchParams(location.search),url=p.get('campaign'),app=document.getElementById('app');
-  if(!url){app.innerHTML='<div class="error"><h2>광고 주소가 없습니다.</h2><p>핀세계 현장 시연 화면에서 새 QR을 만들어 주세요.</p></div>';return;}
+  const decodeInline=()=>{const raw=location.hash.startsWith('#data=')?location.hash.slice(6):'';if(!raw)return null;const normalized=raw.replace(/-/g,'+').replace(/_/g,'/');const binary=atob(normalized+'='.repeat((4-normalized.length%4)%4));const bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));return JSON.parse(new TextDecoder().decode(bytes));};
+  if(!location.hash.startsWith('#data=')&&!url){app.innerHTML='<div class="error"><h2>광고 주소가 없습니다.</h2><p>핀세계 현장 시연 화면에서 새 QR을 만들어 주세요.</p></div>';return;}
   try{
-    const res=await fetch(url,{cache:'no-store'}); if(!res.ok) throw new Error('광고 데이터를 찾지 못했습니다.'); const d=await res.json();
+    let d=decodeInline();if(!d){const res=await fetch(url,{cache:'no-store'});if(!res.ok)throw new Error('광고 데이터를 찾지 못했습니다.');d=await res.json();}
     const media=d.videoUrl?`<video controls playsinline poster="${esc(d.photoUrl)}"><source src="${esc(d.videoUrl)}"></video>`:(d.photoUrl?`<img src="${esc(d.photoUrl)}" alt="${esc(d.store)} 광고 사진">`:'<div class="placeholder">✨<br><small>우리 동네 특별 혜택</small></div>');
     const tel=String(d.phone||'').replace(/[^0-9+]/g,''), map='https://map.kakao.com/link/search/'+encodeURIComponent(d.address||d.store||'');
     app.innerHTML=`<header class="top"><div class="brand">FINSEGYE · 핀세계</div><div class="demo">${esc(d.badge||'현장 시연')}</div></header><section class="hero">${media}</section><section class="card"><div class="store">${esc(d.store)}</div><h1 class="title">${esc(d.title)}</h1><div class="benefit">${esc(d.benefit)}</div><div class="meta">${d.address?'📍 '+esc(d.address)+'<br>':''}${d.phone?'☎ '+esc(d.phone):''}</div><div class="actions">${tel?`<a class="btn call" href="tel:${tel}">전화하기</a>`:''}<a class="btn map" href="${map}" target="_blank" rel="noopener">지도 보기</a></div><button id="approve" class="btn approve" type="button">✓ 이 광고 시안 승인</button><div class="share-note">승인 버튼은 사장님의 공유 화면을 열며 실제 광고를 발송하지 않습니다.</div></section><footer class="footer">지역 광고 기술 제공 · 핀세계<br>본 화면은 매장 확인용 광고 시안입니다.</footer>`;

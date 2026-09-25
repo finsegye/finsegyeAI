@@ -1,6 +1,6 @@
 (function (global) {
   'use strict';
-  const MODULE_ID = 'field-sales-demo-v14.13.1';
+  const MODULE_ID = 'field-sales-demo-v14.13.2';
   const LIVE_ROOT = 'https://finsegye.github.io/finsegyeAI/';
   const state = { mediaUrls: [], campaignUrl: '' };
   const esc = value => String(value || '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -9,7 +9,7 @@
   function mount() {
     if (byId('fsdLaunch')) return;
     const style = document.createElement('link');
-    style.rel = 'stylesheet'; style.href = 'field-sales-demo.css?v=14.13.1';
+    style.rel = 'stylesheet'; style.href = 'field-sales-demo.css?v=14.13.2';
     document.head.appendChild(style);
     document.body.insertAdjacentHTML('beforeend', `
       <button id="fsdLaunch" class="fsd-launch" type="button">✨ 매장 현장 시연</button>
@@ -84,6 +84,13 @@
     return global.getDownloadURL(target);
   }
 
+  function encodePayload(payload) {
+    const bytes = new TextEncoder().encode(JSON.stringify(payload));
+    let binary = '';
+    bytes.forEach(byte => { binary += String.fromCharCode(byte); });
+    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+  }
+
   function viewerRoot() {
     return LIVE_ROOT + 'field-sales-view.html';
   }
@@ -99,19 +106,14 @@
       const [photoUrl, videoUrl] = await Promise.all([
         upload(byId('fsdPhoto').files[0], 'photos'), upload(byId('fsdVideo').files[0], 'videos')
       ]);
-      setProgress('2/3 스마트폰 광고 화면을 만들고 있습니다…', true);
+      setProgress('2/2 카카오톡에서도 열리는 광고 주소를 만들고 있습니다…', true);
       const payload = {
-        version:'14.13.1', id:`FSD-${Date.now().toString(36).toUpperCase()}`, createdAt:new Date().toISOString(),
+        version:'14.13.2', id:`FSD-${Date.now().toString(36).toUpperCase()}`, createdAt:new Date().toISOString(),
         store, title, benefit, phone:byId('fsdPhone').value.trim(), address:byId('fsdAddress').value.trim(),
         photoUrl, videoUrl, provider:'핀세계', badge:'현장 시연 광고 · 실제 발송 아님'
       };
-      const blob = new Blob([JSON.stringify(payload)], {type:'application/json'});
-      const jsonPath = `field-sales/campaigns/${payload.id}.json`;
-      const jsonRef = global.firebaseRef(global.storage, jsonPath);
-      await global.uploadBytes(jsonRef, blob, {contentType:'application/json', customMetadata:{module:MODULE_ID}});
-      const dataUrl = await global.getDownloadURL(jsonRef);
-      state.campaignUrl = viewerRoot() + '?campaign=' + encodeURIComponent(dataUrl);
-      setProgress('3/3 QR 코드를 완성했습니다.', false);
+      state.campaignUrl = viewerRoot() + '#data=' + encodePayload(payload);
+      setProgress('QR 코드를 완성했습니다.', false);
       byId('fsdQr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=10&data=' + encodeURIComponent(state.campaignUrl);
       byId('fsdUrl').textContent = state.campaignUrl;
       byId('fsdForm').style.display = 'none'; byId('fsdResult').classList.add('on');
