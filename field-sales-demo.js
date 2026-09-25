@@ -1,6 +1,6 @@
 (function (global) {
   'use strict';
-  const MODULE_ID = 'field-sales-demo-v14.13.2';
+  const MODULE_ID = 'field-sales-demo-v14.13.3';
   const LIVE_ROOT = 'https://finsegye.github.io/finsegyeAI/';
   const state = { mediaUrls: [], campaignUrl: '' };
   const esc = value => String(value || '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -52,7 +52,7 @@
     byId('fsdSample').onclick = fillSample;
     byId('fsdCreate').onclick = createCampaign;
     byId('fsdAgain').onclick = reset;
-    byId('fsdPreview').onclick = () => { if (state.campaignUrl) global.open(state.campaignUrl, '_blank'); };
+    byId('fsdPreview').onclick = () => { if (state.campaignUrl) global.location.href = state.campaignUrl; };
     byId('fsdShare').onclick = share;
   }
 
@@ -108,11 +108,16 @@
       ]);
       setProgress('2/2 카카오톡에서도 열리는 광고 주소를 만들고 있습니다…', true);
       const payload = {
-        version:'14.13.2', id:`FSD-${Date.now().toString(36).toUpperCase()}`, createdAt:new Date().toISOString(),
+        version:'14.13.3', id:`FSD-${Date.now().toString(36).toUpperCase()}`, createdAt:new Date().toISOString(),
         store, title, benefit, phone:byId('fsdPhone').value.trim(), address:byId('fsdAddress').value.trim(),
         photoUrl, videoUrl, provider:'핀세계', badge:'현장 시연 광고 · 실제 발송 아님'
       };
-      state.campaignUrl = viewerRoot() + '#data=' + encodePayload(payload);
+      const safeJson = JSON.stringify(payload).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
+      const campaignBlob = new Blob(['window.__FINSEGYE_CAMPAIGN__=' + safeJson + ';'], {type:'application/javascript'});
+      const campaignRef = global.firebaseRef(global.storage, `field-sales/campaigns/${payload.id}.js`);
+      await global.uploadBytes(campaignRef, campaignBlob, {contentType:'application/javascript', customMetadata:{module:MODULE_ID}});
+      const campaignSource = await global.getDownloadURL(campaignRef);
+      state.campaignUrl = viewerRoot() + '?src=' + encodeURIComponent(campaignSource);
       setProgress('QR 코드를 완성했습니다.', false);
       byId('fsdQr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=10&data=' + encodeURIComponent(state.campaignUrl);
       byId('fsdUrl').textContent = state.campaignUrl;
